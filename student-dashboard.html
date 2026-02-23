@@ -1,0 +1,593 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0">
+<title>Class Signal – Student Dashboard</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+*{margin:0;padding:0;box-sizing:border-box;}
+:root{
+  --blue:#4F6EF7;--indigo:#6366F1;--purple:#8B5CF6;--green:#22C55E;--amber:#F59E0B;--red:#EF4444;--cyan:#06B6D4;
+  --bg:#0F1117;--surface:#1A1D27;--surface2:#22263A;--surface3:#2A2E45;
+  --border:#2A2E45;--text:#F0F2FF;--muted:#7B82A8;--soft:#3A3F5C;
+}
+body{font-family:'Inter',sans-serif;background:#0A0C12;min-height:100vh;display:flex;justify-content:center;align-items:flex-start;padding:20px;}
+.frame{width:390px;min-height:844px;background:var(--bg);border-radius:48px;box-shadow:0 40px 100px rgba(0,0,0,0.7),0 0 0 1px var(--border);overflow:hidden;position:relative;display:flex;flex-direction:column;}
+
+/* STATUS BAR */
+.status-bar{height:50px;display:flex;align-items:center;justify-content:space-between;padding:0 28px;position:absolute;top:0;left:0;right:0;z-index:20;}
+.s-time{font-size:15px;font-weight:700;color:white;}
+.s-icons{display:flex;gap:5px;align-items:center;}
+.s-icons svg{width:15px;height:15px;fill:white;}
+
+/* HERO */
+.hero{background:linear-gradient(160deg,#0D1140 0%,#1A0A40 50%,#0F0D2E 100%);padding:60px 22px 26px;position:relative;overflow:hidden;flex-shrink:0;}
+.hero::before{content:'';position:absolute;top:-60px;right:-60px;width:220px;height:220px;background:radial-gradient(circle,rgba(139,92,246,0.28) 0%,transparent 70%);}
+.hero::after{content:'';position:absolute;bottom:-70px;left:-40px;width:200px;height:200px;background:radial-gradient(circle,rgba(79,110,247,0.22) 0%,transparent 70%);}
+.hero-top{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:18px;position:relative;z-index:2;}
+.greet-sub{color:rgba(255,255,255,0.6);font-size:13px;font-weight:500;margin-bottom:3px;}
+.greet-name{color:white;font-size:22px;font-weight:800;letter-spacing:-.3px;}
+.notif-wrap{position:relative;}
+.notif-btn{width:42px;height:42px;background:rgba(255,255,255,0.12);border:1px solid rgba(255,255,255,0.18);border-radius:13px;display:flex;align-items:center;justify-content:center;cursor:pointer;border:none;}
+.notif-btn svg{width:20px;height:20px;fill:white;}
+.notif-dot{position:absolute;top:8px;right:8px;width:8px;height:8px;background:#FF5C5C;border-radius:50%;border:2px solid #0D1140;}
+.notif-dropdown{position:absolute;top:52px;right:0;width:260px;background:var(--surface2);border:1px solid var(--border);border-radius:18px;padding:12px;box-shadow:0 16px 48px rgba(0,0,0,0.5);z-index:9999;display:none;}
+.notif-dropdown.show{display:block;}
+.notif-item{padding:10px 12px;border-radius:10px;font-size:12.5px;color:var(--text);border-bottom:1px solid var(--border);margin-bottom:4px;line-height:1.45;}
+.notif-item:last-child{border-bottom:none;margin-bottom:0;}
+.notif-item strong{color:var(--blue);}
+
+.profile-card{background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.14);border-radius:20px;padding:14px 18px;display:flex;align-items:center;gap:14px;position:relative;z-index:2;backdrop-filter:blur(10px);}
+.avatar{width:50px;height:50px;border-radius:15px;background:linear-gradient(135deg,#6366F1,#8B5CF6);display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0;border:2px solid rgba(255,255,255,0.2);}
+.prof-name{color:white;font-size:16px;font-weight:800;margin-bottom:3px;}
+.prof-class{color:rgba(255,255,255,0.6);font-size:12px;}
+.xp-badge{padding:5px 11px;border-radius:20px;font-size:11px;font-weight:800;white-space:nowrap;background:rgba(99,102,241,0.25);color:#A5B4FC;border:1px solid rgba(99,102,241,0.3);}
+
+/* TABS */
+.tab-bar{display:flex;gap:0;border-bottom:1px solid var(--border);background:var(--bg);position:sticky;top:0;z-index:10;flex-shrink:0;}
+.tab{flex:1;padding:14px 8px 12px;text-align:center;font-size:12px;font-weight:700;color:var(--muted);cursor:pointer;transition:all .15s;border-bottom:2px solid transparent;letter-spacing:.1px;}
+.tab.active{color:var(--blue);border-bottom-color:var(--blue);}
+
+/* SCROLL */
+.scroll{flex:1;overflow-y:auto;padding-bottom:90px;}
+.scroll::-webkit-scrollbar{display:none;}
+.inner{padding:18px 16px 0;}
+.tab-content{display:none;}
+.tab-content.active{display:block;}
+
+.sec-hdr{display:flex;align-items:center;justify-content:space-between;margin:0 0 12px;}
+.sec-title{font-size:15px;font-weight:800;color:var(--text);}
+.sec-link{font-size:13px;font-weight:600;color:var(--blue);cursor:pointer;}
+
+/* ─ QUICK STATS ─ */
+.stats-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px;}
+.stat-card{background:var(--surface);border:1px solid var(--border);border-radius:18px;padding:16px 14px;}
+.stat-ico{width:36px;height:36px;border-radius:11px;display:flex;align-items:center;justify-content:center;margin-bottom:10px;}
+.stat-ico svg{width:18px;height:18px;}
+.stat-val{font-size:22px;font-weight:900;color:var(--text);margin-bottom:2px;}
+.stat-lbl{font-size:10.5px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.4px;}
+
+/* ─ AI TOOL CARDS ─ */
+.tools-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px;}
+.tool-card{background:var(--surface);border:1px solid var(--border);border-radius:20px;padding:18px 16px;cursor:pointer;transition:all .18s;text-decoration:none;display:block;position:relative;overflow:hidden;}
+.tool-card:hover{transform:translateY(-3px);box-shadow:0 12px 36px rgba(0,0,0,0.35);}
+.tool-card::after{content:'';position:absolute;top:-20px;right:-20px;width:70px;height:70px;border-radius:50%;opacity:.07;}
+.tool-ai::after{background:#8B5CF6;}
+.tool-qa::after{background:#4F6EF7;}
+.tool-dost::after{background:#F59E0B;}
+.tool-icon{font-size:28px;margin-bottom:10px;display:block;}
+.tool-name{font-size:13px;font-weight:800;color:var(--text);margin-bottom:4px;}
+.tool-desc{font-size:11px;color:var(--muted);line-height:1.45;}
+.tool-arrow{position:absolute;bottom:12px;right:12px;font-size:14px;color:var(--soft);}
+
+/* DOST card full width */
+.tool-card-wide{background:linear-gradient(135deg,rgba(245,158,11,0.1),rgba(217,119,6,0.05));border-color:rgba(245,158,11,0.2);}
+
+/* ─ AI INSIGHT STRIP ─ */
+.insight-strip{background:linear-gradient(135deg,rgba(99,102,241,0.12),rgba(139,92,246,0.08));border:1px solid rgba(99,102,241,0.2);border-radius:20px;padding:16px 18px;margin-bottom:16px;}
+.ins-hdr{display:flex;align-items:center;gap:10px;margin-bottom:10px;}
+.ins-icon{width:32px;height:32px;background:linear-gradient(135deg,var(--blue),var(--purple));border-radius:10px;display:flex;align-items:center;justify-content:center;}
+.ins-icon svg{width:16px;height:16px;fill:white;}
+.ins-label{font-size:13px;font-weight:800;color:#A5B4FC;}
+.ins-text{font-size:13px;color:rgba(240,242,255,0.7);line-height:1.65;}
+.ins-text strong{color:var(--text);}
+
+/* ─ HW SECTION ─ */
+.hw-card{background:var(--surface);border:1px solid var(--border);border-radius:20px;overflow:hidden;margin-bottom:16px;}
+.hw-item{display:flex;align-items:flex-start;gap:12px;padding:14px 16px;border-bottom:1px solid var(--border);transition:background .12s;cursor:pointer;}
+.hw-item:last-child{border-bottom:none;}
+.hw-item:hover{background:rgba(79,110,247,0.04);}
+.hw-item.done .hw-text,.hw-item.done .hw-sub{text-decoration:line-through;opacity:.5;}
+.hw-check{width:22px;height:22px;border-radius:7px;border:2px solid var(--border);display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;transition:all .15s;}
+.hw-item.done .hw-check{background:var(--green);border-color:var(--green);}
+.hw-check-ico{font-size:12px;display:none;}
+.hw-item.done .hw-check-ico{display:block;}
+.hw-info{flex:1;}
+.hw-text{font-size:13px;font-weight:700;color:var(--text);margin-bottom:3px;}
+.hw-sub{font-size:11.5px;color:var(--muted);}
+.hw-due{padding:3px 9px;border-radius:8px;font-size:10px;font-weight:800;white-space:nowrap;}
+.hw-due.urgent{background:rgba(239,68,68,0.15);color:#F87171;border:1px solid rgba(239,68,68,0.2);}
+.hw-due.soon{background:rgba(245,158,11,0.15);color:#FCD34D;border:1px solid rgba(245,158,11,0.2);}
+.hw-due.ok{background:rgba(34,197,94,0.15);color:#4ADE80;border:1px solid rgba(34,197,94,0.2);}
+.hw-due.done-tag{background:var(--surface2);color:var(--muted);}
+
+/* ─ ATTENDANCE TAB ─ */
+.att-summary-strip{display:flex;gap:10px;margin-bottom:16px;}
+.att-sum-box{flex:1;background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:14px 12px;text-align:center;}
+.att-sum-val{font-size:20px;font-weight:900;color:var(--text);margin-bottom:2px;}
+.att-sum-lbl{font-size:10px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.4px;}
+.att-calendar{background:var(--surface);border:1px solid var(--border);border-radius:20px;padding:16px;margin-bottom:16px;}
+.att-cal-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;}
+.att-month{font-size:14px;font-weight:800;color:var(--text);}
+.att-nav-btn{width:28px;height:28px;border-radius:8px;background:var(--surface2);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:14px;color:var(--muted);}
+.att-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:5px;}
+.att-day-hdr{font-size:9.5px;font-weight:700;color:var(--muted);text-align:center;padding:4px 0;}
+.att-day{width:100%;aspect-ratio:1;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;}
+.att-p{background:rgba(34,197,94,0.18);color:#4ADE80;}
+.att-a{background:rgba(239,68,68,0.18);color:#F87171;}
+.att-l{background:rgba(245,158,11,0.18);color:#FCD34D;}
+.att-e{background:transparent;color:var(--soft);}
+.att-legend{display:flex;gap:14px;margin-top:12px;justify-content:center;}
+.att-leg-item{display:flex;align-items:center;gap:6px;font-size:11px;color:var(--muted);}
+.att-leg-dot{width:8px;height:8px;border-radius:3px;}
+.att-subj-card{background:var(--surface);border:1px solid var(--border);border-radius:20px;overflow:hidden;margin-bottom:16px;}
+.att-subj-item{display:flex;align-items:center;gap:12px;padding:13px 16px;border-bottom:1px solid var(--border);}
+.att-subj-item:last-child{border-bottom:none;}
+.att-subj-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;}
+.att-subj-name{font-size:13px;font-weight:700;color:var(--text);flex:1;}
+.att-subj-pct{font-size:13px;font-weight:800;}
+.att-subj-bar-wrap{width:80px;height:5px;background:var(--surface2);border-radius:3px;}
+.att-subj-bar{height:100%;border-radius:3px;}
+
+/* ─ TIMETABLE ─ */
+.timetable-card{background:var(--surface);border:1px solid var(--border);border-radius:20px;overflow:hidden;margin-bottom:16px;}
+.tt-item{display:flex;align-items:center;gap:12px;padding:13px 16px;border-bottom:1px solid var(--border);}
+.tt-item:last-child{border-bottom:none;}
+.tt-time{font-size:12px;font-weight:700;color:var(--muted);min-width:55px;}
+.tt-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;}
+.tt-info{flex:1;}
+.tt-subj{font-size:13px;font-weight:800;color:var(--text);}
+.tt-room{font-size:11px;color:var(--muted);}
+.tt-badge{font-size:11px;font-weight:800;padding:4px 10px;border-radius:10px;white-space:nowrap;}
+.b-now{background:rgba(34,197,94,0.15);color:#4ADE80;border:1px solid rgba(34,197,94,0.2);}
+.b-next{background:rgba(79,110,247,0.15);color:#93C5FD;border:1px solid rgba(79,110,247,0.2);}
+.b-done{background:var(--surface2);color:var(--muted);}
+.b-later{background:rgba(245,158,11,0.15);color:#FCD34D;border:1px solid rgba(245,158,11,0.2);}
+
+/* ─ BOTTOM NAV ─ */
+.bot-nav{position:absolute;bottom:0;left:0;right:0;height:80px;background:var(--surface);border-top:1px solid var(--border);display:flex;align-items:center;justify-content:space-around;padding:0 8px 12px;z-index:50;}
+.nav-item{display:flex;flex-direction:column;align-items:center;gap:4px;padding:8px 14px;border-radius:14px;cursor:pointer;transition:background .15s;min-width:58px;text-decoration:none;}
+.nav-item.active{background:rgba(79,110,247,0.15);}
+.nav-item svg{width:22px;height:22px;}
+.nav-item.active svg{fill:var(--blue);}
+.nav-item:not(.active) svg{fill:var(--muted);}
+.nav-lbl{font-size:10px;font-weight:700;}
+.nav-item.active .nav-lbl{color:var(--blue);}
+.nav-item:not(.active) .nav-lbl{color:var(--muted);}
+
+/* TOAST */
+.toast-notif{position:absolute;bottom:100px;left:50%;transform:translateX(-50%);background:var(--surface2);border:1px solid rgba(79,110,247,0.3);border-radius:14px;padding:10px 16px;font-size:12px;font-weight:700;color:#93C5FD;white-space:nowrap;z-index:300;opacity:0;transition:opacity .3s;pointer-events:none;}
+.toast-notif.show{opacity:1;}
+@keyframes fadeUp{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:translateY(0);}}
+
+/* XP progress bar */
+.xp-bar-wrap{height:5px;background:var(--surface2);border-radius:3px;margin-top:6px;overflow:hidden;}
+.xp-bar{height:100%;background:linear-gradient(90deg,#4F6EF7,#8B5CF6);border-radius:3px;width:68%;transition:width 1s ease;}
+</style>
+</head>
+<body>
+<div class="frame">
+  <div class="status-bar">
+    <span class="s-time">9:41</span>
+    <div class="s-icons">
+      <svg viewBox="0 0 24 24"><path d="M1 9l2 2c4.97-4.97 13.03-4.97 18 0l2-2C16.93 2.93 7.08 2.93 1 9zm8 8l3 3 3-3c-1.65-1.66-4.34-1.66-6 0zm-4-4l2 2c2.76-2.76 7.24-2.76 10 0l2-2C15.14 9.14 8.87 9.14 5 13z"/></svg>
+      <svg viewBox="0 0 24 24"><path d="M15.67 4H14V2h-4v2H8.33C7.6 4 7 4.6 7 5.33v15.33C7 21.4 7.6 22 8.33 22h7.33c.74 0 1.34-.6 1.34-1.33V5.33C17 4.6 16.4 4 15.67 4z"/></svg>
+    </div>
+  </div>
+
+  <!-- HERO -->
+  <div class="hero">
+    <div class="hero-top">
+      <div>
+        <div class="greet-sub">Good Morning, Aarav 👋</div>
+        <div class="greet-name">My Dashboard</div>
+      </div>
+      <div class="notif-wrap">
+        <button class="notif-btn" onclick="toggleNotif()">
+          <svg viewBox="0 0 24 24"><path d="M12 22c1.1 0 2-.9 2-2h-4c0 1.1.9 2 2 2zm6-6v-5c0-3.07-1.64-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.63 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2z"/></svg>
+          <div class="notif-dot"></div>
+        </button>
+        <div class="notif-dropdown" id="notifDrop">
+          <div class="notif-item"><strong>Physics HW</strong> due tomorrow – Newton's Laws worksheet</div>
+          <div class="notif-item"><strong>Ms. Kavita</strong> replied to your nudged doubt</div>
+          <div class="notif-item">New <strong>Term 2 Report</strong> is available</div>
+        </div>
+      </div>
+    </div>
+    <div class="profile-card">
+      <div class="avatar">🧑</div>
+      <div style="flex:1;">
+        <div class="prof-name">Aarav Sharma</div>
+        <div class="prof-class">Class 8A · DPS School · Roll #12</div>
+        <div class="xp-bar-wrap"><div class="xp-bar"></div></div>
+      </div>
+      <div class="xp-badge">⭐ 680 XP</div>
+    </div>
+  </div>
+  <div style="display:flex;gap:6px;padding:8px 22px 0;position:relative;z-index:2;">
+    <div style="background:rgba(139,92,246,0.2);border:1px solid rgba(139,92,246,0.3);border-radius:20px;padding:4px 12px;font-size:11px;font-weight:700;color:#C4B5FD;">🏆 Level 4</div>
+    <div style="background:rgba(34,197,94,0.1);border:1px solid rgba(34,197,94,0.2);border-radius:20px;padding:4px 12px;font-size:11px;font-weight:700;color:#4ADE80;">Growing Consistently ↑</div>
+  </div>
+
+  <!-- TAB BAR -->
+  <div class="tab-bar">
+    <div class="tab active" onclick="switchTab('home',this)">Home</div>
+    <div class="tab" onclick="switchTab('attendance',this)">Attendance</div>
+    <div class="tab" onclick="switchTab('homework',this)">Homework</div>
+    <div class="tab" onclick="switchTab('timetable',this)">Timetable</div>
+  </div>
+
+  <div class="scroll">
+    <div class="inner">
+
+      <!-- ══ HOME TAB ══ -->
+      <div class="tab-content active" id="tab-home">
+
+        <div class="sec-hdr" style="margin-top:4px;">
+          <div class="sec-title">Quick Stats</div>
+        </div>
+        <div class="stats-grid">
+          <div class="stat-card">
+            <div class="stat-ico" style="background:rgba(34,197,94,0.15);"><svg viewBox="0 0 24 24" fill="#4ADE80"><path d="M9 11H7v2h2v-2zm4 0h-2v2h2v-2zm4 0h-2v2h2v-2zm2-7h-1V2h-2v2H8V2H6v2H5c-1.11 0-1.99.9-1.99 2L3 20c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V9h14v11z"/></svg></div>
+            <div class="stat-val">92%</div><div class="stat-lbl">Attendance</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-ico" style="background:rgba(79,110,247,0.15);"><svg viewBox="0 0 24 24" fill="#818CF8"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/></svg></div>
+            <div class="stat-val">A+</div><div class="stat-lbl">Last Grade</div><div style="font-size:9px;color:var(--soft);margin-top:2px;font-weight:500;">Last Assessment</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-ico" style="background:rgba(245,158,11,0.15);"><svg viewBox="0 0 24 24" fill="#FCD34D"><path d="M19 3h-4.18C14.4 1.84 13.3 1 12 1s-2.4.84-2.82 2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 0c.55 0 1 .45 1 1s-.45 1-1 1-1-.45-1-1 .45-1 1-1zm2 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/></svg></div>
+            <div class="stat-val">3</div><div class="stat-lbl">Pending HW</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-ico" style="background:rgba(139,92,246,0.15);"><svg viewBox="0 0 24 24" fill="#C4B5FD"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z"/></svg></div>
+            <div class="stat-val">2</div><div class="stat-lbl">Doubts Sent</div><div style="font-size:9px;color:var(--soft);margin-top:2px;font-weight:500;">Shared with Teachers</div>
+          </div>
+        </div>
+
+        <!-- AI TOOLS -->
+        <div class="sec-hdr">
+          <div class="sec-title">AI Tools</div>
+          <div class="sec-link" onclick="showToast('All tools coming soon!')">See All</div>
+        </div>
+        <div class="tools-grid">
+          <a href="student-ai-lab.html" class="tool-card tool-ai">
+            <span class="tool-icon">🧠</span>
+            <div class="tool-name">AI Learning Lab</div>
+            <div class="tool-desc">Generate images, text & voice prompts</div>
+            <div class="tool-arrow">›</div>
+          </a>
+          <a href="qa-bot.html" class="tool-card tool-qa">
+            <span class="tool-icon">💬</span>
+            <div class="tool-name">Q&A Bot</div>
+            <div class="tool-desc">Ask doubts, nudge teacher</div>
+            <div class="tool-arrow">›</div>
+          </a>
+        </div>
+        <a href="dost-chatbot.html" class="tool-card tool-dost tool-card-wide" style="display:flex;align-items:center;gap:16px;margin-bottom:16px;border-radius:20px;">
+          <span style="font-size:32px;">🍞</span>
+          <div style="flex:1;">
+            <div class="tool-name" style="font-size:14px;">DOST – Emotional Support</div>
+            <div class="tool-desc">Talk to your AI buddy. Mood check-ins, affirmations.</div>
+          </div>
+          <div style="font-size:18px;color:rgba(245,158,11,0.6);">›</div>
+        </a>
+
+        <!-- AI INSIGHT -->
+        <div class="sec-hdr"><div class="sec-title">AI Insight</div></div>
+        <div class="insight-strip">
+          <div class="ins-hdr">
+            <div class="ins-icon"><svg viewBox="0 0 24 24"><path d="M12 2l2.4 7.4H22l-6.2 4.5 2.4 7.4L12 17l-6.2 4.3 2.4-7.4L2 9.4h7.6z"/></svg></div>
+            <div class="ins-label">Your Weekly AI Summary</div>
+          </div>
+          <div class="ins-text">You're excelling in <strong>Creative Thinking</strong> and <strong>Analytical Reasoning</strong>. Your <strong>Physics doubt</strong> on Newton's Laws was answered by Ms. Kavita. Try completing <strong>3 pending HW</strong> tasks today for a streak bonus! 🔥</div>
+          <div style="margin-top:10px;padding-top:8px;border-top:1px solid rgba(99,102,241,0.15);font-size:10.5px;color:var(--muted);display:flex;align-items:center;gap:5px;"><span>🔄</span>Generated from your weekly activity.</div>
+        </div>
+
+        <!-- TODAY'S HW PREVIEW -->
+        <div class="sec-hdr">
+          <div class="sec-title">Due Today</div>
+          <div class="sec-link" onclick="switchTab('homework',document.querySelector('.tab:nth-child(3)'))">All HW →</div>
+        </div>
+        <div class="hw-card">
+          <div class="hw-item" id="hw-today1" onclick="toggleHW('hw-today1')">
+            <div class="hw-check"><span class="hw-check-ico">✓</span></div>
+            <div class="hw-info">
+              <div class="hw-text">Newton's Laws Worksheet</div>
+              <div class="hw-sub">Physics · Ch. 5</div>
+            </div>
+            <div class="hw-due urgent">Due Today</div>
+          </div>
+          <div class="hw-item" id="hw-today2" onclick="toggleHW('hw-today2')">
+            <div class="hw-check"><span class="hw-check-ico">✓</span></div>
+            <div class="hw-info">
+              <div class="hw-text">Mean, Median, Mode Problems</div>
+              <div class="hw-sub">Mathematics · Ex. 14.1</div>
+            </div>
+            <div class="hw-due soon">Due Tomorrow</div>
+          </div>
+        </div>
+
+      </div><!-- /home tab -->
+
+      <!-- ══ ATTENDANCE TAB ══ -->
+      <div class="tab-content" id="tab-attendance">
+
+        <div class="att-summary-strip" style="margin-top:4px;">
+          <div class="att-sum-box">
+            <div class="att-sum-val" style="color:#4ADE80;">92%</div>
+            <div class="att-sum-lbl">Overall</div>
+          </div>
+          <div class="att-sum-box">
+            <div class="att-sum-val">18</div>
+            <div class="att-sum-lbl">Present</div>
+          </div>
+          <div class="att-sum-box">
+            <div class="att-sum-val" style="color:#F87171;">2</div>
+            <div class="att-sum-lbl">Absent</div>
+          </div>
+          <div class="att-sum-box">
+            <div class="att-sum-val" style="color:#FCD34D;">1</div>
+            <div class="att-sum-lbl">Leave</div>
+          </div>
+        </div>
+
+        <div style="background:rgba(34,197,94,0.08);border:1px solid rgba(34,197,94,0.15);border-radius:14px;padding:10px 14px;margin-bottom:14px;display:flex;align-items:center;gap:8px;">
+          <span style="font-size:18px;">👏</span>
+          <div><div style="font-size:12px;font-weight:700;color:#4ADE80;">Excellent consistency!</div><div style="font-size:11px;color:var(--muted);margin-top:1px;">You're in the top 10% for attendance this month.</div></div>
+        </div>
+        <div class="att-calendar">
+          <div class="att-cal-hdr">
+            <div class="att-nav-btn">‹</div>
+            <div class="att-month">February 2025</div>
+            <div class="att-nav-btn">›</div>
+          </div>
+          <div class="att-grid">
+            <div class="att-day-hdr">M</div><div class="att-day-hdr">T</div><div class="att-day-hdr">W</div><div class="att-day-hdr">T</div><div class="att-day-hdr">F</div><div class="att-day-hdr">S</div><div class="att-day-hdr">S</div>
+            <!-- Week 1 (starts Fri) -->
+            <div class="att-day att-e"></div><div class="att-day att-e"></div><div class="att-day att-e"></div><div class="att-day att-e"></div><div class="att-day att-p">1</div><div class="att-day att-p">2</div><div class="att-day att-e"></div>
+            <!-- Week 2 -->
+            <div class="att-day att-p">5</div><div class="att-day att-p">6</div><div class="att-day att-p">7</div><div class="att-day att-a">8</div><div class="att-day att-p">9</div><div class="att-day att-l">10</div><div class="att-day att-e"></div>
+            <!-- Week 3 -->
+            <div class="att-day att-p">12</div><div class="att-day att-p">13</div><div class="att-day att-p">14</div><div class="att-day att-p">15</div><div class="att-day att-a">16</div><div class="att-day att-p">17</div><div class="att-day att-e"></div>
+            <!-- Week 4 -->
+            <div class="att-day att-p">19</div><div class="att-day att-p">20</div><div class="att-day att-p">21</div><div class="att-day att-p">22</div><div class="att-day att-p" style="border:2px solid var(--blue);">23</div><div class="att-day att-e"></div><div class="att-day att-e"></div>
+          </div>
+          <div class="att-legend">
+            <div class="att-leg-item"><div class="att-leg-dot" style="background:rgba(34,197,94,0.6);"></div>Present</div>
+            <div class="att-leg-item"><div class="att-leg-dot" style="background:rgba(239,68,68,0.6);"></div>Absent</div>
+            <div class="att-leg-item"><div class="att-leg-dot" style="background:rgba(245,158,11,0.6);"></div>Leave</div>
+          </div>
+        </div>
+
+        <div class="sec-hdr"><div class="sec-title">Subject-wise Attendance</div></div>
+        <div class="att-subj-card">
+          <div class="att-subj-item">
+            <div class="att-subj-dot" style="background:#4ADE80;"></div>
+            <div class="att-subj-name">Mathematics</div>
+            <div class="att-subj-bar-wrap"><div class="att-subj-bar" style="width:96%;background:#4ADE80;"></div></div>
+            <div class="att-subj-pct" style="color:#4ADE80;">96%</div>
+          </div>
+          <div class="att-subj-item">
+            <div class="att-subj-dot" style="background:#4ADE80;"></div>
+            <div class="att-subj-name">Science</div>
+            <div class="att-subj-bar-wrap"><div class="att-subj-bar" style="width:94%;background:#4ADE80;"></div></div>
+            <div class="att-subj-pct" style="color:#4ADE80;">94%</div>
+          </div>
+          <div class="att-subj-item">
+            <div class="att-subj-dot" style="background:#93C5FD;"></div>
+            <div class="att-subj-name">English</div>
+            <div class="att-subj-bar-wrap"><div class="att-subj-bar" style="width:90%;background:#93C5FD;"></div></div>
+            <div class="att-subj-pct" style="color:#93C5FD;">90%</div>
+          </div>
+          <div class="att-subj-item">
+            <div class="att-subj-dot" style="background:#FCD34D;"></div>
+            <div class="att-subj-name">Hindi</div>
+            <div class="att-subj-bar-wrap"><div class="att-subj-bar" style="width:85%;background:#FCD34D;"></div></div>
+            <div class="att-subj-pct" style="color:#FCD34D;">85%</div>
+          </div>
+          <div class="att-subj-item">
+            <div class="att-subj-dot" style="background:#F87171;"></div>
+            <div class="att-subj-name">Physical Ed.</div>
+            <div class="att-subj-bar-wrap"><div class="att-subj-bar" style="width:78%;background:#F87171;"></div></div>
+            <div class="att-subj-pct" style="color:#F87171;">78%</div>
+          </div>
+        </div>
+
+      </div><!-- /attendance tab -->
+
+      <!-- ══ HOMEWORK TAB ══ -->
+      <div class="tab-content" id="tab-homework">
+
+        <div class="sec-hdr" style="margin-top:4px;"><div class="sec-title">Pending</div><div class="sec-link" style="color:#F87171;">3 Due</div></div>
+        <div class="hw-card">
+          <div class="hw-item" id="hw1" onclick="toggleHW('hw1')">
+            <div class="hw-check"><span class="hw-check-ico">✓</span></div>
+            <div class="hw-info">
+              <div class="hw-text">Newton's Laws Worksheet</div>
+              <div class="hw-sub">Physics · Ch. 5 · Ms. Kavita</div>
+            </div>
+            <div class="hw-due urgent">Today</div>
+          </div>
+          <div class="hw-item" id="hw2" onclick="toggleHW('hw2')">
+            <div class="hw-check"><span class="hw-check-ico">✓</span></div>
+            <div class="hw-info">
+              <div class="hw-text">Mean, Median & Mode – Ex. 14.1</div>
+              <div class="hw-sub">Mathematics · Ch. 14 · Mr. Rajan</div>
+            </div>
+            <div class="hw-due soon">Tomorrow</div>
+          </div>
+          <div class="hw-item" id="hw3" onclick="toggleHW('hw3')">
+            <div class="hw-check"><span class="hw-check-ico">✓</span></div>
+            <div class="hw-info">
+              <div class="hw-text">Mitosis vs Meiosis Diagram</div>
+              <div class="hw-sub">Biology · Ch. 8 · Ms. Anand</div>
+            </div>
+            <div class="hw-due ok">Feb 26</div>
+          </div>
+        </div>
+
+        <div class="sec-hdr"><div class="sec-title">Completed</div></div>
+        <div class="hw-card">
+          <div class="hw-item done" id="hw4" onclick="toggleHW('hw4')">
+            <div class="hw-check" style="background:var(--green);border-color:var(--green);"><span class="hw-check-ico" style="display:block;">✓</span></div>
+            <div class="hw-info">
+              <div class="hw-text">Shakespeare Essay – 500 words</div>
+              <div class="hw-sub">English · Ms. Priya</div>
+            </div>
+            <div class="hw-due done-tag">Done</div>
+          </div>
+          <div class="hw-item done" id="hw5" onclick="toggleHW('hw5')">
+            <div class="hw-check" style="background:var(--green);border-color:var(--green);"><span class="hw-check-ico" style="display:block;">✓</span></div>
+            <div class="hw-info">
+              <div class="hw-text">Trigonometry Practice Set</div>
+              <div class="hw-sub">Mathematics · Mr. Rajan</div>
+            </div>
+            <div class="hw-due done-tag">Done</div>
+          </div>
+        </div>
+
+      </div><!-- /homework tab -->
+
+      <!-- ══ TIMETABLE TAB ══ -->
+      <div class="tab-content" id="tab-timetable">
+        <div class="sec-hdr" style="margin-top:4px;"><div class="sec-title">Today · Monday, Feb 23</div></div>
+        <div class="timetable-card">
+          <div class="tt-item">
+            <div class="tt-time">8:00 AM</div>
+            <div class="tt-dot" style="background:#22C55E;"></div>
+            <div class="tt-info"><div class="tt-subj">Mathematics</div><div class="tt-room">Room 204 · Mr. Rajan</div></div>
+            <div class="tt-badge b-done">Done</div>
+          </div>
+          <div class="tt-item">
+            <div class="tt-time">9:30 AM</div>
+            <div class="tt-dot" style="background:#4F6EF7;box-shadow:0 0 6px rgba(79,110,247,0.6);"></div>
+            <div class="tt-info"><div class="tt-subj">Physics</div><div class="tt-room">Room 101 · Ms. Kavita</div></div>
+            <div class="tt-badge b-now">Now</div>
+          </div>
+          <div class="tt-item">
+            <div class="tt-time">11:00 AM</div>
+            <div class="tt-dot" style="background:#8B5CF6;"></div>
+            <div class="tt-info"><div class="tt-subj">English</div><div class="tt-room">Room 305 · Ms. Priya</div></div>
+            <div class="tt-badge b-next">Next</div>
+          </div>
+          <div class="tt-item">
+            <div class="tt-time">12:00 PM</div>
+            <div class="tt-dot" style="background:#6B7280;"></div>
+            <div class="tt-info"><div class="tt-subj">Lunch Break</div><div class="tt-room">Cafeteria</div></div>
+            <div class="tt-badge b-later">Later</div>
+          </div>
+          <div class="tt-item">
+            <div class="tt-time">1:00 PM</div>
+            <div class="tt-dot" style="background:#F59E0B;"></div>
+            <div class="tt-info"><div class="tt-subj">Hindi</div><div class="tt-room">Room 202 · Ms. Sharma</div></div>
+            <div class="tt-badge b-later">Later</div>
+          </div>
+          <div class="tt-item">
+            <div class="tt-time">2:30 PM</div>
+            <div class="tt-dot" style="background:#22C55E;"></div>
+            <div class="tt-info"><div class="tt-subj">Physical Ed.</div><div class="tt-room">Playground</div></div>
+            <div class="tt-badge b-later">Later</div>
+          </div>
+        </div>
+      </div><!-- /timetable tab -->
+
+    </div>
+  </div>
+
+  <!-- BOTTOM NAV -->
+  <div class="bot-nav">
+    <div class="nav-item active"><svg viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg><span class="nav-lbl">Home</span></div>
+    <a class="nav-item" href="student-ai-lab.html"><svg viewBox="0 0 24 24"><path d="M12 2a10 10 0 100 20A10 10 0 0012 2zm1 17.93V18a1 1 0 00-2 0v1.93A8.001 8.001 0 014.07 13H6a1 1 0 000-2H4.07A8.001 8.001 0 0111 4.07V6a1 1 0 002 0V4.07A8.001 8.001 0 0119.93 11H18a1 1 0 000 2h1.93A8.001 8.001 0 0113 19.93z"/></svg><span class="nav-lbl">AI Lab</span></a>
+    <a class="nav-item" href="qa-bot.html"><svg viewBox="0 0 24 24"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-2 12H6v-2h12v2zm0-3H6V9h12v2zm0-3H6V6h12v2z"/></svg><span class="nav-lbl">Q&A Bot</span></a>
+    <a class="nav-item" href="dost-chatbot.html"><svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14H9V8h2v8zm4 0h-2V8h2v8z"/></svg><span class="nav-lbl">DOST</span></a>
+  </div>
+
+  <div class="toast-notif" id="toast"></div>
+</div>
+
+<script>
+// Tab switching
+function switchTab(name, el){
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('.tab-content').forEach(c=>c.classList.remove('active'));
+  if(el) el.classList.add('active');
+  else document.querySelector('.tab')?.classList.add('active');
+  document.getElementById('tab-'+name).classList.add('active');
+}
+
+// Notification toggle
+function toggleNotif(){
+  document.getElementById('notifDrop').classList.toggle('show');
+}
+document.addEventListener('click', e=>{
+  if(!e.target.closest('.notif-wrap')) document.getElementById('notifDrop').classList.remove('show');
+});
+
+// HW toggle done/undone
+const pendingHWIds = ['hw1','hw2','hw3'];
+
+function checkHWEmpty(){
+  const pendingCard = document.querySelector('#tab-homework .sec-hdr + .hw-card');
+  if(!pendingCard) return;
+  const remaining = pendingCard.querySelectorAll('.hw-item:not(.done)');
+  let empty = document.getElementById('hw-empty-state');
+  if(remaining.length === 0){
+    if(!empty){
+      empty = document.createElement('div');
+      empty.id='hw-empty-state';
+      empty.style.cssText='padding:28px 16px;text-align:center;animation:fadeUp .3s ease;';
+      empty.innerHTML=`
+        <div style="font-size:36px;margin-bottom:10px;">🎉</div>
+        <div style="font-size:14px;font-weight:800;color:var(--text);margin-bottom:6px;">You're all caught up!</div>
+        <div style="font-size:12px;color:var(--muted);line-height:1.6;">No pending homework for today.<br>Keep up the great work! 🔥</div>`;
+      pendingCard.appendChild(empty);
+    } else {
+      empty.style.display = '';
+    }
+  } else {
+    if(empty) empty.style.display = 'none';
+  }
+}
+
+function toggleHW(id){
+  const el = document.getElementById(id);
+  el.classList.toggle('done');
+  const isDone = el.classList.contains('done');
+  const dueEl = el.querySelector('.hw-due');
+  if(isDone && dueEl){
+    dueEl.className='hw-due done-tag';
+    dueEl.textContent='Done';
+    showToast('✅ Marked as done! +20 XP');
+    if(pendingHWIds.includes(id)){
+      // Move the completed item to the Completed section card
+      const completedCard = document.querySelectorAll('#tab-homework .hw-card')[1];
+      if(completedCard){ completedCard.prepend(el); }
+      checkHWEmpty();
+    }
+  } else if(dueEl && dueEl.classList.contains('done-tag')){
+    dueEl.className='hw-due ok';
+    dueEl.textContent='Pending';
+  }
+}
+
+// Toast
+function showToast(msg){
+  const t=document.getElementById('toast');
+  t.textContent=msg; t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),2400);
+}
+</script>
+</body>
+</html>

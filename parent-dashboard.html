@@ -1,0 +1,635 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0">
+<title>Class Signal – Parent Dashboard</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+*{margin:0;padding:0;box-sizing:border-box;}
+:root{--blue:#4F6EF7;--indigo:#6366F1;--purple:#8B5CF6;--green:#22C55E;--amber:#F59E0B;--red:#EF4444;--bg:#0F1117;--surface:#1A1D27;--surface2:#22263A;--surface3:#2A2E45;--border:#2A2E45;--text:#F0F2FF;--muted:#7B82A8;--soft:#3A3F5C;}
+body{font-family:'Inter',sans-serif;background:#0A0C12;min-height:100vh;display:flex;justify-content:center;align-items:flex-start;padding:20px;}
+.frame{width:390px;min-height:844px;background:var(--bg);border-radius:48px;box-shadow:0 40px 100px rgba(0,0,0,0.7),0 0 0 1px var(--border);overflow:hidden;position:relative;display:flex;flex-direction:column;}
+.status-bar{height:50px;display:flex;align-items:center;justify-content:space-between;padding:0 28px;position:absolute;top:0;left:0;right:0;z-index:20;}
+.s-time{font-size:15px;font-weight:700;color:white;}
+.s-icons{display:flex;gap:5px;align-items:center;}
+.s-icons svg{width:15px;height:15px;fill:white;}
+
+/* Hero */
+.hero{background:linear-gradient(160deg,#1E2456 0%,#2D1B69 50%,#1A1D4E 100%);padding:60px 22px 30px;position:relative;overflow:hidden;flex-shrink:0;}
+.hero::before{content:'';position:absolute;top:-60px;right:-60px;width:220px;height:220px;background:radial-gradient(circle,rgba(139,92,246,0.25) 0%,transparent 70%);}
+.hero::after{content:'';position:absolute;bottom:-80px;left:-40px;width:200px;height:200px;background:radial-gradient(circle,rgba(79,110,247,0.2) 0%,transparent 70%);}
+.hero-top{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:18px;position:relative;z-index:2;}
+.greet-sub{color:rgba(255,255,255,0.65);font-size:13px;font-weight:500;margin-bottom:3px;}
+.greet-name{color:white;font-size:22px;font-weight:800;letter-spacing:-.3px;}
+.notif-wrap{position:relative;}
+.notif-btn{width:42px;height:42px;background:rgba(255,255,255,0.12);border:1px solid rgba(255,255,255,0.18);border-radius:13px;display:flex;align-items:center;justify-content:center;cursor:pointer;border:none;}
+.notif-btn svg{width:20px;height:20px;fill:white;}
+.notif-dot{position:absolute;top:8px;right:8px;width:8px;height:8px;background:#FF5C5C;border-radius:50%;border:2px solid #1E2456;}
+.notif-dropdown{position:absolute;top:52px;right:0;width:260px;background:var(--surface2);border:1px solid var(--border);border-radius:18px;padding:12px;box-shadow:0 16px 48px rgba(0,0,0,0.5);z-index:9999;display:none;}
+.notif-dropdown.show{display:block;}
+.notif-item{padding:10px 12px;border-radius:10px;font-size:12.5px;color:var(--text);border-bottom:1px solid var(--border);margin-bottom:4px;line-height:1.45;}
+.notif-item:last-child{border-bottom:none;margin-bottom:0;}
+.notif-item strong{color:var(--blue);}
+
+/* profile card */
+.profile-card{background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.16);border-radius:20px;padding:14px 18px;display:flex;align-items:center;gap:14px;position:relative;z-index:2;backdrop-filter:blur(10px);}
+.avatar{width:52px;height:52px;border-radius:15px;background:linear-gradient(135deg,#FDE68A,#F59E0B);display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0;border:2px solid rgba(255,255,255,0.3);}
+.prof-name{color:white;font-size:17px;font-weight:800;margin-bottom:3px;}
+.prof-class{color:rgba(255,255,255,0.65);font-size:12.5px;}
+.status-badge{padding:5px 11px;border-radius:20px;font-size:11px;font-weight:800;letter-spacing:.3px;white-space:nowrap;}
+.badge-improving{background:rgba(34,197,94,0.25);color:#4ADE80;border:1px solid rgba(34,197,94,0.3);}
+.badge-attention{background:rgba(245,158,11,0.25);color:#FCD34D;border:1px solid rgba(245,158,11,0.3);}
+
+/* scroll */
+.scroll{flex:1;overflow-y:auto;padding-bottom:90px;}
+.scroll::-webkit-scrollbar{display:none;}
+.inner{padding:18px 16px 0;}
+
+.sec-hdr{display:flex;align-items:center;justify-content:space-between;margin:0 0 12px;}
+.sec-title{font-size:15px;font-weight:800;color:var(--text);}
+.sec-link{font-size:13px;font-weight:600;color:var(--blue);cursor:pointer;}
+
+/* radar card */
+.radar-card{background:var(--surface);border-radius:22px;padding:20px 18px 16px;border:1px solid var(--border);margin-bottom:16px;position:relative;overflow:visible;}
+.radar-sub{font-size:11.5px;color:var(--muted);margin-bottom:6px;}
+.radar-updated{font-size:10px;color:var(--soft);margin-bottom:14px;display:flex;align-items:center;gap:5px;}
+.radar-wrap{position:relative;display:flex;align-items:center;justify-content:center;height:320px;}
+#radar{position:relative;z-index:2;display:block;}
+.radar-tooltip{position:absolute;background:linear-gradient(135deg,#1E2256,#221B44);border:1px solid rgba(99,102,241,0.4);border-radius:12px;padding:8px 14px;font-size:12px;font-weight:700;color:var(--text);pointer-events:none;opacity:0;transition:opacity .2s,transform .2s;white-space:nowrap;z-index:10;box-shadow:0 8px 24px rgba(0,0,0,0.4);transform:translateY(4px);}
+.radar-tooltip.show{opacity:1;transform:translateY(0);}
+.radar-tooltip-val{color:#A5B4FC;font-size:15px;font-weight:900;display:block;margin-top:1px;}
+.legend{display:flex;gap:18px;margin-top:4px;}
+.leg-item{display:flex;align-items:center;gap:6px;font-size:11px;color:var(--muted);}
+.leg-dot{width:10px;height:10px;border-radius:3px;}
+/* score pills shown at each radar vertex */
+#radarPills{position:absolute;inset:0;pointer-events:none;z-index:5;}
+.radar-score-pill{position:absolute;background:rgba(99,102,241,0.18);border:1px solid rgba(99,102,241,0.35);border-radius:20px;padding:2px 7px;font-size:10px;font-weight:800;color:#C4B5FD;pointer-events:none;white-space:nowrap;}
+
+/* insight */
+.insight-card{background:linear-gradient(135deg,rgba(99,102,241,0.12),rgba(139,92,246,0.08));border:1px solid rgba(99,102,241,0.2);border-radius:20px;padding:16px 18px;margin-bottom:16px;}
+.ins-hdr{display:flex;align-items:center;gap:10px;margin-bottom:10px;}
+.ins-icon{width:32px;height:32px;background:linear-gradient(135deg,var(--blue),var(--purple));border-radius:10px;display:flex;align-items:center;justify-content:center;}
+.ins-icon svg{width:16px;height:16px;fill:white;}
+.ins-label{font-size:13px;font-weight:800;color:#A5B4FC;}
+.ins-badge{margin-left:auto;background:var(--indigo);color:white;font-size:10px;font-weight:800;padding:3px 9px;border-radius:10px;}
+.ins-text{font-size:13px;color:rgba(240,242,255,0.7);line-height:1.65;}
+.ins-text strong{color:var(--text);}
+
+/* stats */
+.stats-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px;}
+.stat-card{background:var(--surface);border:1px solid var(--border);border-radius:18px;padding:16px 14px;}
+.stat-ico{width:36px;height:36px;border-radius:11px;display:flex;align-items:center;justify-content:center;margin-bottom:10px;}
+.stat-ico svg{width:18px;height:18px;}
+.stat-val{font-size:22px;font-weight:900;color:var(--text);margin-bottom:2px;}
+.stat-lbl{font-size:10.5px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.4px;}
+
+/* remark */
+.remark-card{background:var(--surface);border:1px solid var(--border);border-radius:20px;padding:16px 18px;margin-bottom:16px;}
+.rem-hdr{display:flex;align-items:center;gap:10px;margin-bottom:10px;}
+.rem-av{width:38px;height:38px;border-radius:12px;background:linear-gradient(135deg,#5B21B6,#7C3AED);display:flex;align-items:center;justify-content:center;font-size:16px;}
+.rem-name{font-size:13px;font-weight:800;color:var(--text);}
+.rem-sub{font-size:11px;color:var(--muted);}
+.rem-date{margin-left:auto;font-size:11px;color:var(--muted);}
+.rem-text{font-size:13px;color:rgba(240,242,255,0.65);line-height:1.6;border-left:3px solid var(--purple);padding-left:12px;font-style:italic;}
+
+/* trend */
+.trend-card{background:var(--surface);border:1px solid var(--border);border-radius:20px;padding:16px 18px;margin-bottom:16px;}
+.trend-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;}
+.trend-title{font-size:14px;font-weight:800;color:var(--text);}
+.trend-tag{background:rgba(34,197,94,0.15);color:#4ADE80;font-size:11px;font-weight:800;padding:4px 10px;border-radius:20px;border:1px solid rgba(34,197,94,0.2);}
+.bars-wrap{display:flex;gap:6px;align-items:flex-end;height:64px;}
+.bar-col{flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;height:100%;justify-content:flex-end;}
+.bar{width:100%;border-radius:5px 5px 0 0;transition:opacity .15s;cursor:pointer;}
+.bar:hover{opacity:.8;}
+.bar-lbl{font-size:9.5px;color:var(--muted);font-weight:700;}
+
+/* parent panels (attendance + reports overlay) */
+.parent-panel{position:absolute;inset:0;background:rgba(0,0,0,0.65);display:none;align-items:flex-end;z-index:200;backdrop-filter:blur(6px);}
+.parent-panel.show{display:flex;}
+.panel-sheet{width:100%;background:var(--surface);border-radius:28px 28px 0 0;padding:22px 22px 40px;border-top:1px solid var(--border);max-height:80%;}
+.panel-handle{width:36px;height:4px;background:var(--border);border-radius:2px;margin:0 auto 18px;}
+.panel-title{font-size:18px;font-weight:900;color:var(--text);margin-bottom:4px;}
+.panel-sub{font-size:12.5px;color:var(--muted);margin-bottom:18px;}
+.attend-month-row{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;margin-bottom:12px;}
+.att-day-hdr{font-size:9.5px;font-weight:700;color:var(--muted);text-align:center;padding:4px 0;}
+.att-day{width:100%;aspect-ratio:1;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:10.5px;font-weight:700;}
+.att-p{background:rgba(34,197,94,0.18);color:#4ADE80;}
+.att-a{background:rgba(239,68,68,0.18);color:#F87171;}
+.att-l{background:rgba(245,158,11,0.18);color:#FCD34D;}
+.att-e{background:transparent;color:var(--soft);}
+.att-legend{display:flex;gap:12px;margin-top:8px;}
+.att-leg-item{display:flex;align-items:center;gap:5px;font-size:11px;color:var(--muted);}
+.att-leg-dot{width:8px;height:8px;border-radius:3px;}
+.report-item{display:flex;align-items:center;gap:14px;padding:12px 14px;background:var(--surface2);border-radius:14px;margin-bottom:10px;border:1px solid var(--border);}
+.rep-icon{width:38px;height:38px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;}
+.rep-info{flex:1;}
+.rep-name{font-size:13px;font-weight:800;color:var(--text);margin-bottom:2px;}
+.rep-date{font-size:11px;color:var(--muted);}
+.rep-btn{padding:6px 13px;border-radius:9px;border:none;background:rgba(79,110,247,0.2);color:#93C5FD;font-size:11px;font-weight:700;cursor:pointer;font-family:'Inter',sans-serif;}
+.panel-close{width:100%;margin-top:6px;padding:13px;border-radius:14px;border:1.5px solid var(--border);background:var(--surface2);font-size:14px;font-weight:700;color:var(--muted);cursor:pointer;font-family:'Inter',sans-serif;}
+
+/* nav */
+.bot-nav{position:absolute;bottom:0;left:0;right:0;height:80px;background:var(--surface);border-top:1px solid var(--border);display:flex;align-items:center;justify-content:space-around;padding:0 8px 12px;z-index:50;}
+.nav-item{display:flex;flex-direction:column;align-items:center;gap:4px;padding:8px 14px;border-radius:14px;cursor:pointer;transition:background .15s;min-width:58px;text-decoration:none;}
+.nav-item.active{background:rgba(79,110,247,0.15);}
+.nav-item svg{width:22px;height:22px;}
+.nav-item.active svg{fill:var(--blue);}
+.nav-item:not(.active) svg{fill:var(--muted);}
+.nav-lbl{font-size:10px;font-weight:700;}
+.nav-item.active .nav-lbl{color:var(--blue);}
+.nav-item:not(.active) .nav-lbl{color:var(--muted);}
+</style>
+</head>
+<body>
+<div class="frame">
+  <div class="status-bar">
+    <span class="s-time">9:41</span>
+    <div class="s-icons">
+      <svg viewBox="0 0 24 24"><path d="M1 9l2 2c4.97-4.97 13.03-4.97 18 0l2-2C16.93 2.93 7.08 2.93 1 9zm8 8l3 3 3-3c-1.65-1.66-4.34-1.66-6 0zm-4-4l2 2c2.76-2.76 7.24-2.76 10 0l2-2C15.14 9.14 8.87 9.14 5 13z"/></svg>
+      <svg viewBox="0 0 24 24"><path d="M15.67 4H14V2h-4v2H8.33C7.6 4 7 4.6 7 5.33v15.33C7 21.4 7.6 22 8.33 22h7.33c.74 0 1.34-.6 1.34-1.33V5.33C17 4.6 16.4 4 15.67 4z"/></svg>
+    </div>
+  </div>
+
+  <div class="hero">
+    <div class="hero-top">
+      <div>
+        <div class="greet-sub">Good Morning, Priya 👋</div>
+        <div class="greet-name">Student Overview</div>
+      </div>
+      <div class="notif-wrap">
+        <button class="notif-btn" onclick="toggleNotif()">
+          <svg viewBox="0 0 24 24"><path d="M12 22c1.1 0 2-.9 2-2h-4c0 1.1.9 2 2 2zm6-6v-5c0-3.07-1.64-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.63 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2z"/></svg>
+          <div class="notif-dot"></div>
+        </button>
+        <div class="notif-dropdown" id="notifDrop">
+          <div class="notif-item"><strong>Ms. Kavita</strong> added a new remark for Aarav · 2h ago</div>
+          <div class="notif-item">Attendance alert: <strong>3 absences</strong> this month</div>
+          <div class="notif-item">New report card ready for <strong>Term 2</strong></div>
+        </div>
+      </div>
+    </div>
+    <div class="profile-card">
+      <div class="avatar">🧑</div>
+      <div style="flex:1">
+        <div class="prof-name">Aarav Sharma</div>
+        <div class="prof-class">Class 8 – Section A · DPS School</div>
+      </div>
+      <div class="status-badge badge-improving">↑ Improving</div>
+    </div>
+  </div>
+
+  <div class="scroll">
+    <div class="inner">
+
+      <div class="sec-hdr" style="margin-top:4px;">
+        <div class="sec-title">Growth Radar</div>
+        <div class="sec-link" onclick="alert('Full report coming soon!')">Full Report →</div>
+      </div>
+
+      <div class="radar-card">
+        <div class="radar-sub">AI-mapped across 6 growth dimensions</div>
+        <div class="radar-updated">🔄 Updated weekly · Based on academic & behavioural signals</div>
+        <div class="radar-wrap" id="radarWrap">
+          <canvas id="radar" width="320" height="310"></canvas>
+          <div class="radar-tooltip" id="rTip"><span id="rTipLabel">–</span><span class="radar-tooltip-val" id="rTipVal">–</span></div>
+          <div id="radarPills"></div>
+        </div>
+        <div class="legend">
+          <div class="leg-item"><div class="leg-dot" style="background:linear-gradient(135deg,#4F6EF7,#8B5CF6);border-radius:50%;width:10px;height:10px;"></div><span>Aarav</span></div>
+          <div class="leg-item"><div class="leg-dot" style="background:rgba(90,96,140,0.8);border-radius:50%;width:10px;height:10px;"></div><span>Class Avg</span></div>
+        </div>
+      </div>
+
+      <div class="sec-hdr"><div class="sec-title">AI Insight</div><div class="sec-link">Details</div></div>
+      <div class="insight-card">
+        <div class="ins-hdr">
+          <div class="ins-icon"><svg viewBox="0 0 24 24"><path d="M12 2l2.4 7.4H22l-6.2 4.5 2.4 7.4L12 17l-6.2 4.3 2.4-7.4L2 9.4h7.6z"/></svg></div>
+          <div class="ins-label">AI Insight Summary</div>
+        </div>
+        <div class="ins-text">Aarav shows exceptional strength in <strong>Creative Thinking</strong> (88%) and <strong>Analytical Thinking</strong> (82%). His <strong>Emotional Growth</strong> score is at 58% this month — a brief check-in conversation is recommended. Academic Consistency remains on an upward trend. 📈</div>
+          <div style="margin-top:10px;padding-top:8px;border-top:1px solid rgba(99,102,241,0.15);font-size:10.5px;color:rgba(165,180,252,0.6);">Based on marks, attendance, remarks &amp; AI learning patterns.</div>
+      </div>
+
+      <div class="sec-hdr"><div class="sec-title">Quick Stats</div></div>
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-ico" style="background:rgba(34,197,94,0.15);"><svg viewBox="0 0 24 24" fill="#4ADE80"><path d="M9 11H7v2h2v-2zm4 0h-2v2h2v-2zm4 0h-2v2h2v-2zm2-7h-1V2h-2v2H8V2H6v2H5c-1.11 0-1.99.9-1.99 2L3 20c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V9h14v11z"/></svg></div>
+          <div class="stat-val">92%</div><div class="stat-lbl">Attendance</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-ico" style="background:rgba(79,110,247,0.15);"><svg viewBox="0 0 24 24" fill="#818CF8"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/></svg></div>
+          <div class="stat-val">78%</div><div class="stat-lbl">Overall Score</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-ico" style="background:rgba(245,158,11,0.15);"><svg viewBox="0 0 24 24" fill="#FCD34D"><path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67V7z"/></svg></div>
+          <div class="stat-val">3</div><div class="stat-lbl">Pending HW</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-ico" style="background:rgba(139,92,246,0.15);"><svg viewBox="0 0 24 24" fill="#C4B5FD"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg></div>
+          <div class="stat-val">A+</div><div class="stat-lbl">Last Grade</div>
+        </div>
+      </div>
+
+      <div class="sec-hdr"><div class="sec-title">Latest Remark</div><div class="sec-link" onclick="alert('All remarks coming soon!')">All Remarks</div></div>
+      <div class="remark-card">
+        <div class="rem-hdr">
+          <div class="rem-av">👩‍🏫</div>
+          <div><div class="rem-name">Ms. Kavita Reddy</div><div class="rem-sub">Mathematics · Class 8A</div></div>
+          <div class="rem-date">2 days ago</div>
+        </div>
+        <div class="rem-text">"Aarav demonstrated excellent problem-solving ability this week. Showing great improvement in algebra. Encourage geometry practice at home."</div>
+      </div>
+
+      <div class="sec-hdr"><div class="sec-title">Academic Trend</div></div>
+      <div class="trend-card">
+        <div class="trend-top">
+          <div class="trend-title">Last 7 Months</div>
+          <div class="trend-tag">↑ Improving</div>
+        </div>
+        <div class="bars-wrap" id="trendBars"></div>
+        <div style="display:flex;justify-content:space-between;margin-top:6px;">
+          <span style="font-size:10px;color:var(--muted);">Aug</span><span style="font-size:10px;color:var(--muted);">Sep</span><span style="font-size:10px;color:var(--muted);">Oct</span><span style="font-size:10px;color:var(--muted);">Nov</span><span style="font-size:10px;color:var(--muted);">Dec</span><span style="font-size:10px;color:var(--muted);">Jan</span><span style="font-size:10px;color:var(--blue);font-weight:800;">Feb</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ATTENDANCE PANEL -->
+  <div class="parent-panel" id="panel-attendance" onclick="closePanelOuter(event,'attendance')">
+    <div class="panel-sheet">
+      <div class="panel-handle"></div>
+      <div class="panel-title">📅 Attendance – Aarav</div>
+      <div class="panel-sub">February 2025 · Class 8A · DPS School</div>
+      <div class="attend-month-row">
+        <div class="att-day-hdr">M</div><div class="att-day-hdr">T</div><div class="att-day-hdr">W</div><div class="att-day-hdr">T</div><div class="att-day-hdr">F</div><div class="att-day-hdr">S</div><div class="att-day-hdr">S</div>
+        <div class="att-day att-e"></div><div class="att-day att-e"></div><div class="att-day att-e"></div><div class="att-day att-e"></div><div class="att-day att-p">1</div><div class="att-day att-p">2</div><div class="att-day att-e"></div>
+        <div class="att-day att-p">5</div><div class="att-day att-p">6</div><div class="att-day att-p">7</div><div class="att-day att-a">8</div><div class="att-day att-p">9</div><div class="att-day att-l">10</div><div class="att-day att-e"></div>
+        <div class="att-day att-p">12</div><div class="att-day att-p">13</div><div class="att-day att-p">14</div><div class="att-day att-p">15</div><div class="att-day att-a">16</div><div class="att-day att-p">17</div><div class="att-day att-e"></div>
+        <div class="att-day att-p">19</div><div class="att-day att-p">20</div><div class="att-day att-p">21</div><div class="att-day att-p">22</div><div class="att-day att-p">23</div><div class="att-day att-e"></div><div class="att-day att-e"></div>
+      </div>
+      <div class="att-legend">
+        <div class="att-leg-item"><div class="att-leg-dot" style="background:rgba(34,197,94,0.5);"></div>Present (18)</div>
+        <div class="att-leg-item"><div class="att-leg-dot" style="background:rgba(239,68,68,0.5);"></div>Absent (2)</div>
+        <div class="att-leg-item"><div class="att-leg-dot" style="background:rgba(245,158,11,0.5);"></div>Leave (1)</div>
+      </div>
+      <button class="panel-close" onclick="closePanel('attendance')" style="margin-top:18px;">Close</button>
+    </div>
+  </div>
+
+  <!-- REPORTS PANEL -->
+  <div class="parent-panel" id="panel-reports" onclick="closePanelOuter(event,'reports')">
+    <div class="panel-sheet">
+      <div class="panel-handle"></div>
+      <div class="panel-title">📊 Report Cards – Aarav</div>
+      <div class="panel-sub">All terms · Class 8A · DPS School</div>
+      <div class="report-item">
+        <div class="rep-icon" style="background:rgba(79,110,247,0.15);">📘</div>
+        <div class="rep-info"><div class="rep-name">Term 2 Report Card</div><div class="rep-date">Feb 2025 · Overall: A+ · 78%</div></div>
+        <button class="rep-btn">View</button>
+      </div>
+      <div class="report-item">
+        <div class="rep-icon" style="background:rgba(139,92,246,0.15);">📗</div>
+        <div class="rep-info"><div class="rep-name">Term 1 Report Card</div><div class="rep-date">Nov 2024 · Overall: A · 74%</div></div>
+        <button class="rep-btn">View</button>
+      </div>
+      <div class="report-item">
+        <div class="rep-icon" style="background:rgba(99,102,241,0.15);">📙</div>
+        <div class="rep-info"><div class="rep-name">Mid-Term Assessment</div><div class="rep-date">Sep 2024 · Overall: B+ · 68%</div></div>
+        <button class="rep-btn">View</button>
+      </div>
+      <button class="panel-close" onclick="closePanel('reports')">Close</button>
+    </div>
+  </div>
+
+  <div class="bot-nav">
+    <div class="nav-item active"><svg viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg><span class="nav-lbl">Dashboard</span></div>
+    <div class="nav-item" onclick="openParentPanel('attendance')"><svg viewBox="0 0 24 24"><path d="M9 11H7v2h2v-2zm4 0h-2v2h2v-2zm4 0h-2v2h2v-2zm2-7h-1V2h-2v2H8V2H6v2H5c-1.11 0-1.99.9-1.99 2L3 20c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V9h14v11z"/></svg><span class="nav-lbl">Attendance</span></div>
+    <div class="nav-item" onclick="openParentPanel('reports')"><svg viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/></svg><span class="nav-lbl">Reports</span></div>
+    <div class="nav-item" onclick="alert('Profile coming soon!')"><svg viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg><span class="nav-lbl">Profile</span></div>
+  </div>
+</div>
+
+<script>
+// notif toggle
+function toggleNotif(){
+  document.getElementById('notifDrop').classList.toggle('show');
+}
+document.addEventListener('click', e => {
+  if(!e.target.closest('.notif-wrap')) document.getElementById('notifDrop').classList.remove('show');
+});
+
+// parent panels
+function openParentPanel(type){
+  document.getElementById('panel-'+type).classList.add('show');
+}
+function closePanel(type){
+  document.getElementById('panel-'+type).classList.remove('show');
+}
+function closePanelOuter(e,type){
+  if(e.target===document.getElementById('panel-'+type)) closePanel(type);
+}
+
+// ══════════════════════════════════════════
+// GROWTH RADAR  –  fully rebuilt
+// ══════════════════════════════════════════
+const canvas = document.getElementById('radar');
+const ctx = canvas.getContext('2d');
+
+// Retina-sharp rendering
+const DPR = window.devicePixelRatio || 1;
+canvas.width  = 320 * DPR;
+canvas.height = 310 * DPR;
+canvas.style.width  = '320px';
+canvas.style.height = '310px';
+ctx.scale(DPR, DPR);
+
+const W = 320, H = 310;
+const cx = W / 2, cy = H / 2 + 10;
+const maxR = 108; // slightly larger
+
+// ── Data ──
+const dimensions = [
+  { label: 'Analytical\nThinking',    student: 0.82, avg: 0.65, icon: '🧠', color: '#818CF8' },
+  { label: 'Language &\nExpression',  student: 0.70, avg: 0.68, icon: '✍️', color: '#67E8F9' },
+  { label: 'Creative\nThinking',      student: 0.88, avg: 0.72, icon: '🎨', color: '#C4B5FD' },
+  { label: 'Physical\nEngagement',    student: 0.60, avg: 0.70, icon: '⚡', color: '#86EFAC' },
+  { label: 'Academic\nConsistency',   student: 0.78, avg: 0.66, icon: '📚', color: '#FCD34D' },
+  { label: 'Emotional\nGrowth',       student: 0.58, avg: 0.72, icon: '🌱', color: '#FCA5A5' },
+];
+const N = dimensions.length;
+const step = (Math.PI * 2) / N;
+const startAngle = -Math.PI / 2; // top
+
+// Helper: point on polygon at radius r, dimension i
+function ptX(r, i){ return cx + r * Math.cos(startAngle + i * step); }
+function ptY(r, i){ return cy + r * Math.sin(startAngle + i * step); }
+
+// ── Animation ──
+let animT = 0;
+let animRAF = null;
+const ANIM_DUR = 900; // ms
+
+function easeOut(t){ return 1 - Math.pow(1 - t, 3); }
+
+// ── Draw ──
+let hoveredIdx = -1;
+
+function draw(progress = 1){
+  ctx.clearRect(0, 0, W, H);
+
+  const ease = easeOut(Math.min(progress, 1));
+
+  // ── 1. Subtle radial background glow ──
+  const bgGlow = ctx.createRadialGradient(cx, cy, 0, cx, cy, maxR * 1.2);
+  bgGlow.addColorStop(0, 'rgba(99,102,241,0.07)');
+  bgGlow.addColorStop(1, 'rgba(0,0,0,0)');
+  ctx.fillStyle = bgGlow;
+  ctx.beginPath(); ctx.arc(cx, cy, maxR * 1.2, 0, Math.PI * 2); ctx.fill();
+
+  // ── 2. Grid rings ──
+  const ringCount = 5;
+  for(let r = 1; r <= ringCount; r++){
+    const fr = (maxR / ringCount) * r;
+    ctx.beginPath();
+    for(let i = 0; i < N; i++){
+      i === 0 ? ctx.moveTo(ptX(fr,i), ptY(fr,i)) : ctx.lineTo(ptX(fr,i), ptY(fr,i));
+    }
+    ctx.closePath();
+    if(r === ringCount){
+      ctx.strokeStyle = 'rgba(99,102,241,0.25)';
+      ctx.lineWidth = 1.5;
+    } else {
+      ctx.strokeStyle = 'rgba(58,63,92,0.55)';
+      ctx.lineWidth = 1;
+    }
+    ctx.stroke();
+
+    // ring % label (only 60% and 100%)
+    if(r === 3 || r === ringCount){
+      ctx.save();
+      ctx.font = '500 8.5px Inter,sans-serif';
+      ctx.fillStyle = 'rgba(123,130,168,0.5)';
+      ctx.textAlign = 'center';
+      ctx.fillText((r * 20) + '%', cx + 4, cy - fr - 3);
+      ctx.restore();
+    }
+  }
+
+  // ── 3. Axes ──
+  for(let i = 0; i < N; i++){
+    ctx.beginPath();
+    ctx.moveTo(cx, cy);
+    ctx.lineTo(ptX(maxR, i), ptY(maxR, i));
+    ctx.strokeStyle = i === hoveredIdx
+      ? 'rgba(139,92,246,0.4)'
+      : 'rgba(58,63,92,0.6)';
+    ctx.lineWidth = hoveredIdx === i ? 1.5 : 1;
+    ctx.stroke();
+  }
+
+  // ── 4. Class Average polygon ──
+  ctx.beginPath();
+  for(let i = 0; i < N; i++){
+    const r = dimensions[i].avg * maxR * ease;
+    i === 0 ? ctx.moveTo(ptX(r,i), ptY(r,i)) : ctx.lineTo(ptX(r,i), ptY(r,i));
+  }
+  ctx.closePath();
+  ctx.fillStyle = 'rgba(58,63,92,0.35)';
+  ctx.strokeStyle = 'rgba(90,96,140,0.55)';
+  ctx.lineWidth = 1.5;
+  ctx.setLineDash([4, 4]);
+  ctx.fill(); ctx.stroke();
+  ctx.setLineDash([]);
+
+  // ── 5. Student polygon with per-vertex colour gradient trick ──
+  // First: filled area with blue-purple radial gradient
+  const grad = ctx.createRadialGradient(cx, cy, 0, cx, cy, maxR);
+  grad.addColorStop(0,   'rgba(99,102,241,0.55)');
+  grad.addColorStop(0.6, 'rgba(139,92,246,0.30)');
+  grad.addColorStop(1,   'rgba(139,92,246,0.05)');
+
+  ctx.beginPath();
+  for(let i = 0; i < N; i++){
+    const r = dimensions[i].student * maxR * ease;
+    i === 0 ? ctx.moveTo(ptX(r,i), ptY(r,i)) : ctx.lineTo(ptX(r,i), ptY(r,i));
+  }
+  ctx.closePath();
+  ctx.fillStyle = grad;
+  ctx.fill();
+
+  // Stroke with a glowing indigo line
+  ctx.shadowColor = 'rgba(99,102,241,0.6)';
+  ctx.shadowBlur = 8;
+  ctx.beginPath();
+  for(let i = 0; i < N; i++){
+    const r = dimensions[i].student * maxR * ease;
+    i === 0 ? ctx.moveTo(ptX(r,i), ptY(r,i)) : ctx.lineTo(ptX(r,i), ptY(r,i));
+  }
+  ctx.closePath();
+  ctx.strokeStyle = '#6366F1';
+  ctx.lineWidth = 2.5;
+  ctx.stroke();
+  ctx.shadowBlur = 0;
+
+  // ── 6. Vertex dots ──
+  for(let i = 0; i < N; i++){
+    const r   = dimensions[i].student * maxR * ease;
+    const vx  = ptX(r, i), vy = ptY(r, i);
+    const isH = i === hoveredIdx;
+    const col = dimensions[i].color;
+
+    if(isH){
+      // outer glow ring
+      ctx.beginPath();
+      ctx.arc(vx, vy, 11, 0, Math.PI * 2);
+      ctx.fillStyle = 'rgba(99,102,241,0.2)';
+      ctx.fill();
+    }
+    // dark core
+    ctx.beginPath();
+    ctx.arc(vx, vy, isH ? 7 : 5.5, 0, Math.PI * 2);
+    ctx.fillStyle = '#0F1117';
+    ctx.fill();
+    // coloured ring
+    ctx.beginPath();
+    ctx.arc(vx, vy, isH ? 7 : 5.5, 0, Math.PI * 2);
+    ctx.strokeStyle = isH ? '#C4B5FD' : col;
+    ctx.lineWidth = isH ? 3 : 2.5;
+    ctx.shadowColor = isH ? 'rgba(196,181,253,0.8)' : 'transparent';
+    ctx.shadowBlur  = isH ? 10 : 0;
+    ctx.stroke();
+    ctx.shadowBlur = 0;
+  }
+
+  // ── 7. Axis labels ──
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  for(let i = 0; i < N; i++){
+    const angle = startAngle + i * step;
+    const labelR = maxR + 34;
+    const lx = cx + labelR * Math.cos(angle);
+    const ly = cy + labelR * Math.sin(angle);
+    const lines = dimensions[i].label.split('\n');
+    const isH = i === hoveredIdx;
+    const lineH = 13.5;
+
+    lines.forEach((line, li) => {
+      const offsetY = (li - (lines.length - 1) / 2) * lineH;
+      ctx.font = isH ? '700 10.5px Inter,sans-serif' : '600 10px Inter,sans-serif';
+      ctx.fillStyle = isH ? '#E0D9FF' : 'rgba(155,163,200,0.9)';
+      ctx.fillText(line, lx, ly + offsetY);
+    });
+
+    // Score % under label when hovered
+    if(isH){
+      const scoreY = ly + (lines.length / 2) * lineH + 8;
+      ctx.font = '800 11px Inter,sans-serif';
+      ctx.fillStyle = dimensions[i].color;
+      ctx.fillText(Math.round(dimensions[i].student * 100) + '%', lx, scoreY);
+    }
+  }
+}
+
+// ── Animate on load ──
+function startAnimation(){
+  const startT = performance.now();
+  function frame(now){
+    const t = (now - startT) / ANIM_DUR;
+    draw(t);
+    if(t < 1){ animRAF = requestAnimationFrame(frame); }
+    else { draw(1); updatePills(); }
+  }
+  animRAF = requestAnimationFrame(frame);
+}
+
+// ── Score pills (DOM overlays on each vertex) ──
+function updatePills(){
+  const wrap  = document.getElementById('radarWrap');
+  const pills = document.getElementById('radarPills');
+  pills.innerHTML = '';
+  const wRect = wrap.getBoundingClientRect();
+  const cRect = canvas.getBoundingClientRect();
+  const offX  = cRect.left - wRect.left;
+  const offY  = cRect.top  - wRect.top;
+
+  dimensions.forEach((d, i) => {
+    const r   = d.student * maxR;
+    const vx  = ptX(r, i);
+    const vy  = ptY(r, i);
+    const pill = document.createElement('div');
+    pill.className = 'radar-score-pill';
+    const pct = Math.round(d.student * 100);
+
+    // position pill relative to dot, offset away from centre
+    const angle = startAngle + i * step;
+    const offsetDist = 16;
+    const pillLeft = offX + vx + Math.cos(angle) * offsetDist - 16;
+    const pillTop  = offY + vy + Math.sin(angle) * offsetDist - 10;
+
+    pill.style.left = pillLeft + 'px';
+    pill.style.top  = pillTop  + 'px';
+    pill.textContent = pct + '%';
+    pill.style.borderColor = 'rgba(99,102,241,0.4)';
+    pills.appendChild(pill);
+  });
+}
+
+// ── Hover interaction ──
+const tip = document.getElementById('rTip');
+const tipLabel = document.getElementById('rTipLabel');
+const tipVal   = document.getElementById('rTipVal');
+
+canvas.addEventListener('mousemove', e => {
+  const rect = canvas.getBoundingClientRect();
+  const mx = (e.clientX - rect.left);
+  const my = (e.clientY - rect.top);
+  let found = -1, minD = 24;
+  for(let i = 0; i < N; i++){
+    const r  = dimensions[i].student * maxR;
+    const dx = mx - ptX(r, i);
+    const dy = my - ptY(r, i);
+    const d  = Math.sqrt(dx*dx + dy*dy);
+    if(d < minD){ minD = d; found = i; }
+  }
+  hoveredIdx = found;
+  if(found >= 0){
+    const d   = dimensions[found];
+    const vx  = ptX(d.student * maxR, found);
+    const vy  = ptY(d.student * maxR, found);
+    tipLabel.textContent = d.label.replace('\n', ' ');
+    tipVal.textContent   = Math.round(d.student * 100) + '%';
+    tip.style.left = (vx - 54) + 'px';
+    tip.style.top  = (vy - 58) + 'px';
+    tip.classList.add('show');
+  } else {
+    tip.classList.remove('show');
+  }
+  draw(1);
+});
+
+canvas.addEventListener('mouseleave', () => {
+  hoveredIdx = -1;
+  tip.classList.remove('show');
+  draw(1);
+});
+
+// kick off animated entrance
+startAnimation();
+
+// trend bars
+const trendData=[52,60,58,65,70,74,78];
+const maxH=60;
+const bc=document.getElementById('trendBars');
+trendData.forEach((v,i)=>{
+  const w=document.createElement('div');w.className='bar-col';
+  const b=document.createElement('div');b.className='bar';
+  b.style.height=((v/100)*maxH)+'px';
+  b.style.background=i===trendData.length-1?'linear-gradient(180deg,#4F6EF7,#8B5CF6)':'rgba(79,110,247,0.25)';
+  b.title=v+'%';
+  w.appendChild(b);bc.appendChild(w);
+});
+</script>
+</body>
+</html>

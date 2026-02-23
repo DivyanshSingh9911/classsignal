@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Class Signal – Login</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+*{margin:0;padding:0;box-sizing:border-box;}
+:root{
+  --blue:#4F6EF7;--indigo:#6366F1;--purple:#8B5CF6;
+  --bg:#0F1117;--surface:#1A1D27;--surface2:#22263A;
+  --border:#2A2E45;--text:#F0F2FF;--muted:#7B82A8;--soft:#3A3F5C;
+}
+body{font-family:'Inter',sans-serif;background:var(--bg);min-height:100vh;display:flex;justify-content:center;align-items:center;padding:20px;}
+.frame{width:390px;min-height:844px;background:var(--surface);border-radius:48px;box-shadow:0 40px 100px rgba(0,0,0,0.6),0 0 0 1px var(--border);overflow:hidden;position:relative;display:flex;flex-direction:column;}
+
+/* top glow */
+.top-glow{position:absolute;top:-80px;left:50%;transform:translateX(-50%);width:300px;height:200px;background:radial-gradient(ellipse,rgba(99,102,241,0.35) 0%,transparent 70%);pointer-events:none;}
+
+.status-bar{height:50px;display:flex;align-items:center;justify-content:space-between;padding:0 28px;position:relative;z-index:10;}
+.s-time{font-size:15px;font-weight:700;color:var(--text);}
+.s-icons{display:flex;gap:5px;align-items:center;}
+.s-icons svg{width:15px;height:15px;fill:var(--text);}
+
+.screen{flex:1;display:flex;flex-direction:column;padding:0 24px 36px;position:relative;z-index:2;overflow:hidden;}
+
+/* logo */
+.logo-wrap{display:flex;flex-direction:column;align-items:center;padding:24px 0 36px;}
+.logo-ring{width:76px;height:76px;border-radius:24px;background:linear-gradient(135deg,var(--blue),var(--purple));display:flex;align-items:center;justify-content:center;box-shadow:0 12px 40px rgba(99,102,241,0.45),inset 0 1px 0 rgba(255,255,255,0.15);margin-bottom:16px;position:relative;}
+.logo-ring::after{content:'';position:absolute;inset:-1px;border-radius:25px;background:linear-gradient(135deg,rgba(255,255,255,0.2),transparent);pointer-events:none;}
+.logo-ring svg{width:40px;height:40px;}
+.logo-name{font-size:28px;font-weight:900;letter-spacing:-0.8px;color:var(--text);margin-bottom:6px;}
+.logo-name span{background:linear-gradient(135deg,var(--blue),var(--purple));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.tagline{font-size:13.5px;color:var(--muted);font-weight:400;}
+.tagline-sub{font-size:11.5px;color:var(--soft);font-weight:400;margin-top:5px;text-align:center;letter-spacing:.1px;}
+
+/* role tabs */
+.role-label{font-size:11px;font-weight:700;color:var(--muted);letter-spacing:0.8px;text-transform:uppercase;margin-bottom:10px;}
+.role-tabs{display:flex;background:var(--surface2);border-radius:16px;padding:5px;gap:3px;margin-bottom:28px;border:1px solid var(--border);}
+.role-tab{flex:1;text-align:center;padding:10px;border-radius:11px;font-size:13px;font-weight:600;color:var(--muted);cursor:pointer;transition:all .22s cubic-bezier(.4,0,.2,1);border:none;background:transparent;}
+.role-tab.active{background:linear-gradient(135deg,var(--blue),var(--indigo));color:#fff;box-shadow:0 4px 16px rgba(79,110,247,0.4);}
+
+/* input */
+.field{margin-bottom:16px;}
+.field-label{font-size:12px;font-weight:700;color:var(--muted);margin-bottom:8px;display:block;letter-spacing:0.3px;}
+.input-box{position:relative;}
+.field-icon{position:absolute;left:16px;top:50%;transform:translateY(-50%);width:18px;height:18px;color:var(--muted);}
+.field-icon svg{width:18px;height:18px;fill:var(--muted);}
+.field-input{width:100%;padding:14px 46px;border:1.5px solid var(--border);border-radius:14px;font-size:15px;font-family:'Inter',sans-serif;color:var(--text);background:var(--surface2);outline:none;transition:all .2s;caret-color:var(--blue);}
+.field-input::placeholder{color:var(--soft);}
+.field-input:focus{border-color:var(--blue);background:var(--bg);box-shadow:0 0 0 4px rgba(79,110,247,0.15);}
+.eye-btn{position:absolute;right:16px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;color:var(--muted);padding:4px;}
+.eye-btn svg{width:17px;height:17px;fill:var(--muted);}
+.forgot{text-align:right;margin-top:8px;}
+.forgot a{font-size:13px;color:var(--blue);text-decoration:none;font-weight:600;}
+
+/* error msg */
+.error-msg{background:rgba(239,68,68,0.12);border:1px solid rgba(239,68,68,0.25);border-radius:12px;padding:10px 14px;font-size:13px;color:#F87171;margin-bottom:16px;display:none;align-items:center;gap:8px;}
+.error-msg svg{width:16px;height:16px;fill:#F87171;flex-shrink:0;}
+
+/* btn */
+.btn-primary{width:100%;padding:16px;border:none;border-radius:16px;font-size:16px;font-weight:800;color:#fff;cursor:pointer;margin-top:4px;position:relative;overflow:hidden;transition:transform .15s,box-shadow .15s;letter-spacing:0.2px;background:linear-gradient(135deg,var(--blue),var(--indigo),var(--purple));}
+.btn-primary::after{content:'';position:absolute;inset:0;background:linear-gradient(180deg,rgba(255,255,255,0.12) 0%,transparent 60%);pointer-events:none;}
+.btn-primary:hover{box-shadow:0 8px 32px rgba(79,110,247,0.5);}
+.btn-primary:active{transform:scale(.98);}
+.btn-primary.loading .btn-text{display:none;}
+.btn-primary .spinner{display:none;width:20px;height:20px;border:2.5px solid rgba(255,255,255,0.3);border-top-color:white;border-radius:50%;animation:spin .7s linear infinite;margin:0 auto;}
+.btn-primary.loading .spinner{display:block;}
+@keyframes spin{to{transform:rotate(360deg);}}
+
+.divider{display:flex;align-items:center;gap:12px;margin:20px 0;}
+.divider-line{flex:1;height:1px;background:var(--border);}
+.divider-text{font-size:12px;color:var(--muted);font-weight:500;}
+
+.sso-btn{width:100%;padding:14px;background:var(--surface2);border:1.5px solid var(--border);border-radius:14px;font-size:14px;font-weight:600;color:var(--text);cursor:pointer;display:flex;align-items:center;justify-content:center;gap:10px;transition:all .15s;font-family:'Inter',sans-serif;}
+.sso-btn:hover{background:var(--soft);border-color:var(--blue);}
+
+.footer-lock{text-align:center;margin-top:22px;font-size:12px;color:var(--muted);display:flex;align-items:center;justify-content:center;gap:5px;}
+.footer-lock svg{width:13px;height:13px;fill:#22C55E;}
+
+/* success overlay */
+.success-overlay{position:absolute;inset:0;background:var(--surface);display:none;flex-direction:column;align-items:center;justify-content:center;gap:16px;z-index:100;}
+.success-icon{width:80px;height:80px;background:linear-gradient(135deg,#22C55E,#16A34A);border-radius:24px;display:flex;align-items:center;justify-content:center;animation:popIn .4s cubic-bezier(.4,0,.2,1);}
+.success-icon svg{width:44px;height:44px;fill:white;}
+@keyframes popIn{0%{transform:scale(0.5);opacity:0;}100%{transform:scale(1);opacity:1;}}
+.success-text{font-size:20px;font-weight:800;color:var(--text);}
+.success-sub{font-size:14px;color:var(--muted);}
+.success-progress{width:200px;height:4px;background:var(--border);border-radius:2px;overflow:hidden;}
+.success-fill{height:100%;background:linear-gradient(90deg,var(--blue),var(--purple));width:0%;transition:width 1.8s ease;}
+</style>
+</head>
+<body>
+<div class="frame">
+  <div class="top-glow"></div>
+  <div class="status-bar">
+    <span class="s-time">9:41</span>
+    <div class="s-icons">
+      <svg viewBox="0 0 24 24"><path d="M1 9l2 2c4.97-4.97 13.03-4.97 18 0l2-2C16.93 2.93 7.08 2.93 1 9zm8 8l3 3 3-3c-1.65-1.66-4.34-1.66-6 0zm-4-4l2 2c2.76-2.76 7.24-2.76 10 0l2-2C15.14 9.14 8.87 9.14 5 13z"/></svg>
+      <svg viewBox="0 0 24 24"><path d="M15.67 4H14V2h-4v2H8.33C7.6 4 7 4.6 7 5.33v15.33C7 21.4 7.6 22 8.33 22h7.33c.74 0 1.34-.6 1.34-1.33V5.33C17 4.6 16.4 4 15.67 4z"/></svg>
+    </div>
+  </div>
+
+  <div class="screen">
+    <div class="logo-wrap">
+      <div class="logo-ring">
+        <svg viewBox="0 0 40 40" fill="none">
+          <circle cx="20" cy="20" r="11" stroke="white" stroke-width="2.5"/>
+          <circle cx="20" cy="20" r="4.5" fill="white"/>
+          <line x1="20" y1="9" x2="20" y2="6" stroke="white" stroke-width="2.5" stroke-linecap="round"/>
+          <line x1="20" y1="31" x2="20" y2="34" stroke="white" stroke-width="2.5" stroke-linecap="round"/>
+          <line x1="9" y1="20" x2="6" y2="20" stroke="white" stroke-width="2.5" stroke-linecap="round"/>
+          <line x1="31" y1="20" x2="34" y2="20" stroke="white" stroke-width="2.5" stroke-linecap="round"/>
+        </svg>
+      </div>
+      <div class="logo-name">Class <span>Signal</span></div>
+      <div class="tagline">Understand Every Student.</div>
+      <div class="tagline-sub">AI-powered growth insights for modern schools.</div>
+    </div>
+
+    <div class="role-label">Sign in as</div>
+    <div class="role-tabs">
+      <button class="role-tab active" data-role="parent">👨‍👩‍👧 Parent</button>
+      <button class="role-tab" data-role="student">🎓 Student</button>
+      <button class="role-tab" data-role="teacher">🧑‍🏫 Teacher</button>
+    </div>
+
+    <div class="error-msg" id="errMsg">
+      <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/></svg>
+      <span id="errText">Invalid credentials. Please try again.</span>
+    </div>
+
+    <div class="field">
+      <label class="field-label">Email Address</label>
+      <div class="input-box">
+        <div class="field-icon"><svg viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6" stroke="#7B82A8" stroke-width="2" fill="none"/></svg></div>
+        <input type="email" class="field-input" id="emailInput" placeholder="you@classsignal.app">
+      </div>
+    </div>
+
+    <div class="field">
+      <label class="field-label">Password</label>
+      <div class="input-box">
+        <div class="field-icon"><svg viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4" stroke="#7B82A8" stroke-width="2" fill="none"/></svg></div>
+        <input type="password" class="field-input" id="passInput" placeholder="••••••••">
+        <button class="eye-btn" id="eyeBtn" onclick="togglePass()">
+          <svg id="eyeOpen" viewBox="0 0 24 24"><path d="M12 5c-7 0-11 7-11 7s4 7 11 7 11-7 11-7-4-7-11-7zm0 12a5 5 0 110-10 5 5 0 010 10zm0-8a3 3 0 100 6 3 3 0 000-6z"/></svg>
+        </button>
+      </div>
+      <div class="forgot"><a href="#" onclick="showForgot(event)">Forgot Password?</a></div>
+    </div>
+
+    <button class="btn-primary" id="loginBtn" onclick="doLogin()">
+      <div class="btn-text">Sign In to Class Signal</div>
+      <div class="spinner"></div>
+    </button>
+
+    <div class="divider">
+      <div class="divider-line"></div><span class="divider-text">or</span><div class="divider-line"></div>
+    </div>
+
+    <button class="sso-btn" onclick="doSSO()">
+      <svg width="18" height="18" viewBox="0 0 48 48">
+        <path fill="#FFC107" d="M43.6 20H24v8h11.2C33.6 33.6 29.2 36 24 36c-6.6 0-12-5.4-12-12s5.4-12 12-12c3 0 5.7 1.1 7.8 2.9l5.9-5.9C34.4 6.6 29.5 4.5 24 4.5 13.2 4.5 4.5 13.2 4.5 24S13.2 43.5 24 43.5c11.8 0 21-8.5 21-21.5 0-1.2-.1-2.3-.4-3.5z"/>
+        <path fill="#FF3D00" d="M6.3 14.7l6.6 4.8C14.5 15.1 18.9 12 24 12c3 0 5.7 1.1 7.8 2.9l5.9-5.9C34.4 6.6 29.5 4.5 24 4.5c-7.7 0-14.4 4.4-17.7 10.2z"/>
+        <path fill="#4CAF50" d="M24 43.5c5.3 0 10.1-2 13.7-5.2l-6.3-5.3C29.5 34.7 26.9 36 24 36c-5.2 0-9.5-3.3-11.1-8l-6.6 5.1C9.6 39.1 16.4 43.5 24 43.5z"/>
+        <path fill="#1976D2" d="M43.6 20H24v8h11.2c-.8 2.3-2.3 4.3-4.3 5.7l6.3 5.3c3.7-3.4 6-8.4 6-14.5 0-1.2-.1-2.3-.4-3.5z"/>
+      </svg>
+      Continue with Google
+    </button>
+
+    <div class="footer-lock">
+      <svg viewBox="0 0 24 24"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm0 4l5 2.18V11c0 3.5-2.33 6.79-5 7.93C9.33 17.79 7 14.5 7 11V7.18L12 5z"/></svg>
+      🔒 Data encrypted · School-level isolation enabled
+    </div>
+  </div>
+
+  <!-- Success Overlay -->
+  <div class="success-overlay" id="successOverlay">
+    <div class="success-icon">
+      <svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
+    </div>
+    <div class="success-text">Welcome back!</div>
+    <div class="success-sub" id="successSub">Signing you in…</div>
+    <div class="success-progress"><div class="success-fill" id="successFill"></div></div>
+  </div>
+</div>
+
+<script>
+const CREDS = { parent:'parent@demo.com', student:'student@demo.com', teacher:'teacher@demo.com' };
+const DEST  = { parent:'parent-dashboard.html', student:'student-dashboard.html', teacher:'teacher-dashboard.html' };
+let activeRole = 'parent';
+
+document.querySelectorAll('.role-tab').forEach(t => {
+  t.addEventListener('click', () => {
+    document.querySelectorAll('.role-tab').forEach(x => x.classList.remove('active'));
+    t.classList.add('active');
+    activeRole = t.dataset.role;
+    const hints = {parent:'parent@demo.com',student:'student@demo.com',teacher:'teacher@demo.com'};
+    document.getElementById('emailInput').placeholder = hints[activeRole];
+    hideErr();
+  });
+});
+
+function togglePass(){
+  const inp = document.getElementById('passInput');
+  inp.type = inp.type === 'password' ? 'text' : 'password';
+}
+function showErr(msg){ const e=document.getElementById('errMsg'); e.style.display='flex'; document.getElementById('errText').textContent=msg; }
+function hideErr(){ document.getElementById('errMsg').style.display='none'; }
+
+function doLogin(){
+  hideErr();
+  const email = document.getElementById('emailInput').value.trim();
+  const pass  = document.getElementById('passInput').value.trim();
+  if(!email){ showErr('Please enter your email address.'); return; }
+  if(!pass)  { showErr('Please enter your password.');      return; }
+  if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){ showErr('Enter a valid email address.'); return; }
+
+  // simulate auth
+  const btn = document.getElementById('loginBtn');
+  btn.classList.add('loading');
+  setTimeout(() => {
+    btn.classList.remove('loading');
+    // accept demo creds OR any password for demo
+    if(email.includes('@')){
+      showSuccess();
+    } else {
+      showErr('Invalid credentials. Try: ' + CREDS[activeRole]);
+    }
+  }, 1800);
+}
+
+function showSuccess(){
+  const labels = {parent:'Parent Dashboard',student:'Student Home',teacher:'Teacher Dashboard'};
+  document.getElementById('successSub').textContent = 'Opening ' + labels[activeRole] + '…';
+  const ov = document.getElementById('successOverlay');
+  ov.style.display = 'flex';
+  setTimeout(() => { document.getElementById('successFill').style.width='100%'; }, 50);
+  setTimeout(() => { window.location.href = DEST[activeRole]; }, 2000);
+}
+
+function doSSO(){
+  const btn = document.querySelector('.sso-btn');
+  btn.textContent = 'Connecting…';
+  setTimeout(() => { btn.textContent = '✓ Connected'; showSuccess(); }, 1400);
+}
+
+function showForgot(e){
+  e.preventDefault();
+  const email = document.getElementById('emailInput').value.trim();
+  if(!email) { showErr('Enter your email first, then tap Forgot Password.'); return; }
+  hideErr();
+  alert('✅ Password reset link sent to ' + email);
+}
+
+// enter key
+document.getElementById('passInput').addEventListener('keydown', e => { if(e.key==='Enter') doLogin(); });
+document.getElementById('emailInput').addEventListener('keydown', e => { if(e.key==='Enter') document.getElementById('passInput').focus(); });
+</script>
+</body>
+</html>

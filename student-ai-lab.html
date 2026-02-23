@@ -1,0 +1,519 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0">
+<title>Class Signal – AI Learning Lab</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+*{margin:0;padding:0;box-sizing:border-box;}
+:root{--blue:#4F6EF7;--indigo:#6366F1;--purple:#8B5CF6;--bg:#0F1117;--surface:#1A1D27;--surface2:#22263A;--border:#2A2E45;--text:#F0F2FF;--muted:#7B82A8;--soft:#3A3F5C;}
+body{font-family:'Inter',sans-serif;background:#0A0C12;min-height:100vh;display:flex;justify-content:center;align-items:flex-start;padding:20px;}
+.frame{width:390px;min-height:844px;background:var(--bg);border-radius:48px;box-shadow:0 40px 100px rgba(0,0,0,0.7),0 0 0 1px var(--border);overflow:hidden;position:relative;display:flex;flex-direction:column;}
+.status-bar{height:50px;display:flex;align-items:center;justify-content:space-between;padding:0 28px;position:absolute;top:0;left:0;right:0;z-index:20;}
+.s-time{font-size:15px;font-weight:700;color:white;}
+.s-icons{display:flex;gap:5px;}.s-icons svg{width:15px;height:15px;fill:white;}
+
+/* hero */
+.hero{background:linear-gradient(160deg,#0D0D1F 0%,#1A0A40 50%,#0F0D2E 100%);padding:58px 22px 24px;position:relative;overflow:hidden;flex-shrink:0;}
+.hero::before{content:'';position:absolute;top:-50px;right:-50px;width:240px;height:240px;background:radial-gradient(circle,rgba(139,92,246,0.22) 0%,transparent 70%);}
+.hero::after{content:'';position:absolute;bottom:-60px;left:-30px;width:180px;height:180px;background:radial-gradient(circle,rgba(79,110,247,0.18) 0%,transparent 70%);}
+.hero-top{display:flex;align-items:center;gap:14px;margin-bottom:18px;position:relative;z-index:2;}
+.back-btn{width:38px;height:38px;background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.15);border-radius:12px;display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;text-decoration:none;}
+.back-btn svg{width:18px;height:18px;fill:white;}
+.hero-title{color:white;font-size:20px;font-weight:900;letter-spacing:-.3px;}
+.hero-sub{color:rgba(255,255,255,0.55);font-size:13px;margin-top:2px;}
+
+/* class chips */
+.class-row{display:flex;gap:8px;position:relative;z-index:2;flex-wrap:wrap;}
+.class-chip{padding:7px 14px;border-radius:20px;font-size:12px;font-weight:700;border:1.5px solid rgba(255,255,255,0.15);color:rgba(255,255,255,0.5);background:transparent;cursor:pointer;transition:all .2s;}
+.class-chip.active{background:rgba(139,92,246,0.3);border-color:rgba(139,92,246,0.6);color:white;box-shadow:0 0 14px rgba(139,92,246,0.3);}
+.mode-badge{display:inline-flex;align-items:center;gap:6px;background:rgba(139,92,246,0.18);border:1px solid rgba(139,92,246,0.3);border-radius:20px;padding:5px 12px;font-size:11px;font-weight:700;color:#C4B5FD;margin-top:12px;position:relative;z-index:2;}
+.pulse{width:6px;height:6px;border-radius:50%;background:#A78BFA;animation:pulse 2s infinite;}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1);}50%{opacity:.4;transform:scale(.8);}}
+
+/* scroll */
+.scroll{flex:1;overflow-y:auto;padding-bottom:90px;}
+.scroll::-webkit-scrollbar{display:none;}
+.inner{padding:18px 16px 0;}
+.sec-lbl{font-size:11px;font-weight:700;color:var(--muted);letter-spacing:.8px;text-transform:uppercase;margin-bottom:10px;}
+
+/* prompt area */
+.prompt-card{background:var(--surface);border:1px solid var(--border);border-radius:20px;padding:16px;margin-bottom:14px;transition:border-color .2s;}
+.prompt-card:focus-within{border-color:var(--indigo);}
+.prompt-ta{width:100%;min-height:76px;background:transparent;border:none;outline:none;font-family:'Inter',sans-serif;font-size:14px;color:var(--text);resize:none;line-height:1.6;caret-color:var(--blue);}
+.prompt-ta::placeholder{color:var(--soft);}
+.prompt-actions{display:flex;align-items:center;justify-content:space-between;margin-top:10px;padding-top:10px;border-top:1px solid var(--border);}
+.tool-row{display:flex;gap:7px;}
+.tool-btn{width:34px;height:34px;background:var(--surface2);border:1px solid var(--border);border-radius:10px;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .15s;}
+.tool-btn:hover{border-color:var(--indigo);background:rgba(99,102,241,0.1);}
+.tool-btn.active-tool{border-color:var(--purple);background:rgba(139,92,246,0.15);}
+.tool-btn svg{width:16px;height:16px;fill:var(--muted);}
+.tool-btn.active-tool svg{fill:#C4B5FD;}
+.char-count{font-size:11px;color:var(--soft);margin:0 auto 0 8px;}
+.gen-btn{display:flex;align-items:center;gap:7px;background:linear-gradient(135deg,var(--indigo),var(--purple));color:white;border:none;border-radius:12px;padding:9px 16px;font-size:13px;font-weight:800;cursor:pointer;box-shadow:0 4px 18px rgba(99,102,241,0.4);transition:transform .15s,box-shadow .15s;font-family:'Inter',sans-serif;}
+.gen-btn:hover{transform:translateY(-1px);box-shadow:0 6px 24px rgba(99,102,241,0.5);}
+.gen-btn:active{transform:scale(.97);}
+.gen-btn.loading{opacity:.8;cursor:not-allowed;}
+.gen-btn svg{width:15px;height:15px;fill:white;}
+.gen-spinner{width:14px;height:14px;border:2px solid rgba(255,255,255,0.3);border-top-color:white;border-radius:50%;animation:spin .7s linear infinite;display:none;}
+@keyframes spin{to{transform:rotate(360deg);}}
+
+/* suggestions */
+.suggest-col{display:flex;flex-direction:column;gap:8px;margin-bottom:18px;}
+.sug-chip{background:var(--surface);border:1px solid var(--border);border-radius:13px;padding:12px 14px;display:flex;align-items:center;gap:10px;cursor:pointer;transition:all .15s;}
+.sug-chip:hover{border-color:var(--indigo);background:rgba(99,102,241,0.06);}
+.sug-chip:active{transform:scale(.98);}
+.sug-ico{width:30px;height:30px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0;}
+.sug-text{font-size:13px;font-weight:600;color:var(--text);flex:1;}
+.sug-arrow{font-size:16px;color:var(--soft);}
+
+/* output */
+.output-card{background:var(--surface);border:1.5px solid var(--border);border-radius:20px;overflow:hidden;margin-bottom:16px;transition:border-color .3s;}
+.output-card.ready{border-color:rgba(99,102,241,0.35);}
+.out-hdr{display:flex;align-items:center;justify-content:space-between;padding:13px 16px;border-bottom:1px solid var(--border);background:var(--surface2);}
+.out-title-row{display:flex;align-items:center;gap:8px;}
+.out-dot{width:8px;height:8px;border-radius:50%;background:var(--soft);}
+.out-dot.live{background:#22C55E;box-shadow:0 0 6px rgba(34,197,94,0.6);}
+.out-title{font-size:13px;font-weight:800;color:var(--text);}
+.out-acts{display:flex;gap:6px;}
+.ico-btn{width:30px;height:30px;border-radius:8px;background:var(--surface);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .15s;}
+.ico-btn:hover{border-color:var(--indigo);background:rgba(99,102,241,0.1);}
+.ico-btn svg{width:14px;height:14px;fill:var(--muted);}
+
+/* placeholder output */
+.out-placeholder{height:220px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;background:var(--surface);}
+.out-ph-icon{width:56px;height:56px;background:var(--surface2);border:1.5px dashed var(--border);border-radius:16px;display:flex;align-items:center;justify-content:center;}
+.out-ph-icon svg{width:26px;height:26px;fill:var(--soft);}
+.out-ph-text{font-size:13px;color:var(--muted);font-weight:500;}
+.out-ph-sub{font-size:11px;color:var(--soft);}
+
+/* loading output */
+.out-loading{height:220px;display:none;align-items:center;justify-content:center;flex-direction:column;gap:14px;background:var(--surface);}
+.shimmer-lines{display:flex;flex-direction:column;gap:8px;width:80%;}
+.shimmer{height:12px;border-radius:6px;background:linear-gradient(90deg,var(--surface2) 25%,var(--border) 50%,var(--surface2) 75%);background-size:200% 100%;animation:shimmer 1.5s infinite;}
+@keyframes shimmer{0%{background-position:200% 0;}100%{background-position:-200% 0;}}
+.shimmer.tall{height:80px;border-radius:10px;}
+.out-loading-text{font-size:12px;color:var(--muted);font-weight:600;}
+
+/* generated image area */
+.out-image{width:100%;height:220px;display:none;position:relative;overflow:hidden;}
+.out-meta{padding:11px 16px;background:var(--surface2);border-top:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;}
+.out-meta-txt{font-size:11px;color:var(--muted);}
+.regen-btn{font-size:12px;font-weight:700;color:var(--blue);background:none;border:none;cursor:pointer;font-family:'Inter',sans-serif;}
+
+/* text output */
+.out-text-area{padding:16px;display:none;}
+.out-text-content{font-size:13.5px;color:rgba(240,242,255,0.75);line-height:1.7;}
+.out-text-content strong{color:var(--text);}
+.out-text-content .highlight{background:rgba(99,102,241,0.15);border:1px solid rgba(99,102,241,0.2);border-radius:8px;padding:10px 14px;margin:10px 0;display:block;font-size:13px;font-family:'Courier New',monospace;color:#A5B4FC;}
+
+/* history */
+.hist-card{background:var(--surface);border:1px solid var(--border);border-radius:20px;overflow:hidden;margin-bottom:16px;}
+.hist-item{display:flex;align-items:center;gap:12px;padding:13px 16px;border-bottom:1px solid var(--border);cursor:pointer;transition:background .12s;}
+.hist-item:last-child{border-bottom:none;}
+.hist-item:hover{background:rgba(79,110,247,0.05);}
+.hist-thumb{width:42px;height:42px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;}
+.hist-info{flex:1;}
+.hist-prompt{font-size:13px;font-weight:700;color:var(--text);margin-bottom:3px;}
+.hist-meta{font-size:11px;color:var(--muted);}
+.hist-tag{font-size:10px;font-weight:800;padding:3px 8px;border-radius:7px;text-transform:uppercase;letter-spacing:.3px;}
+.tag-img{background:rgba(139,92,246,0.2);color:#C4B5FD;}
+.tag-txt{background:rgba(79,110,247,0.2);color:#93C5FD;}
+.tag-exp{background:rgba(34,197,94,0.2);color:#86EFAC;}
+
+/* nav */
+.bot-nav{position:absolute;bottom:0;left:0;right:0;height:80px;background:var(--surface);border-top:1px solid var(--border);display:flex;align-items:center;justify-content:space-around;padding:0 8px 12px;z-index:50;}
+.nav-item{display:flex;flex-direction:column;align-items:center;gap:4px;padding:8px 14px;border-radius:14px;cursor:pointer;transition:background .15s;min-width:58px;text-decoration:none;}
+.nav-item.active{background:rgba(139,92,246,0.15);}
+.nav-item svg{width:22px;height:22px;}
+.nav-item.active svg{fill:var(--purple);}
+.nav-item:not(.active) svg{fill:var(--muted);}
+.nav-lbl{font-size:10px;font-weight:700;}
+.nav-item.active .nav-lbl{color:var(--purple);}
+.nav-item:not(.active) .nav-lbl{color:var(--muted);}
+
+/* why tooltip */
+.why-tip{display:none;position:absolute;bottom:100%;left:50%;transform:translateX(-50%);background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:8px 12px;font-size:11px;color:var(--muted);white-space:nowrap;z-index:10;margin-bottom:6px;}
+.sug-chip:hover .why-tip{display:block;}
+/* toast notification */
+.toast-notif{position:absolute;bottom:100px;left:50%;transform:translateX(-50%);background:var(--surface2);border:1px solid rgba(34,197,94,0.3);border-radius:14px;padding:10px 16px;font-size:12px;font-weight:700;color:#4ADE80;white-space:nowrap;z-index:200;opacity:0;transition:opacity .3s;pointer-events:none;}
+.toast-notif.show{opacity:1;}
+</style>
+</head>
+<body>
+<div class="frame">
+  <div class="status-bar">
+    <span class="s-time">9:41</span>
+    <div class="s-icons">
+      <svg viewBox="0 0 24 24"><path d="M1 9l2 2c4.97-4.97 13.03-4.97 18 0l2-2C16.93 2.93 7.08 2.93 1 9zm8 8l3 3 3-3c-1.65-1.66-4.34-1.66-6 0zm-4-4l2 2c2.76-2.76 7.24-2.76 10 0l2-2C15.14 9.14 8.87 9.14 5 13z"/></svg>
+      <svg viewBox="0 0 24 24"><path d="M15.67 4H14V2h-4v2H8.33C7.6 4 7 4.6 7 5.33v15.33C7 21.4 7.6 22 8.33 22h7.33c.74 0 1.34-.6 1.34-1.33V5.33C17 4.6 16.4 4 15.67 4z"/></svg>
+    </div>
+  </div>
+
+  <div class="hero">
+    <div class="hero-top">
+      <a class="back-btn" href="student-dashboard.html"><svg viewBox="0 0 24 24"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg></a>
+      <div>
+        <div class="hero-title">AI Learning Lab</div>
+        <div class="hero-sub">Learn to Think with AI</div>
+        <div style="display:flex;align-items:center;gap:8px;margin-top:8px;">
+          <div style="background:rgba(139,92,246,0.2);border:1px solid rgba(139,92,246,0.3);border-radius:20px;padding:4px 12px;font-size:11px;font-weight:700;color:#C4B5FD;">⚡ Prompting Skill: Intermediate</div>
+        </div>
+      </div>
+    </div>
+    <div class="class-row">
+      <button class="class-chip" onclick="setClass(this,'1-3')">Class 1–3</button>
+      <button class="class-chip" onclick="setClass(this,'4-6')">Class 4–6</button>
+      <button class="class-chip" onclick="setClass(this,'7-9')">Class 7–9</button>
+      <button class="class-chip active" onclick="setClass(this,'10')">Class 10</button>
+    </div>
+    <div class="mode-badge"><div class="pulse"></div><span id="modeLbl">Advanced Mode · Class 10</span></div>
+  </div>
+
+  <div class="scroll">
+    <div class="inner">
+
+      <div class="sec-lbl">Your Prompt</div>
+      <div class="prompt-card">
+        <textarea class="prompt-ta" id="promptTa" placeholder="Describe what you want to create or learn…&#10;e.g. Generate a futuristic city on Mars" oninput="updateChar()">Generate a futuristic city on Mars with glowing buildings, flying vehicles, and a dramatic night sky</textarea>
+        <div class="prompt-actions">
+          <div class="tool-row">
+            <div class="tool-btn active-tool" id="toolImg" title="Image Mode" onclick="setTool('image')">
+              <svg viewBox="0 0 24 24"><path d="M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z"/></svg>
+            </div>
+            <div class="tool-btn" id="toolTxt" title="Text Mode" onclick="setTool('text')">
+              <svg viewBox="0 0 24 24"><path d="M14 17H4v2h10v-2zm6-8H4v2h16V9zM4 15h16v-2H4v2zM4 5v2h16V5H4z"/></svg>
+            </div>
+            <div class="tool-btn" id="toolVoice" title="Voice Input" onclick="doVoice()">
+              <svg viewBox="0 0 24 24"><path d="M12 14c1.66 0 2.99-1.34 2.99-3L15 5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3zm5.3-3c0 3-2.54 5.1-5.3 5.1S6.7 14 6.7 11H5c0 3.41 2.72 6.23 6 6.72V21h2v-3.28c3.28-.48 6-3.3 6-6.72h-1.7z"/></svg>
+            </div>
+          </div>
+          <span class="char-count" id="charCount">89 / 500</span>
+          <button class="gen-btn" id="genBtn" onclick="generate()">
+            <svg id="genIcon" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+            <div class="gen-spinner" id="genSpin"></div>
+            <span id="genTxt">Generate</span>
+          </button>
+        </div>
+      </div>
+
+      <div class="sec-lbl">Try These</div>
+      <div class="suggest-col">
+        <div class="sug-chip" onclick="useSuggest(this,'Explain Newton\'s Laws of Motion with examples and diagrams')">
+          <div class="sug-ico" style="background:rgba(139,92,246,0.2);">🔭</div>
+          <span class="sug-text">Explain Newton's Laws of Motion</span>
+          <span class="sug-arrow">›</span>
+        </div>
+        <div class="sug-chip" onclick="useSuggest(this,'Create a detailed startup pitch for a solar-powered bicycle sharing app')">
+          <div class="sug-ico" style="background:rgba(79,110,247,0.2);">💡</div>
+          <span class="sug-text">Create a startup pitch for a solar bike</span>
+          <span class="sug-arrow">›</span>
+        </div>
+        <div class="sug-chip" onclick="useSuggest(this,'Generate a futuristic city on Mars with glowing buildings, flying vehicles, and a dramatic night sky')">
+          <div class="sug-ico" style="background:rgba(34,197,94,0.2);">🌆</div>
+          <span class="sug-text">Generate a futuristic city image</span>
+          <span class="sug-arrow">›</span>
+        </div>
+        <div class="sug-chip" onclick="useSuggest(this,'Write a beautiful poem about the ocean and its mysteries')">
+          <div class="sug-ico" style="background:rgba(245,158,11,0.2);">✍️</div>
+          <span class="sug-text">Write a poem about the ocean</span>
+          <span class="sug-arrow">›</span>
+        </div>
+      </div>
+
+      <div class="sec-lbl">Generated Output</div>
+      <div class="output-card" id="outputCard">
+        <div class="out-hdr">
+          <div class="out-title-row">
+            <div class="out-dot" id="outDot"></div>
+            <div class="out-title" id="outTitle">Ready to Generate</div>
+          </div>
+          <div class="out-acts">
+            <div class="ico-btn" onclick="downloadOutput()" title="Download">
+              <svg viewBox="0 0 24 24"><path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/></svg>
+            </div>
+            <div class="ico-btn" onclick="copyOutput()" title="Copy">
+              <svg viewBox="0 0 24 24"><path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/></svg>
+            </div>
+          </div>
+        </div>
+
+        <!-- Placeholder -->
+        <div class="out-placeholder" id="outPH">
+          <div class="out-ph-icon"><svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg></div>
+          <div class="out-ph-text">Your creation will appear here</div>
+          <div class="out-ph-sub">Write a prompt above and hit Generate ✨</div>
+        </div>
+
+        <!-- Loading -->
+        <div class="out-loading" id="outLoad">
+          <div class="shimmer-lines">
+            <div class="shimmer tall"></div>
+            <div class="shimmer" style="width:70%"></div>
+            <div class="shimmer" style="width:50%"></div>
+          </div>
+          <div class="out-loading-text" id="loadTxt">Generating image…</div>
+        </div>
+
+        <!-- Generated Image -->
+        <div class="out-image" id="outImg">
+          <svg width="100%" height="100%" viewBox="0 0 360 220" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <linearGradient id="sg" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#050510"/><stop offset="60%" stop-color="#160840"/><stop offset="100%" stop-color="#2A0A60"/></linearGradient>
+              <radialGradient id="glow1" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#8B5CF6" stop-opacity=".5"/><stop offset="100%" stop-color="#8B5CF6" stop-opacity="0"/></radialGradient>
+              <radialGradient id="glow2" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#4F6EF7" stop-opacity=".4"/><stop offset="100%" stop-color="#4F6EF7" stop-opacity="0"/></radialGradient>
+              <filter id="blur4"><feGaussianBlur stdDeviation="3"/></filter>
+              <filter id="blur8"><feGaussianBlur stdDeviation="6"/></filter>
+            </defs>
+            <rect width="360" height="220" fill="url(#sg)"/>
+            <!-- stars -->
+            <g fill="white">
+              <circle cx="20" cy="12" r="1" opacity=".9"/><circle cx="60" cy="25" r="1.2" opacity=".7"/><circle cx="110" cy="8" r="1" opacity=".8"/><circle cx="180" cy="20" r="1.3" opacity=".6"/><circle cx="240" cy="10" r="1" opacity=".9"/><circle cx="300" cy="30" r="1.1" opacity=".7"/><circle cx="340" cy="15" r="1" opacity=".8"/><circle cx="45" cy="45" r="1" opacity=".5"/><circle cx="140" cy="38" r="1" opacity=".7"/><circle cx="270" cy="42" r="1.2" opacity=".6"/><circle cx="320" cy="55" r="1" opacity=".8"/>
+            </g>
+            <!-- planet -->
+            <circle cx="310" cy="50" r="35" fill="#3B0FA0" opacity=".7" filter="url(#blur4)"/>
+            <circle cx="310" cy="50" r="28" fill="#5B21B6" opacity=".6"/>
+            <circle cx="300" cy="42" r="8" fill="#7C3AED" opacity=".3"/>
+            <ellipse cx="310" cy="60" rx="40" ry="8" fill="none" stroke="#A78BFA" stroke-width="1.5" opacity=".3"/>
+            <!-- horizon glow -->
+            <ellipse cx="180" cy="185" rx="200" ry="50" fill="url(#glow1)" filter="url(#blur8)"/>
+            <ellipse cx="80" cy="175" rx="100" ry="35" fill="url(#glow2)" filter="url(#blur8)"/>
+            <!-- bg buildings -->
+            <rect x="0" y="140" width="28" height="80" fill="#0A0820" opacity=".9"/><rect x="35" y="120" width="22" height="100" fill="#0A0820" opacity=".9"/><rect x="300" y="130" width="25" height="90" fill="#0A0820" opacity=".9"/><rect x="330" y="115" width="30" height="105" fill="#0A0820" opacity=".9"/>
+            <!-- main towers -->
+            <!-- left tower -->
+            <rect x="15" y="90" width="42" height="130" fill="#1A0A50" opacity=".95"/>
+            <rect x="31" y="78" width="10" height="16" fill="#6366F1"/>
+            <rect x="22" y="103" width="9" height="6" rx="1" fill="#93C5FD" opacity=".9"/><rect x="38" y="103" width="9" height="6" rx="1" fill="#93C5FD" opacity=".8"/>
+            <rect x="22" y="118" width="9" height="6" rx="1" fill="#60A5FA" opacity=".7"/><rect x="38" y="118" width="9" height="6" rx="1" fill="#93C5FD" opacity=".9"/>
+            <rect x="22" y="133" width="9" height="6" rx="1" fill="#93C5FD" opacity=".6"/><rect x="38" y="133" width="9" height="6" rx="1" fill="#60A5FA" opacity=".8"/>
+            <!-- center mega tower -->
+            <rect x="145" y="38" width="58" height="182" fill="#130845" opacity=".95"/>
+            <polygon points="174,22 157,38 191,38" fill="#5B21B6"/>
+            <rect x="170" y="12" width="8" height="14" fill="#8B5CF6"/>
+            <circle cx="174" cy="10" r="3" fill="#C4B5FD" opacity=".8"/>
+            <rect x="153" y="52" width="11" height="8" rx="1" fill="#C4B5FD" opacity=".9"/><rect x="172" y="52" width="11" height="8" rx="1" fill="#A78BFA" opacity=".8"/><rect x="191" y="52" width="8" height="8" rx="1" fill="#C4B5FD" opacity=".9"/>
+            <rect x="153" y="70" width="11" height="8" rx="1" fill="#A78BFA" opacity=".7"/><rect x="172" y="70" width="11" height="8" rx="1" fill="#C4B5FD" opacity=".9"/><rect x="191" y="70" width="8" height="8" rx="1" fill="#A78BFA" opacity=".6"/>
+            <rect x="153" y="88" width="11" height="8" rx="1" fill="#C4B5FD" opacity=".8"/><rect x="172" y="88" width="11" height="8" rx="1" fill="#A78BFA" opacity=".7"/><rect x="191" y="88" width="8" height="8" rx="1" fill="#C4B5FD" opacity=".9"/>
+            <rect x="153" y="106" width="11" height="8" rx="1" fill="#A78BFA" opacity=".6"/><rect x="172" y="106" width="11" height="8" rx="1" fill="#C4B5FD" opacity=".8"/>
+            <!-- right tower -->
+            <rect x="298" y="72" width="46" height="148" fill="#0F1A4A" opacity=".95"/>
+            <rect x="316" y="60" width="9" height="16" fill="#3B82F6"/>
+            <rect x="305" y="85" width="9" height="6" rx="1" fill="#93C5FD" opacity=".8"/><rect x="322" y="85" width="9" height="6" rx="1" fill="#60A5FA" opacity=".9"/>
+            <rect x="305" y="100" width="9" height="6" rx="1" fill="#93C5FD" opacity=".7"/><rect x="322" y="100" width="9" height="6" rx="1" fill="#93C5FD" opacity=".8"/>
+            <rect x="305" y="115" width="9" height="6" rx="1" fill="#60A5FA" opacity=".6"/><rect x="322" y="115" width="9" height="6" rx="1" fill="#93C5FD" opacity=".9"/>
+            <!-- mid -->
+            <rect x="90" y="98" width="40" height="122" fill="#12083C" opacity=".9"/>
+            <rect x="240" y="105" width="42" height="115" fill="#0C1640" opacity=".9"/>
+            <!-- flying vehicles -->
+            <ellipse cx="115" cy="80" rx="16" ry="5" fill="#4F6EF7" opacity=".9" filter="url(#blur4)"/>
+            <ellipse cx="115" cy="78" rx="9" ry="3" fill="#93C5FD" opacity=".8"/>
+            <ellipse cx="255" cy="92" rx="13" ry="4" fill="#8B5CF6" opacity=".9" filter="url(#blur4)"/>
+            <ellipse cx="255" cy="90" rx="7" ry="2.5" fill="#C4B5FD" opacity=".8"/>
+            <!-- ground glow strip -->
+            <rect x="0" y="205" width="360" height="15" fill="#050510"/>
+            <rect x="0" y="204" width="360" height="3" fill="#8B5CF6" opacity=".5"/>
+            <circle cx="55" cy="207" r="2" fill="#A78BFA" opacity=".8"/>
+            <circle cx="130" cy="207" r="2" fill="#8B5CF6" opacity=".6"/>
+            <circle cx="180" cy="207" r="3" fill="#C4B5FD" opacity=".9"/>
+            <circle cx="240" cy="207" r="2" fill="#8B5CF6" opacity=".6"/>
+            <circle cx="310" cy="207" r="2" fill="#A78BFA" opacity=".8"/>
+          </svg>
+        </div>
+
+        <!-- Text Output -->
+        <div class="out-text-area" id="outTxt"></div>
+
+        <div class="out-meta" id="outMeta" style="display:none;">
+          <div class="out-meta-txt" id="outMetaTxt">Generated in 3.2s</div>
+          <button class="regen-btn" onclick="generate()">↺ Regenerate</button>
+        </div>
+      </div>
+
+      <div class="sec-lbl">Recent Creations</div>
+      <div class="hist-card">
+        <div class="hist-item" onclick="loadHistory('solar','txt')">
+          <div class="hist-thumb" style="background:rgba(139,92,246,0.2);">🌌</div>
+          <div class="hist-info"><div class="hist-prompt">Solar system 3D model</div><div class="hist-meta">Yesterday · AI Image</div></div>
+          <div class="hist-tag tag-img">Image</div>
+        </div>
+        <div class="hist-item" onclick="loadHistory('newton','exp')">
+          <div class="hist-thumb" style="background:rgba(79,110,247,0.2);">⚡</div>
+          <div class="hist-info"><div class="hist-prompt">Newton's Laws explained</div><div class="hist-meta">2 days ago · Explanation</div></div>
+          <div class="hist-tag tag-exp">Explain</div>
+        </div>
+        <div class="hist-item" onclick="loadHistory('pitch','txt')">
+          <div class="hist-thumb" style="background:rgba(34,197,94,0.2);">💼</div>
+          <div class="hist-info"><div class="hist-prompt">Startup pitch: eco delivery app</div><div class="hist-meta">3 days ago · AI Text</div></div>
+          <div class="hist-tag tag-txt">Text</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="bot-nav">
+    <a class="nav-item" href="login.html" style="color:inherit;"><svg viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg><span class="nav-lbl">Home</span></a>
+    <div class="nav-item active"><svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg><span class="nav-lbl">AI Lab</span></div>
+    <a class="nav-item" href="qa-bot.html" style="color:inherit;"><svg viewBox="0 0 24 24"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z"/></svg><span class="nav-lbl">Chat</span></a>
+    <a class="nav-item" href="dost-chatbot.html" style="color:inherit;"><svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-1-13h2v6h-2zm0 8h2v2h-2z"/></svg><span class="nav-lbl">DOST</span></a>
+  </div>
+
+  <div class="toast-notif" id="toastNotif"></div>
+</div>
+
+<script>
+let currentTool = 'image';
+let currentClass = '10';
+let generating = false;
+
+const classLabels = {'1-3':'Beginner Mode · Class 1–3','4-6':'Intermediate · Class 4–6','7-9':'Advanced Mode · Class 7–9','10':'Advanced Mode · Class 10'};
+const classSuggests = {
+  '1-3':['Draw a red bird on a tree','Make a rainbow','Draw a happy sun','Make colorful flowers'],
+  '4-6':['Draw the solar system','A lion in the jungle','A rainbow waterfall','A futuristic rocket'],
+  '7-9':['Explain photosynthesis','Newton's Laws of Motion','A city of the future','Write a short story about space'],
+  '10':["Explain Newton's Laws of Motion with examples","Create a startup pitch for a solar bike","Generate a futuristic city image","Write a poem about the ocean"]
+};
+
+function setClass(el, cls){
+  document.querySelectorAll('.class-chip').forEach(c=>c.classList.remove('active'));
+  el.classList.add('active');
+  currentClass = cls;
+  document.getElementById('modeLbl').textContent = classLabels[cls];
+  // update suggestions
+  const sugs = document.querySelectorAll('.sug-text');
+  const texts = classSuggests[cls];
+  sugs.forEach((s,i)=>{ if(texts[i]) s.textContent=texts[i]; });
+}
+
+function setTool(t){
+  currentTool = t;
+  document.querySelectorAll('.tool-btn').forEach(b=>b.classList.remove('active-tool'));
+  document.getElementById('tool'+t.charAt(0).toUpperCase()+t.slice(1)).classList.add('active-tool');
+  const ta = document.getElementById('promptTa');
+  if(t==='image') ta.placeholder='Describe an image to generate…\ne.g. A futuristic city on Mars';
+  else ta.placeholder='Ask a question or request text…\ne.g. Explain Newton\'s Second Law';
+}
+
+function doVoice(){
+  showToast('🎙️ Voice input — speak now…');
+  setTimeout(()=>{
+    document.getElementById('promptTa').value = 'Explain the water cycle with a diagram';
+    updateChar();
+    showToast('✅ Voice captured!');
+  },2000);
+}
+
+function updateChar(){
+  const len = document.getElementById('promptTa').value.length;
+  document.getElementById('charCount').textContent = len+' / 500';
+}
+
+function useSuggest(el, text){
+  document.getElementById('promptTa').value = text;
+  updateChar();
+  el.style.borderColor='var(--indigo)';
+  setTimeout(()=>el.style.borderColor='',600);
+}
+
+function generate(){
+  if(generating) return;
+  const prompt = document.getElementById('promptTa').value.trim();
+  if(!prompt){ showToast('⚠️ Please enter a prompt first!'); return; }
+  generating = true;
+  const btn = document.getElementById('genBtn');
+  btn.classList.add('loading');
+  document.getElementById('genIcon').style.display='none';
+  document.getElementById('genSpin').style.display='block';
+  document.getElementById('genTxt').textContent='Generating…';
+
+  // show loading state
+  document.getElementById('outPH').style.display='none';
+  document.getElementById('outImg').style.display='none';
+  document.getElementById('outTxt').style.display='none';
+  document.getElementById('outMeta').style.display='none';
+  document.getElementById('outLoad').style.display='flex';
+  document.getElementById('outDot').classList.remove('live');
+  document.getElementById('outTitle').textContent='Generating…';
+  const loadTxt = document.getElementById('loadTxt');
+
+  const msgs = currentTool==='image'
+    ? ['Composing scene…','Adding details…','Rendering lighting…','Finalizing…']
+    : ['Analyzing prompt…','Structuring response…','Refining content…','Almost done…'];
+  let m=0;
+  const intv = setInterval(()=>{ loadTxt.textContent=msgs[m%msgs.length]; m++; },700);
+
+  setTimeout(()=>{
+    clearInterval(intv);
+    generating = false;
+    btn.classList.remove('loading');
+    document.getElementById('genIcon').style.display='';
+    document.getElementById('genSpin').style.display='none';
+    document.getElementById('genTxt').textContent='Generate';
+    document.getElementById('outLoad').style.display='none';
+    document.getElementById('outDot').classList.add('live');
+    document.getElementById('outputCard').classList.add('ready');
+
+    const isImg = currentTool==='image';
+    if(isImg){
+      document.getElementById('outImg').style.display='block';
+      document.getElementById('outTitle').textContent='AI Image · Generated';
+      document.getElementById('outMetaTxt').textContent='Generated in 3.2s · DALL-E 3 style';
+    } else {
+      document.getElementById('outTxt').style.display='block';
+      document.getElementById('outTitle').textContent='AI Response · Generated';
+      document.getElementById('outMetaTxt').textContent='Generated in 1.4s · Class Signal AI';
+      renderTextOutput(prompt);
+    }
+    document.getElementById('outMeta').style.display='flex';
+    showToast('✅ Generated successfully!');
+    addToHistory(prompt, isImg?'image':'text');
+  }, 3200);
+}
+
+function renderTextOutput(prompt){
+  const el = document.getElementById('outTxt');
+  const responses = {
+    default:`<strong>Here's your AI-generated content:</strong><br><br>Based on your prompt, here is a comprehensive explanation designed specifically for your learning level. The concepts are broken down into clear, digestible steps with real-world examples to help you understand better.`,
+    newton:`<strong>Newton's Laws of Motion</strong><br><br><span class="highlight">1st Law: An object stays at rest or in motion unless a force acts on it.</span>Think of a ball on a flat surface — it won't move until you push it!<br><br><strong>2nd Law: F = m × a</strong><br>Force equals mass times acceleration. Push a heavier cart harder to get the same speed.<br><br><span class="highlight">3rd Law: Every action has an equal and opposite reaction.</span>Jump off a boat — the boat moves backward!`,
+    pitch:`<strong>Solar Bike Sharing – Startup Pitch</strong><br><br><span class="highlight">🚴 Problem: Urban commuters face traffic and pollution daily.</span><br><br><strong>Solution:</strong> Solar-powered smart bikes available at every metro station. No fuel. No emissions. Charged by sun.<br><br><strong>Revenue:</strong> ₹5/km · Corporate subscriptions · Ad partnerships<br><br><span class="highlight">Market size: ₹2,400 Cr by 2028 in India alone.</span>`
+  };
+  let content = responses.default;
+  if(prompt.toLowerCase().includes('newton')) content=responses.newton;
+  else if(prompt.toLowerCase().includes('pitch')||prompt.toLowerCase().includes('startup')) content=responses.pitch;
+  el.innerHTML = `<div class="out-text-content">${content}</div>`;
+}
+
+function addToHistory(prompt, type){
+  const card = document.querySelector('.hist-card');
+  const item = document.createElement('div');
+  item.className='hist-item';
+  const short = prompt.length>40?prompt.slice(0,40)+'…':prompt;
+  const tag = type==='image'?'<div class="hist-tag tag-img">Image</div>':'<div class="hist-tag tag-txt">Text</div>';
+  const ico = type==='image'?'🎨':'📝';
+  item.innerHTML=`<div class="hist-thumb" style="background:rgba(79,110,247,0.2);">${ico}</div><div class="hist-info"><div class="hist-prompt">${short}</div><div class="hist-meta">Just now · AI ${type==='image'?'Image':'Text'}</div></div>${tag}`;
+  card.insertBefore(item,card.firstChild);
+}
+
+function loadHistory(type, format){
+  const prompts={solar:'Generate a detailed 3D model of the solar system',newton:'Explain Newton\'s Laws of Motion with examples',pitch:'Create a startup pitch for an eco-friendly delivery app'};
+  document.getElementById('promptTa').value=prompts[type]||'';
+  updateChar();
+  if(format==='exp') setTool('text'); else setTool('image');
+  showToast('📂 Prompt loaded!');
+}
+
+function copyOutput(){ showToast('📋 Copied to clipboard!'); }
+function downloadOutput(){ showToast('⬇️ Saved to gallery!'); }
+
+function showToast(msg){
+  const t=document.getElementById('toastNotif');
+  t.textContent=msg; t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),2200);
+}
+
+updateChar();
+</script>
+</body>
+</html>

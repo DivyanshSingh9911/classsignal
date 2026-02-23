@@ -1,0 +1,800 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0">
+<title>Class Signal – Teacher Dashboard</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+*{margin:0;padding:0;box-sizing:border-box;}
+:root{--teal:#0D9488;--teal2:#0F766E;--cyan:#06B6D4;--bg:#0F1117;--surface:#1A1D27;--surface2:#22263A;--border:#2A2E45;--text:#F0F2FF;--muted:#7B82A8;--soft:#3A3F5C;--green:#22C55E;--amber:#F59E0B;--red:#EF4444;--blue:#4F6EF7;}
+body{font-family:'Inter',sans-serif;background:#0A0C12;min-height:100vh;display:flex;justify-content:center;align-items:flex-start;padding:20px;}
+.frame{width:390px;min-height:844px;background:var(--bg);border-radius:48px;box-shadow:0 40px 100px rgba(0,0,0,0.7),0 0 0 1px var(--border);overflow:hidden;position:relative;display:flex;flex-direction:column;}
+.sb{height:50px;display:flex;align-items:center;justify-content:space-between;padding:0 28px;position:absolute;top:0;left:0;right:0;z-index:20;}
+.sb-t{font-size:15px;font-weight:700;color:white;}
+.sb-i{display:flex;gap:5px;}.sb-i svg{width:15px;height:15px;fill:white;}
+
+/* ── HERO ── */
+.hero{background:linear-gradient(160deg,#042F2E 0%,#0D4A46 50%,#065F46 100%);padding:58px 22px 26px;position:relative;overflow:hidden;flex-shrink:0;}
+.hero::before{content:'';position:absolute;top:-60px;right:-60px;width:220px;height:220px;background:radial-gradient(circle,rgba(13,148,136,0.3) 0%,transparent 70%);}
+.hero::after{content:'';position:absolute;bottom:-70px;left:-40px;width:200px;height:200px;background:radial-gradient(circle,rgba(6,182,212,0.2) 0%,transparent 70%);}
+.hero-top{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:18px;position:relative;z-index:2;}
+.t-greet{color:rgba(255,255,255,0.65);font-size:13px;font-weight:500;margin-bottom:3px;}
+.t-name{color:white;font-size:22px;font-weight:900;letter-spacing:-.3px;margin-bottom:3px;}
+.t-class{color:rgba(255,255,255,0.6);font-size:13px;}
+.t-avatar{width:52px;height:52px;background:rgba(255,255,255,0.15);border:2px solid rgba(255,255,255,0.25);border-radius:16px;display:flex;align-items:center;justify-content:center;font-size:24px;}
+.stats-strip{display:flex;gap:10px;position:relative;z-index:2;}
+.strip-stat{flex:1;background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.15);border-radius:14px;padding:10px 12px;text-align:center;}
+.strip-val{color:white;font-size:18px;font-weight:900;}
+.strip-lbl{color:rgba(255,255,255,0.6);font-size:10px;font-weight:700;margin-top:2px;letter-spacing:.3px;}
+
+/* ── SCROLL ── */
+.scroll{flex:1;overflow-y:auto;padding-bottom:90px;}
+.scroll::-webkit-scrollbar{display:none;}
+.inner{padding:18px 16px 0;}
+.sec-hdr{display:flex;align-items:center;justify-content:space-between;margin:0 0 12px;}
+.sec-title{font-size:15px;font-weight:800;color:var(--text);}
+.sec-link{font-size:13px;font-weight:600;color:var(--teal);cursor:pointer;}
+
+/* ── ACTION GRID ── */
+.action-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:18px;}
+.action-card{background:var(--surface);border:1px solid var(--border);border-radius:20px;padding:16px 15px;cursor:pointer;transition:all .18s;position:relative;overflow:hidden;}
+.action-card:hover{border-color:rgba(13,148,136,0.4);background:rgba(13,148,136,0.04);transform:translateY(-1px);}
+.action-card:active{transform:scale(.97);}
+.action-card::after{content:'';position:absolute;top:-20px;right:-20px;width:70px;height:70px;border-radius:50%;opacity:.08;}
+.card-attend::after{background:#22C55E;}
+.card-remark::after{background:#4F6EF7;}
+.card-report::after{background:#8B5CF6;}
+.card-notify::after{background:#F59E0B;}
+.action-ico{width:42px;height:42px;border-radius:13px;display:flex;align-items:center;justify-content:center;margin-bottom:12px;font-size:20px;}
+.ico-green{background:rgba(34,197,94,0.15);}
+.ico-blue{background:rgba(79,110,247,0.15);}
+.ico-purple{background:rgba(139,92,246,0.15);}
+.ico-amber{background:rgba(245,158,11,0.15);}
+.action-title{font-size:13px;font-weight:800;color:var(--text);margin-bottom:3px;}
+.action-desc{font-size:11px;color:var(--muted);line-height:1.4;}
+.action-arrow{position:absolute;bottom:12px;right:12px;width:22px;height:22px;background:var(--surface2);border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:12px;color:var(--muted);}
+
+/* ── DOUBTS ── */
+.doubt-card{background:var(--surface);border:1px solid var(--border);border-radius:20px;overflow:hidden;margin-bottom:16px;}
+.doubt-item{border-bottom:1px solid var(--border);transition:background .12s;}
+.doubt-item:last-child{border-bottom:none;}
+.doubt-item.dismissed{opacity:.4;}
+.d-header{display:flex;align-items:flex-start;gap:12px;padding:14px 16px;cursor:pointer;}
+.d-header:hover{background:rgba(13,148,136,0.04);}
+.d-av{width:36px;height:36px;border-radius:11px;background:linear-gradient(135deg,rgba(99,102,241,0.3),rgba(139,92,246,0.3));display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0;}
+.d-info{flex:1;}
+.d-student{font-size:13px;font-weight:800;color:var(--text);margin-bottom:3px;}
+.d-question{font-size:12px;color:var(--muted);line-height:1.45;margin-bottom:6px;}
+.d-meta{display:flex;align-items:center;gap:6px;}
+.d-subj{font-size:10px;font-weight:800;padding:2px 8px;border-radius:7px;background:rgba(99,102,241,0.15);color:#A5B4FC;border:1px solid rgba(99,102,241,0.2);}
+.d-time{font-size:10px;color:var(--soft);}
+.d-chevron{font-size:16px;color:var(--soft);transition:transform .2s;flex-shrink:0;align-self:center;}
+.doubt-item.expanded .d-chevron{transform:rotate(90deg);}
+/* Chat thread inside doubt */
+.d-thread{display:none;padding:0 16px 14px;background:rgba(0,0,0,0.12);}
+.doubt-item.expanded .d-thread{display:block;}
+.d-thread-msgs{display:flex;flex-direction:column;gap:8px;margin-bottom:12px;max-height:200px;overflow-y:auto;padding-right:4px;}
+.d-thread-msgs::-webkit-scrollbar{width:3px;}
+.d-thread-msgs::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px;}
+.chat-bubble-wrap{display:flex;gap:8px;align-items:flex-end;}
+.chat-bubble-wrap.teacher-side{flex-direction:row-reverse;}
+.chat-mini-av{width:26px;height:26px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:12px;flex-shrink:0;}
+.chat-mini-av.student{background:linear-gradient(135deg,rgba(99,102,241,0.4),rgba(139,92,246,0.4));}
+.chat-mini-av.teacher{background:linear-gradient(135deg,rgba(13,148,136,0.4),rgba(6,182,212,0.3));}
+.chat-msg-bubble{max-width:75%;padding:8px 12px;border-radius:12px;font-size:12px;line-height:1.5;color:var(--text);}
+.student-bubble{background:var(--surface2);border:1px solid var(--border);border-bottom-left-radius:4px;}
+.teacher-bubble{background:rgba(13,148,136,0.2);border:1px solid rgba(13,148,136,0.25);border-bottom-right-radius:4px;color:var(--text);}
+.bubble-time{font-size:9.5px;color:var(--soft);margin-top:3px;}
+.d-acts{display:flex;gap:7px;align-items:center;}
+.reply-btn{background:var(--teal);color:white;font-size:11px;font-weight:800;padding:6px 13px;border-radius:8px;border:none;cursor:pointer;font-family:'Inter',sans-serif;transition:all .15s;white-space:nowrap;flex:1;}
+.reply-btn:hover{background:#0F766E;}
+.dismiss-btn{background:var(--surface2);color:var(--muted);font-size:11px;font-weight:600;padding:5px 10px;border-radius:8px;border:none;cursor:pointer;font-family:'Inter',sans-serif;transition:all .15s;}
+.dismiss-btn:hover{background:rgba(239,68,68,0.15);color:#F87171;}
+/* quick reply input in thread */
+.quick-reply-row{display:flex;gap:8px;align-items:center;margin-top:8px;}
+.quick-reply-input{flex:1;background:var(--surface2);border:1px solid var(--border);border-radius:12px;padding:8px 12px;font-size:12px;color:var(--text);font-family:'Inter',sans-serif;outline:none;caret-color:var(--teal);}
+.quick-reply-input::placeholder{color:var(--soft);}
+.quick-reply-send{width:34px;height:34px;background:var(--teal);border:none;border-radius:10px;display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;}
+.quick-reply-send svg{width:16px;height:16px;fill:white;}
+
+/* ── SCHEDULE ── */
+.sched-card{background:var(--surface);border:1px solid var(--border);border-radius:20px;overflow:hidden;margin-bottom:16px;}
+.sched-item{display:flex;align-items:center;gap:14px;padding:13px 16px;border-bottom:1px solid var(--border);transition:background .12s;}
+.sched-item:last-child{border-bottom:none;}
+.sched-item:hover{background:rgba(13,148,136,0.03);}
+.sched-time{font-size:12px;font-weight:700;color:var(--muted);min-width:55px;}
+.sched-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;}
+.sched-info{flex:1;}
+.sched-subj{font-size:13px;font-weight:800;color:var(--text);}
+.sched-room{font-size:11px;color:var(--muted);}
+.sched-badge{font-size:11px;font-weight:800;padding:4px 10px;border-radius:10px;white-space:nowrap;}
+.b-now{background:rgba(34,197,94,0.15);color:#4ADE80;border:1px solid rgba(34,197,94,0.2);}
+.b-next{background:rgba(79,110,247,0.15);color:#93C5FD;border:1px solid rgba(79,110,247,0.2);}
+.b-done{background:var(--surface2);color:var(--muted);}
+.b-later{background:rgba(245,158,11,0.15);color:#FCD34D;border:1px solid rgba(245,158,11,0.2);}
+
+/* ── AI INSIGHT ── */
+.ai-insight{background:linear-gradient(135deg,rgba(13,148,136,0.12),rgba(6,182,212,0.06));border:1px solid rgba(13,148,136,0.2);border-radius:20px;padding:16px 18px;margin-bottom:16px;}
+.ai-ins-hdr{display:flex;align-items:center;gap:10px;margin-bottom:10px;}
+.ai-ins-ico{width:32px;height:32px;background:linear-gradient(135deg,var(--teal),var(--cyan));border-radius:10px;display:flex;align-items:center;justify-content:center;}
+.ai-ins-ico svg{width:16px;height:16px;fill:white;}
+.ai-ins-label{font-size:13px;font-weight:800;color:#5EEAD4;}
+.ai-ins-badge{margin-left:auto;background:var(--teal);color:white;font-size:10px;font-weight:800;padding:3px 9px;border-radius:10px;}
+.ai-ins-text{font-size:13px;color:rgba(240,242,255,0.7);line-height:1.65;margin-bottom:14px;}
+.ai-ins-text strong{color:var(--text);}
+.ai-btn{width:100%;padding:12px;background:linear-gradient(135deg,var(--teal2),var(--teal));border:none;border-radius:13px;font-size:13px;font-weight:800;color:white;cursor:pointer;font-family:'Inter',sans-serif;box-shadow:0 4px 16px rgba(13,148,136,0.35);transition:transform .15s;}
+.ai-btn:hover{transform:translateY(-1px);}
+.ai-btn:active{transform:scale(.98);}
+
+/* ── NAV ── */
+.bot-nav{position:absolute;bottom:0;left:0;right:0;height:80px;background:var(--surface);border-top:1px solid var(--border);display:flex;align-items:center;justify-content:space-around;padding:0 8px 12px;z-index:50;}
+.nav-item{display:flex;flex-direction:column;align-items:center;gap:4px;padding:8px 14px;border-radius:14px;cursor:pointer;transition:background .15s;min-width:58px;text-decoration:none;}
+.nav-item.active{background:rgba(13,148,136,0.15);}
+.nav-item svg{width:22px;height:22px;}
+.nav-item.active svg{fill:var(--teal);}
+.nav-item:not(.active) svg{fill:var(--muted);}
+.nav-lbl{font-size:10px;font-weight:700;}
+.nav-item.active .nav-lbl{color:var(--teal);}
+.nav-item:not(.active) .nav-lbl{color:var(--muted);}
+
+/* ── MODALS ── */
+.modal-overlay{position:absolute;inset:0;background:rgba(0,0,0,0.65);display:none;align-items:flex-end;z-index:100;backdrop-filter:blur(6px);}
+.modal-overlay.show{display:flex;}
+.modal-sheet{width:100%;background:var(--surface);border-radius:28px 28px 0 0;padding:22px 22px 40px;border-top:1px solid var(--border);}
+.modal-handle{width:36px;height:4px;background:var(--border);border-radius:2px;margin:0 auto 18px;}
+.modal-title{font-size:18px;font-weight:900;color:var(--text);margin-bottom:6px;}
+.modal-sub{font-size:13px;color:var(--muted);margin-bottom:16px;line-height:1.5;}
+.modal-field{background:var(--surface2);border:1px solid var(--border);border-radius:14px;padding:12px 14px;margin-bottom:12px;}
+.modal-field-label{font-size:11px;font-weight:700;color:var(--muted);margin-bottom:5px;letter-spacing:.4px;text-transform:uppercase;}
+.modal-input{width:100%;background:none;border:none;outline:none;font-family:'Inter',sans-serif;font-size:14px;color:var(--text);caret-color:var(--teal);}
+.modal-input::placeholder{color:var(--soft);}
+.modal-ta{width:100%;background:none;border:none;outline:none;font-family:'Inter',sans-serif;font-size:14px;color:var(--text);resize:none;min-height:60px;caret-color:var(--teal);}
+.modal-ta::placeholder{color:var(--soft);}
+.modal-actions{display:flex;gap:10px;margin-top:6px;}
+.modal-cancel{flex:1;padding:14px;border-radius:14px;border:1.5px solid var(--border);background:var(--surface2);font-size:14px;font-weight:700;color:var(--muted);cursor:pointer;font-family:'Inter',sans-serif;}
+.modal-confirm{flex:1;padding:14px;border-radius:14px;border:none;font-size:14px;font-weight:800;color:white;cursor:pointer;font-family:'Inter',sans-serif;}
+.modal-confirm.teal{background:linear-gradient(135deg,var(--teal2),var(--teal));box-shadow:0 4px 16px rgba(13,148,136,0.4);}
+.modal-confirm.green{background:linear-gradient(135deg,#16A34A,#22C55E);box-shadow:0 4px 16px rgba(34,197,94,0.3);}
+
+/* notify target selector */
+.notify-target-row{display:flex;gap:8px;margin-bottom:12px;}
+.notify-target-btn{flex:1;padding:9px 6px;border-radius:12px;border:1.5px solid var(--border);background:var(--surface2);font-size:11px;font-weight:700;color:var(--muted);cursor:pointer;font-family:'Inter',sans-serif;transition:all .15s;text-align:center;}
+.notify-target-btn.active{background:rgba(13,148,136,0.15);border-color:rgba(13,148,136,0.4);color:#5EEAD4;}
+.student-search{display:none;margin-bottom:10px;}
+.student-search.show{display:block;}
+.student-tags{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:8px;}
+.student-tag{display:flex;align-items:center;gap:4px;background:rgba(13,148,136,0.15);border:1px solid rgba(13,148,136,0.25);border-radius:20px;padding:4px 10px;font-size:11px;font-weight:700;color:#5EEAD4;}
+.student-tag-remove{cursor:pointer;opacity:.6;}
+.student-tag-remove:hover{opacity:1;}
+.notify-count-badge{font-size:11px;color:var(--muted);margin-bottom:10px;}
+.notify-count-badge strong{color:var(--text);}
+
+/* toast */
+.toast-notif{position:absolute;bottom:100px;left:50%;transform:translateX(-50%);background:var(--surface2);border:1px solid rgba(34,197,94,0.3);border-radius:14px;padding:10px 16px;font-size:12px;font-weight:700;color:#4ADE80;white-space:nowrap;z-index:200;opacity:0;transition:opacity .3s;pointer-events:none;}
+.toast-notif.show{opacity:1;}
+/* empty state */
+.empty-state{padding:28px 16px;text-align:center;animation:fadeUp .3s ease;}
+@keyframes fadeUp{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:translateY(0);}}
+</style>
+</head>
+<body>
+<div class="frame">
+  <div class="sb">
+    <span class="sb-t">9:41</span>
+    <div class="sb-i">
+      <svg viewBox="0 0 24 24"><path d="M1 9l2 2c4.97-4.97 13.03-4.97 18 0l2-2C16.93 2.93 7.08 2.93 1 9zm8 8l3 3 3-3c-1.65-1.66-4.34-1.66-6 0zm-4-4l2 2c2.76-2.76 7.24-2.76 10 0l2-2C15.14 9.14 8.87 9.14 5 13z"/></svg>
+      <svg viewBox="0 0 24 24"><path d="M15.67 4H14V2h-4v2H8.33C7.6 4 7 4.6 7 5.33v15.33C7 21.4 7.6 22 8.33 22h7.33c.74 0 1.34-.6 1.34-1.33V5.33C17 4.6 16.4 4 15.67 4z"/></svg>
+    </div>
+  </div>
+
+  <div class="hero">
+    <div class="hero-top">
+      <div>
+        <div class="t-greet">Good Morning 👋</div>
+        <div class="t-name">Ms. Kavita Reddy</div>
+        <div class="t-class">Class Teacher · 8A · DPS School</div>
+      </div>
+      <div class="t-avatar">👩‍🏫</div>
+    </div>
+    <div class="stats-strip">
+      <div class="strip-stat"><div class="strip-val">38</div><div class="strip-lbl">Students</div></div>
+      <div class="strip-stat"><div class="strip-val">94%</div><div class="strip-lbl">Avg Attend.</div></div>
+      <div class="strip-stat"><div class="strip-val" id="pendingReports">5</div><div class="strip-lbl">Reports</div></div>
+      <div class="strip-stat"><div class="strip-val" id="nudgeCount">3</div><div class="strip-lbl">Nudges</div></div>
+    </div>
+  </div>
+
+  <div class="scroll">
+    <div class="inner">
+
+      <div class="sec-hdr" style="margin-top:4px;"><div class="sec-title">Quick Actions</div></div>
+      <div class="action-grid">
+        <div class="action-card card-attend" onclick="openModal('attend')">
+          <div class="action-ico ico-green">✅</div>
+          <div class="action-title">Mark Attendance</div>
+          <div class="action-desc">Today's roll call for Class 8A</div>
+          <div class="action-arrow">›</div>
+        </div>
+        <div class="action-card card-remark" onclick="openModal('remark')">
+          <div class="action-ico ico-blue">✏️</div>
+          <div class="action-title">Add Remark</div>
+          <div class="action-desc">Add observation for a student</div>
+          <div class="action-arrow">›</div>
+        </div>
+        <div class="action-card card-report" onclick="openModal('report')">
+          <div class="action-ico ico-purple">📊</div>
+          <div class="action-title">Generate Report</div>
+          <div class="action-desc">Creates structured growth summary in seconds.</div>
+          <div class="action-arrow">›</div>
+        </div>
+        <div class="action-card card-notify" onclick="openModal('notify')">
+          <div class="action-ico ico-amber">📢</div>
+          <div class="action-title">Notify Students</div>
+          <div class="action-desc">Send class announcement</div>
+          <div class="action-arrow">›</div>
+        </div>
+      </div>
+
+      <!-- Nudged Doubts -->
+      <div class="sec-hdr">
+        <div class="sec-title">Nudged Doubts</div>
+        <div class="sec-link" id="nudgeLinkTxt">See All (3)</div>
+      </div>
+      <div style="display:flex;gap:7px;margin-bottom:10px;overflow-x:auto;" id="doubtFilters">
+        <button onclick="filterDoubts('all',this)" style="padding:5px 13px;border-radius:20px;border:1.5px solid rgba(13,148,136,0.4);background:rgba(13,148,136,0.15);color:#5EEAD4;font-size:11px;font-weight:700;cursor:pointer;font-family:inherit;white-space:nowrap;">All (3)</button>
+        <button onclick="filterDoubts('Physics',this)" style="padding:5px 13px;border-radius:20px;border:1.5px solid var(--border);background:var(--surface2);color:var(--muted);font-size:11px;font-weight:700;cursor:pointer;font-family:inherit;white-space:nowrap;">Physics</button>
+        <button onclick="filterDoubts('Mathematics',this)" style="padding:5px 13px;border-radius:20px;border:1.5px solid var(--border);background:var(--surface2);color:var(--muted);font-size:11px;font-weight:700;cursor:pointer;font-family:inherit;white-space:nowrap;">Mathematics</button>
+        <button onclick="filterDoubts('Biology',this)" style="padding:5px 13px;border-radius:20px;border:1.5px solid var(--border);background:var(--surface2);color:var(--muted);font-size:11px;font-weight:700;cursor:pointer;font-family:inherit;white-space:nowrap;">Biology</button>
+      </div>
+      <div class="doubt-card" id="doubtList">
+
+        <!-- DOUBT 1: Aarav -->
+        <div class="doubt-item" id="doubt1">
+          <div class="d-header" onclick="toggleDoubt('doubt1')">
+            <div class="d-av">🧑</div>
+            <div class="d-info">
+              <div class="d-student">Aarav Sharma</div>
+              <div class="d-question">"I don't understand Newton's Second Law — what does acceleration depend on?"</div>
+              <div class="d-meta"><span class="d-subj">Physics</span><span class="d-time">15 mins ago</span></div>
+            </div>
+            <div class="d-chevron">›</div>
+          </div>
+          <div class="d-thread">
+            <div class="d-thread-msgs" id="thread-doubt1">
+              <div class="chat-bubble-wrap">
+                <div class="chat-mini-av student">🧑</div>
+                <div>
+                  <div class="chat-msg-bubble student-bubble">I don't understand Newton's Second Law — what does acceleration depend on?</div>
+                  <div class="bubble-time">Aarav · 9:26 AM</div>
+                </div>
+              </div>
+              <div class="chat-bubble-wrap">
+                <div class="chat-mini-av student">🧑</div>
+                <div>
+                  <div class="chat-msg-bubble student-bubble">I tried reading the textbook but I'm confused about the formula F = ma. What is 'a' exactly?</div>
+                  <div class="bubble-time">Aarav · 9:27 AM</div>
+                </div>
+              </div>
+              <div class="chat-bubble-wrap">
+                <div class="chat-mini-av student">🧑</div>
+                <div>
+                  <div class="chat-msg-bubble student-bubble">Also the AI Bot said I should ask you directly since it was out of its syllabus scope.</div>
+                  <div class="bubble-time">Aarav · 9:28 AM · 🔔 Nudged</div>
+                </div>
+              </div>
+            </div>
+            <div class="quick-reply-row">
+              <input class="quick-reply-input" id="qr-doubt1" placeholder="Reply to Aarav…">
+              <button class="quick-reply-send" onclick="sendQuickReply('doubt1','Aarav')">
+                <svg viewBox="0 0 24 24"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg>
+              </button>
+            </div>
+            <div class="d-acts" style="margin-top:8px;">
+              <button class="reply-btn" onclick="replyDoubt('doubt1','Aarav')">Open Full Reply</button>
+              <button class="dismiss-btn" onclick="dismissDoubt('doubt1')">Dismiss</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- DOUBT 2: Priya -->
+        <div class="doubt-item" id="doubt2">
+          <div class="d-header" onclick="toggleDoubt('doubt2')">
+            <div class="d-av">👧</div>
+            <div class="d-info">
+              <div class="d-student">Priya Kapoor</div>
+              <div class="d-question">"Can you explain the difference between mean, median and mode?"</div>
+              <div class="d-meta"><span class="d-subj">Mathematics</span><span class="d-time">1 hour ago</span></div>
+            </div>
+            <div class="d-chevron">›</div>
+          </div>
+          <div class="d-thread">
+            <div class="d-thread-msgs" id="thread-doubt2">
+              <div class="chat-bubble-wrap">
+                <div class="chat-mini-av student">👧</div>
+                <div>
+                  <div class="chat-msg-bubble student-bubble">Can you explain the difference between mean, median and mode? I get confused when the question says "central tendency".</div>
+                  <div class="bubble-time">Priya · 8:45 AM</div>
+                </div>
+              </div>
+              <div class="chat-bubble-wrap">
+                <div class="chat-mini-av student">👧</div>
+                <div>
+                  <div class="chat-msg-bubble student-bubble">I asked the Q&A Bot and it gave me a formula but didn't explain with an example I could understand.</div>
+                  <div class="bubble-time">Priya · 8:47 AM · 🔔 Nudged</div>
+                </div>
+              </div>
+            </div>
+            <div class="quick-reply-row">
+              <input class="quick-reply-input" id="qr-doubt2" placeholder="Reply to Priya…">
+              <button class="quick-reply-send" onclick="sendQuickReply('doubt2','Priya')">
+                <svg viewBox="0 0 24 24"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg>
+              </button>
+            </div>
+            <div class="d-acts" style="margin-top:8px;">
+              <button class="reply-btn" onclick="replyDoubt('doubt2','Priya')">Open Full Reply</button>
+              <button class="dismiss-btn" onclick="dismissDoubt('doubt2')">Dismiss</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- DOUBT 3: Rohan -->
+        <div class="doubt-item" id="doubt3">
+          <div class="d-header" onclick="toggleDoubt('doubt3')">
+            <div class="d-av">👦</div>
+            <div class="d-info">
+              <div class="d-student">Rohan Mehta</div>
+              <div class="d-question">"What is the difference between mitosis and meiosis?"</div>
+              <div class="d-meta"><span class="d-subj">Biology</span><span class="d-time">2 hours ago</span></div>
+            </div>
+            <div class="d-chevron">›</div>
+          </div>
+          <div class="d-thread">
+            <div class="d-thread-msgs" id="thread-doubt3">
+              <div class="chat-bubble-wrap">
+                <div class="chat-mini-av student">👦</div>
+                <div>
+                  <div class="chat-msg-bubble student-bubble">What is the difference between mitosis and meiosis? I keep mixing them up in diagrams.</div>
+                  <div class="bubble-time">Rohan · 7:58 AM</div>
+                </div>
+              </div>
+              <div class="chat-bubble-wrap">
+                <div class="chat-mini-av student">👦</div>
+                <div>
+                  <div class="chat-msg-bubble student-bubble">Specifically the number of cells produced at the end — is it 2 or 4?</div>
+                  <div class="bubble-time">Rohan · 7:59 AM</div>
+                </div>
+              </div>
+              <div class="chat-bubble-wrap">
+                <div class="chat-mini-av student">👦</div>
+                <div>
+                  <div class="chat-msg-bubble student-bubble">I have a test this week so this is urgent 🙏</div>
+                  <div class="bubble-time">Rohan · 8:00 AM · 🔔 Nudged</div>
+                </div>
+              </div>
+            </div>
+            <div class="quick-reply-row">
+              <input class="quick-reply-input" id="qr-doubt3" placeholder="Reply to Rohan…">
+              <button class="quick-reply-send" onclick="sendQuickReply('doubt3','Rohan')">
+                <svg viewBox="0 0 24 24"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg>
+              </button>
+            </div>
+            <div class="d-acts" style="margin-top:8px;">
+              <button class="reply-btn" onclick="replyDoubt('doubt3','Rohan')">Open Full Reply</button>
+              <button class="dismiss-btn" onclick="dismissDoubt('doubt3')">Dismiss</button>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Schedule -->
+      <div class="sec-hdr"><div class="sec-title">Today's Schedule</div><div class="sec-link">Full Timetable</div></div>
+      <div class="sched-card">
+        <div class="sched-item">
+          <div class="sched-time">8:00 AM</div>
+          <div class="sched-dot" style="background:#22C55E;"></div>
+          <div class="sched-info"><div class="sched-subj">Mathematics</div><div class="sched-room">Class 8A · Room 204</div></div>
+          <div class="sched-badge b-done">Done</div>
+        </div>
+        <div class="sched-item">
+          <div class="sched-time">9:30 AM</div>
+          <div class="sched-dot" style="background:#4F6EF7;box-shadow:0 0 6px rgba(79,110,247,0.6);"></div>
+          <div class="sched-info"><div class="sched-subj">Mathematics</div><div class="sched-room">Class 9B · Room 204</div></div>
+          <div class="sched-badge b-now">Now</div>
+        </div>
+        <div class="sched-item">
+          <div class="sched-time">11:00 AM</div>
+          <div class="sched-dot" style="background:#8B5CF6;"></div>
+          <div class="sched-info"><div class="sched-subj">Mathematics</div><div class="sched-room">Class 10A · Room 204</div></div>
+          <div class="sched-badge b-next">Next</div>
+        </div>
+        <div class="sched-item">
+          <div class="sched-time">2:00 PM</div>
+          <div class="sched-dot" style="background:#F59E0B;"></div>
+          <div class="sched-info"><div class="sched-subj">Staff Meeting</div><div class="sched-room">Principal's Office</div></div>
+          <div class="sched-badge b-later">Later</div>
+        </div>
+      </div>
+
+      <!-- AI Insight -->
+      <div class="sec-hdr"><div class="sec-title">AI Class Insight</div></div>
+      <div class="ai-insight">
+        <div class="ai-ins-hdr">
+          <div class="ai-ins-ico"><svg viewBox="0 0 24 24"><path d="M12 2l2.4 7.4H22l-6.2 4.5 2.4 7.4L12 17l-6.2 4.3 2.4-7.4L2 9.4h7.6z"/></svg></div>
+          <div class="ai-ins-label">AI Class Insight</div>
+          <div class="ai-ins-badge">Class Signal AI</div>
+        </div>
+        <div class="ai-ins-text"><strong>5 students</strong> in Class 8A show a declining trend in Mathematics this month. A group review session on <strong>Algebra</strong> is recommended — it's the most common weak area. <strong>Priya K.</strong> and <strong>Rohan M.</strong> show strong peer-teaching potential.</div>
+        <div style="margin-top:10px;padding-top:8px;border-top:1px solid rgba(13,148,136,0.15);font-size:10.5px;color:rgba(94,234,212,0.55);">Analyzed 38 students across 6 growth dimensions.</div>
+        <button class="ai-btn" onclick="showToast('📊 Full analysis coming soon!')">View Detailed Class Analysis →</button>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="bot-nav">
+    <div class="nav-item active"><svg viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg><span class="nav-lbl">Dashboard</span></div>
+    <div class="nav-item" onclick="openModal('attend')"><svg viewBox="0 0 24 24"><path d="M9 11H7v2h2v-2zm4 0h-2v2h2v-2zm4 0h-2v2h2v-2zm2-7h-1V2h-2v2H8V2H6v2H5c-1.11 0-1.99.9-1.99 2L3 20c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V9h14v11z"/></svg><span class="nav-lbl">Attendance</span></div>
+    <div class="nav-item" onclick="showToast('💬 Doubt inbox — 3 new nudges!')"><svg viewBox="0 0 24 24"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-2 12H6v-2h12v2zm0-3H6V9h12v2zm0-3H6V6h12v2z"/></svg><span class="nav-lbl">Doubts</span></div>
+    <div class="nav-item" onclick="showToast('👩‍🏫 Profile coming soon!')"><svg viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg><span class="nav-lbl">Profile</span></div>
+  </div>
+
+  <!-- ATTEND Modal -->
+  <div class="modal-overlay" id="modal-attend" onclick="closeModalOuter(event,'attend')">
+    <div class="modal-sheet">
+      <div class="modal-handle"></div>
+      <div class="modal-title">✅ Mark Attendance</div>
+      <div class="modal-sub">Class 8A — Today, Feb 23</div>
+      <div id="attendList"></div>
+      <div class="modal-actions" style="margin-top:10px;">
+        <button class="modal-cancel" onclick="closeModal('attend')">Cancel</button>
+        <button class="modal-confirm green" onclick="submitAttendance()">Submit Attendance</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- REMARK Modal -->
+  <div class="modal-overlay" id="modal-remark" onclick="closeModalOuter(event,'remark')">
+    <div class="modal-sheet">
+      <div class="modal-handle"></div>
+      <div class="modal-title">✏️ Add Student Remark</div>
+      <div class="modal-field">
+        <div class="modal-field-label">Student Name</div>
+        <input class="modal-input" id="remarkStudent" placeholder="e.g. Aarav Sharma">
+      </div>
+      <div class="modal-field">
+        <div class="modal-field-label">Remark</div>
+        <textarea class="modal-ta" id="remarkText" placeholder="Write your observation here…"></textarea>
+      </div>
+      <div class="modal-actions">
+        <button class="modal-cancel" onclick="closeModal('remark')">Cancel</button>
+        <button class="modal-confirm teal" onclick="submitRemark()">Save Remark</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- REPORT Modal -->
+  <div class="modal-overlay" id="modal-report" onclick="closeModalOuter(event,'report')">
+    <div class="modal-sheet">
+      <div class="modal-handle"></div>
+      <div class="modal-title">📊 Generate Report Card</div>
+      <div class="modal-sub">AI will generate a comprehensive report for the selected student.</div>
+      <div class="modal-field">
+        <div class="modal-field-label">Student Name</div>
+        <input class="modal-input" id="reportStudent" placeholder="e.g. Aarav Sharma">
+      </div>
+      <div class="modal-field">
+        <div class="modal-field-label">Term / Period</div>
+        <input class="modal-input" placeholder="e.g. Term 2 · Feb 2025">
+      </div>
+      <div class="modal-actions">
+        <button class="modal-cancel" onclick="closeModal('report')">Cancel</button>
+        <button class="modal-confirm teal" onclick="submitReport()">Generate with AI →</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- NOTIFY Modal -->
+  <div class="modal-overlay" id="modal-notify" onclick="closeModalOuter(event,'notify')">
+    <div class="modal-sheet">
+      <div class="modal-handle"></div>
+      <div class="modal-title">📢 Notify Students</div>
+      <div class="modal-sub">Choose who receives this message.</div>
+      <!-- Target selector -->
+      <div style="margin-bottom:4px;font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.4px;">Send To</div>
+      <div class="notify-target-row">
+        <button class="notify-target-btn" id="ntBtn-single" onclick="setNotifyTarget('single')">👤 Single</button>
+        <button class="notify-target-btn" id="ntBtn-group" onclick="setNotifyTarget('group')">👥 Group</button>
+        <button class="notify-target-btn active" id="ntBtn-class" onclick="setNotifyTarget('class')">🏫 Whole Class</button>
+      </div>
+      <!-- Single student search -->
+      <div class="student-search" id="notify-single-field">
+        <div class="modal-field" style="margin-bottom:0;">
+          <div class="modal-field-label">Student Name</div>
+          <input class="modal-input" id="notifySingleName" placeholder="e.g. Aarav Sharma" onkeydown="if(event.key==='Enter') addStudentTag()">
+        </div>
+      </div>
+      <!-- Group student tags -->
+      <div class="student-search" id="notify-group-field">
+        <div class="modal-field" style="margin-bottom:6px;">
+          <div class="modal-field-label">Add Students</div>
+          <input class="modal-input" id="notifyGroupInput" placeholder="Type name and press Enter" onkeydown="if(event.key==='Enter') addStudentTag()">
+        </div>
+        <div class="student-tags" id="studentTagContainer"></div>
+      </div>
+      <!-- Whole class badge -->
+      <div class="notify-count-badge" id="notify-class-badge">Sending to <strong>all 38 students</strong> in Class 8A</div>
+      <div class="modal-field">
+        <div class="modal-field-label">Message</div>
+        <textarea class="modal-ta" id="notifyText" placeholder="e.g. Reminder: Bring your textbook tomorrow!" style="min-height:80px;"></textarea>
+      </div>
+      <div class="modal-actions">
+        <button class="modal-cancel" onclick="closeModal('notify')">Cancel</button>
+        <button class="modal-confirm teal" id="notifySendBtn" onclick="submitNotify()">Send to Whole Class</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- REPLY Modal -->
+  <div class="modal-overlay" id="modal-reply" onclick="closeModalOuter(event,'reply')">
+    <div class="modal-sheet">
+      <div class="modal-handle"></div>
+      <div class="modal-title">💬 Reply to Doubt</div>
+      <div class="modal-sub">Your reply will be sent to <strong id="replyStudentName">the student</strong> via Class Signal.</div>
+      <div class="modal-field">
+        <div class="modal-field-label">Your Reply</div>
+        <textarea class="modal-ta" id="replyText" placeholder="Type your explanation here…" style="min-height:80px;"></textarea>
+      </div>
+      <div class="modal-actions">
+        <button class="modal-cancel" onclick="closeModal('reply')">Cancel</button>
+        <button class="modal-confirm teal" onclick="submitReply()">Send Reply</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast-notif" id="toast"></div>
+</div>
+
+<script>
+// ── Attendance modal population ──
+const students = ['Aarav Sharma','Priya Kapoor','Rohan Mehta','Anaya Singh','Dev Patel','Sara Khan','Arjun Nair','Meera Joshi'];
+function buildAttendList(){
+  const list = document.getElementById('attendList');
+  list.innerHTML = '';
+  students.forEach((name,i)=>{
+    const row = document.createElement('div');
+    row.style.cssText='display:flex;align-items:center;justify-content:space-between;padding:10px 14px;background:var(--surface2);border-radius:12px;margin-bottom:8px;border:1px solid var(--border);';
+    row.innerHTML=`
+      <span style="font-size:13px;font-weight:700;color:var(--text);">${name}</span>
+      <div style="display:flex;gap:6px;">
+        <button onclick="markP(this)" style="padding:5px 11px;border-radius:8px;border:none;background:rgba(34,197,94,0.15);color:#4ADE80;font-size:11px;font-weight:800;cursor:pointer;font-family:inherit;">P</button>
+        <button onclick="markA(this)" style="padding:5px 11px;border-radius:8px;border:none;background:rgba(239,68,68,0.15);color:#F87171;font-size:11px;font-weight:800;cursor:pointer;font-family:inherit;">A</button>
+        <button onclick="markL(this)" style="padding:5px 11px;border-radius:8px;border:none;background:rgba(245,158,11,0.15);color:#FCD34D;font-size:11px;font-weight:800;cursor:pointer;font-family:inherit;">L</button>
+      </div>`;
+    list.appendChild(row);
+  });
+}
+
+function markP(btn){ highlightMark(btn,'rgba(34,197,94,0.3)'); }
+function markA(btn){ highlightMark(btn,'rgba(239,68,68,0.3)'); }
+function markL(btn){ highlightMark(btn,'rgba(245,158,11,0.3)'); }
+function highlightMark(btn,col){
+  const row = btn.closest('[style*="border"]');
+  // reset all buttons in this row
+  row.querySelectorAll('button').forEach(b=>b.style.outline='none');
+  btn.style.outline='2px solid white';
+}
+
+// ── Nudge tracking ──
+let nudgesLeft = 3;
+let activeFilter = 'all';
+
+// Subject mapping for each doubt
+const doubtSubjects = {
+  doubt1: 'Physics',
+  doubt2: 'Mathematics',
+  doubt3: 'Biology'
+};
+
+function filterDoubts(subject, btn){
+  activeFilter = subject.toLowerCase();
+  // Update filter button styles
+  document.querySelectorAll('#doubtFilters button').forEach(b=>{
+    b.style.background = 'var(--surface2)';
+    b.style.color = 'var(--muted)';
+    b.style.borderColor = 'var(--border)';
+  });
+  btn.style.background = 'rgba(13,148,136,0.15)';
+  btn.style.color = '#5EEAD4';
+  btn.style.borderColor = 'rgba(13,148,136,0.4)';
+
+  let visibleCount = 0;
+  Object.entries(doubtSubjects).forEach(([id, subj])=>{
+    const el = document.getElementById(id);
+    if(!el || el.style.display === 'none') return;
+    const show = activeFilter === 'all' || subj.toLowerCase() === activeFilter;
+    el.style.display = show ? '' : 'none';
+    if(show) visibleCount++;
+  });
+  checkDoubtEmpty(visibleCount);
+}
+
+function checkDoubtEmpty(count){
+  const list = document.getElementById('doubtList');
+  let empty = document.getElementById('doubt-empty-state');
+  if(count === 0){
+    const subjectText = activeFilter !== 'all' ? ` in ${activeFilter.charAt(0).toUpperCase()+activeFilter.slice(1)}` : '';
+    if(!empty){
+      empty = document.createElement('div');
+      empty.id = 'doubt-empty-state';
+      empty.className = 'empty-state';
+      empty.innerHTML = `
+        <div style="font-size:32px;margin-bottom:10px;">🎉</div>
+        <div style="font-size:14px;font-weight:800;color:var(--text);margin-bottom:6px;">All caught up!</div>
+        <div style="font-size:12px;color:var(--muted);line-height:1.6;">No questions shared today${subjectText}.<br>Students are doing great.</div>`;
+      list.appendChild(empty);
+    } else {
+      empty.style.display = '';
+      const msgEl = empty.querySelector('div:last-child');
+      if(msgEl) msgEl.innerHTML = `No questions shared today${subjectText}.<br>Students are doing great.`;
+    }
+  } else {
+    if(empty) empty.style.display = 'none';
+  }
+}
+
+function toggleDoubt(id){
+  const el = document.getElementById(id);
+  el.classList.toggle('expanded');
+}
+function dismissDoubt(id){
+  const el = document.getElementById(id);
+  el.classList.add('dismissed');
+  setTimeout(()=>{
+    el.style.display='none';
+    delete doubtSubjects[id];
+    updateNudgeCount(-1);
+    // Check remaining visible doubts
+    const remaining = Object.keys(doubtSubjects).filter(k=>{
+      const e = document.getElementById(k);
+      if(!e) return false;
+      if(activeFilter === 'all') return true;
+      return (doubtSubjects[k]||'').toLowerCase() === activeFilter;
+    }).length;
+    checkDoubtEmpty(remaining);
+  }, 400);
+}
+function replyDoubt(id,name){
+  document.getElementById('replyStudentName').textContent = name;
+  document.getElementById('replyText').value='';
+  document.getElementById('modal-reply').classList.add('show');
+}
+function sendQuickReply(doubtId, name){
+  const input = document.getElementById('qr-'+doubtId);
+  const txt = input.value.trim();
+  if(!txt){ showToast('⚠️ Type a reply first.'); return; }
+  // Append teacher bubble to thread
+  const thread = document.getElementById('thread-'+doubtId);
+  const wrap = document.createElement('div');
+  wrap.className='chat-bubble-wrap teacher-side';
+  wrap.innerHTML=`
+    <div class="chat-mini-av teacher">👩‍🏫</div>
+    <div>
+      <div class="chat-msg-bubble teacher-bubble">${txt}</div>
+      <div class="bubble-time" style="text-align:right;">You · Just now</div>
+    </div>`;
+  thread.appendChild(wrap);
+  thread.scrollTop = thread.scrollHeight;
+  input.value='';
+  showToast('✅ Reply sent to '+name+'! Doubt resolved.');
+  updateNudgeCount(-1);
+  setTimeout(()=> dismissDoubt(doubtId), 1800);
+}
+function updateNudgeCount(delta){
+  nudgesLeft = Math.max(0, nudgesLeft + delta);
+  document.getElementById('nudgeCount').textContent = nudgesLeft;
+  document.getElementById('nudgeLinkTxt').textContent = nudgesLeft > 0 ? `See All (${nudgesLeft})` : 'All Resolved ✓';
+}
+
+// ── Notify target selector ──
+let notifyTarget = 'class';
+let groupStudents = [];
+function setNotifyTarget(type){
+  notifyTarget = type;
+  document.querySelectorAll('.notify-target-btn').forEach(b=>b.classList.remove('active'));
+  document.getElementById('ntBtn-'+type).classList.add('active');
+  document.getElementById('notify-single-field').classList.toggle('show', type==='single');
+  document.getElementById('notify-group-field').classList.toggle('show', type==='group');
+  document.getElementById('notify-class-badge').style.display = type==='class' ? 'block' : 'none';
+  const sendBtn = document.getElementById('notifySendBtn');
+  if(type==='class') sendBtn.textContent='Send to Whole Class (38)';
+  else if(type==='single') sendBtn.textContent='Send to Student';
+  else sendBtn.textContent='Send to Group';
+}
+function addStudentTag(){
+  const input = notifyTarget==='single'
+    ? document.getElementById('notifySingleName')
+    : document.getElementById('notifyGroupInput');
+  const val = input.value.trim();
+  if(!val) return;
+  if(notifyTarget==='single'){ input.value=''; return; } // single just keeps the name
+  if(groupStudents.includes(val)){ showToast('Already added!'); return; }
+  groupStudents.push(val);
+  renderStudentTags();
+  input.value='';
+  document.getElementById('notifySendBtn').textContent=`Send to Group (${groupStudents.length})`;
+}
+function removeStudentTag(name){
+  groupStudents = groupStudents.filter(s=>s!==name);
+  renderStudentTags();
+  document.getElementById('notifySendBtn').textContent=`Send to Group (${groupStudents.length||''})`;
+}
+function renderStudentTags(){
+  const c = document.getElementById('studentTagContainer');
+  c.innerHTML = groupStudents.map(s=>`<div class="student-tag">${s}<span class="student-tag-remove" onclick="removeStudentTag('${s}')">✕</span></div>`).join('');
+}
+
+// ── Modal helpers ──
+function openModal(type){
+  if(type==='attend') buildAttendList();
+  if(type==='notify') setNotifyTarget('class');
+  document.getElementById('modal-'+type).classList.add('show');
+}
+function closeModal(type){ document.getElementById('modal-'+type).classList.remove('show'); }
+function closeModalOuter(e,type){ if(e.target===document.getElementById('modal-'+type)) closeModal(type); }
+
+// ── Submit handlers ──
+function submitAttendance(){
+  closeModal('attend');
+  showToast('✅ Attendance saved for Class 8A!');
+}
+function submitRemark(){
+  const name = document.getElementById('remarkStudent').value.trim();
+  const text = document.getElementById('remarkText').value.trim();
+  if(!name||!text){ showToast('⚠️ Please fill in all fields.'); return; }
+  closeModal('remark');
+  showToast('✅ Remark added for '+name+'!');
+}
+function submitReport(){
+  const name = document.getElementById('reportStudent').value.trim();
+  closeModal('report');
+  showToast('📊 Generating AI report for '+(name||'student')+'…');
+  document.getElementById('pendingReports').textContent = Math.max(0, parseInt(document.getElementById('pendingReports').textContent)-1);
+}
+function submitNotify(){
+  const msg = document.getElementById('notifyText').value.trim();
+  if(!msg){ showToast('⚠️ Please type a message.'); return; }
+  closeModal('notify');
+  if(notifyTarget==='class'){
+    showToast('📢 Message sent to all 38 students!');
+  } else if(notifyTarget==='single'){
+    const name = document.getElementById('notifySingleName').value.trim() || 'student';
+    showToast('📢 Message sent to '+name+'!');
+  } else {
+    const count = groupStudents.length;
+    showToast('📢 Message sent to '+count+' students!');
+    groupStudents=[];
+    renderStudentTags();
+  }
+  document.getElementById('notifyText').value='';
+  // reset to class mode for next open
+  setNotifyTarget('class');
+}
+function submitReply(){
+  const name = document.getElementById('replyStudentName').textContent;
+  const txt = document.getElementById('replyText').value.trim();
+  if(!txt){ showToast('⚠️ Please write a reply.'); return; }
+  closeModal('reply');
+  showToast('💬 Reply sent to '+name+'!');
+  updateNudgeCount(-1);
+}
+
+function showToast(msg){
+  const t=document.getElementById('toast');
+  t.textContent=msg; t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),2400);
+}
+</script>
+</body>
+</html>
