@@ -16,8 +16,8 @@ body{font-family:'Inter',sans-serif;background:#0A0C12;min-height:100vh;display:
 
 /* hero */
 .hero{background:linear-gradient(160deg,#0D0D1F 0%,#1A0A40 50%,#0F0D2E 100%);padding:58px 22px 24px;position:relative;overflow:hidden;flex-shrink:0;}
-.hero::before{content:'';position:absolute;top:-50px;right:-50px;width:240px;height:240px;background:radial-gradient(circle,rgba(139,92,246,0.22) 0%,transparent 70%);}
-.hero::after{content:'';position:absolute;bottom:-60px;left:-30px;width:180px;height:180px;background:radial-gradient(circle,rgba(79,110,247,0.18) 0%,transparent 70%);}
+.hero::before{content:'';position:absolute;top:-50px;right:-50px;width:240px;height:240px;background:radial-gradient(circle,rgba(139,92,246,0.22) 0%,transparent 70%);z-index:1;}
+.hero::after{content:'';position:absolute;bottom:-60px;left:-30px;width:180px;height:180px;background:radial-gradient(circle,rgba(79,110,247,0.18) 0%,transparent 70%);z-index:1;}
 .hero-top{display:flex;align-items:center;gap:14px;margin-bottom:18px;position:relative;z-index:2;}
 .back-btn{width:38px;height:38px;background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.15);border-radius:12px;display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;text-decoration:none;}
 .back-btn svg{width:18px;height:18px;fill:white;}
@@ -139,6 +139,126 @@ body{font-family:'Inter',sans-serif;background:#0A0C12;min-height:100vh;display:
 /* toast notification */
 .toast-notif{position:absolute;bottom:100px;left:50%;transform:translateX(-50%);background:var(--surface2);border:1px solid rgba(34,197,94,0.3);border-radius:14px;padding:10px 16px;font-size:12px;font-weight:700;color:#4ADE80;white-space:nowrap;z-index:200;opacity:0;transition:opacity .3s;pointer-events:none;}
 .toast-notif.show{opacity:1;}
+
+/* Classes 1-3 Specific Styles */
+.ai-concept-card{background:linear-gradient(135deg,rgba(139,92,246,0.15),rgba(79,110,247,0.15));border:1.5px solid rgba(139,92,246,0.3);border-radius:20px;padding:18px;margin-bottom:18px;}
+.concept-title{font-size:15px;font-weight:800;color:var(--text);margin-bottom:10px;display:flex;align-items:center;gap:8px;}
+.concept-content{font-size:13px;color:rgba(240,242,255,0.8);line-height:1.6;margin-bottom:12px;}
+.concept-icons{display:flex;gap:10px;justify-content:center;margin-top:12px;}
+.concept-icon{width:48px;height:48px;background:var(--surface2);border:2px solid var(--border);border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:24px;}
+/* Story Builder with Flip */
+.story-builder-container{perspective:1000px;margin-bottom:14px;}
+.story-builder-card{background:var(--surface);border:1px solid var(--border);border-radius:20px;padding:16px;position:relative;width:100%;min-height:320px;transition:transform 0.8s;transform-style:preserve-3d;}
+.story-builder-card.flipped{transform:rotateY(180deg);}
+.story-front,.story-back{backface-visibility:hidden;position:absolute;width:100%;height:100%;left:0;top:0;padding:16px;border-radius:20px;}
+.story-front{transform:rotateY(0deg);}
+.story-back{transform:rotateY(180deg);background:linear-gradient(135deg,var(--surface),var(--surface2));border:1.5px solid rgba(139,92,246,0.3);display:flex;flex-direction:column;}
+.builder-row{display:flex;flex-direction:column;gap:10px;margin-bottom:12px;}
+.builder-label{font-size:11px;font-weight:700;color:var(--muted);letter-spacing:.5px;text-transform:uppercase;margin-bottom:4px;}
+.builder-select{width:100%;background:var(--surface2);border:1.5px solid var(--border);border-radius:12px;padding:10px 14px;font-size:13px;font-weight:600;color:var(--text);font-family:'Inter',sans-serif;cursor:pointer;transition:all .2s;}
+.builder-select:focus{outline:none;border-color:var(--indigo);background:rgba(99,102,241,0.08);}
+.builder-select option{background:var(--surface2);color:var(--text);}
+.template-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px;}
+.template-btn{background:var(--surface);border:1.5px solid var(--border);border-radius:16px;padding:16px 12px;display:flex;flex-direction:column;align-items:center;gap:8px;cursor:pointer;transition:all .2s;}
+.template-btn:hover{border-color:var(--indigo);background:rgba(99,102,241,0.08);transform:translateY(-2px);}
+.template-btn:active{transform:scale(.97);}
+.template-emoji{font-size:32px;}
+.template-label{font-size:12px;font-weight:700;color:var(--text);text-align:center;line-height:1.3;}
+.emoji-reflection{padding:18px;background:var(--surface);border:1.5px solid var(--border);border-radius:20px;margin-top:14px;display:none;}
+.emoji-question{font-size:14px;font-weight:700;color:var(--text);text-align:center;margin-bottom:14px;}
+.emoji-options{display:flex;justify-content:center;gap:12px;}
+.emoji-btn{width:56px;height:56px;background:var(--surface2);border:2px solid var(--border);border-radius:16px;display:flex;align-items:center;justify-content:center;font-size:28px;cursor:pointer;transition:all .2s;}
+.emoji-btn:hover{border-color:var(--indigo);transform:scale(1.1);}
+.emoji-btn.selected{border-color:var(--purple);background:rgba(139,92,246,0.2);box-shadow:0 0 20px rgba(139,92,246,0.3);}
+.mini-sug-chip{background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:8px;display:flex;flex-direction:column;align-items:center;gap:4px;cursor:pointer;transition:all .2s;text-align:center;}
+.mini-sug-chip:hover{border-color:var(--indigo);background:rgba(99,102,241,0.08);transform:translateY(-2px);}
+.mini-sug-chip:active{transform:scale(.97);}
+.compact-sug-chip{background:var(--surface2);border:1px solid var(--border);border-radius:11px;padding:8px 10px;display:flex;align-items:center;gap:8px;cursor:pointer;transition:all .15s;}
+.compact-sug-chip:hover{border-color:var(--indigo);background:rgba(99,102,241,0.06);}
+.compact-sug-chip:active{transform:scale(.98);}
+.compact-sug-text{font-size:11.5px;font-weight:600;color:var(--text);flex:1;}
+
+/* Classes 4-6 Specific Styles */
+.ai-fundamentals-card{background:linear-gradient(135deg,rgba(79,110,247,0.15),rgba(34,197,94,0.15));border:1.5px solid rgba(79,110,247,0.3);border-radius:20px;padding:20px;margin-bottom:18px;}
+.fundamentals-title{font-size:15px;font-weight:800;color:var(--text);margin-bottom:14px;display:flex;align-items:center;gap:8px;}
+.ai-flow{display:flex;align-items:center;justify-content:space-between;margin:16px 0;}
+.flow-box{flex:1;background:var(--surface2);border:1.5px solid var(--border);border-radius:14px;padding:14px;text-align:center;}
+.flow-icon{font-size:28px;margin-bottom:6px;}
+.flow-label{font-size:12px;font-weight:700;color:var(--text);}
+.flow-desc{font-size:10px;color:var(--muted);margin-top:4px;}
+.flow-arrow{font-size:24px;color:var(--indigo);margin:0 8px;}
+.prompt-builder-card{background:var(--surface);border:1px solid var(--border);border-radius:20px;padding:16px;margin-bottom:14px;}
+.builder-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px;}
+.builder-field{display:flex;flex-direction:column;}
+.builder-field-full{grid-column:1 / -1;}
+.builder-input{width:100%;background:var(--surface2);border:1.5px solid var(--border);border-radius:10px;padding:10px 12px;font-size:13px;font-weight:600;color:var(--text);font-family:'Inter',sans-serif;}
+.builder-input:focus{outline:none;border-color:var(--indigo);}
+.prompt-preview{background:var(--surface2);border:1px solid var(--border);border-radius:12px;padding:12px;margin:12px 0;font-size:13px;color:var(--text);line-height:1.6;}
+.prompt-preview-label{font-size:10px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px;}
+.comparison-section{margin-top:16px;display:none;}
+.comparison-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:12px;}
+.comparison-box{background:var(--surface2);border:1.5px solid var(--border);border-radius:14px;padding:12px;}
+.comparison-label{font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;margin-bottom:8px;text-align:center;}
+.comparison-content{background:var(--surface);border-radius:10px;min-height:120px;display:flex;align-items:center;justify-content:center;color:var(--soft);font-size:11px;}
+.reflection-card{background:var(--surface);border:1.5px solid var(--border);border-radius:20px;padding:18px;margin-top:16px;display:none;}
+.reflection-question{font-size:13px;font-weight:700;color:var(--text);margin-bottom:8px;}
+.reflection-input{width:100%;background:var(--surface2);border:1.5px solid var(--border);border-radius:10px;padding:10px 12px;font-size:12px;color:var(--text);font-family:'Inter',sans-serif;resize:vertical;min-height:60px;}
+.reflection-input:focus{outline:none;border-color:var(--indigo);}
+.reflection-submit{background:linear-gradient(135deg,var(--indigo),var(--purple));color:white;border:none;border-radius:10px;padding:10px 16px;font-size:12px;font-weight:700;cursor:pointer;margin-top:10px;width:100%;font-family:'Inter',sans-serif;}
+.reflection-submit:hover{transform:translateY(-1px);}
+.reflection-choice-btn.selected{border-color:var(--purple);background:rgba(139,92,246,0.2);box-shadow:0 0 16px rgba(139,92,246,0.3);}
+.pattern-box{width:60px;height:60px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:28px;border:2px solid var(--border);background:var(--surface2);transition:all .2s;}
+.pattern-box.choice{cursor:pointer;}
+.pattern-box.choice:hover{border-color:var(--indigo);transform:scale(1.05);}
+.pattern-box.correct{border-color:#10b981;background:rgba(16,185,129,0.2);animation:correctPulse .5s;}
+.pattern-box.incorrect{border-color:#ef4444;background:rgba(239,68,68,0.2);animation:shake .5s;}
+@keyframes correctPulse{0%,100%{transform:scale(1);}50%{transform:scale(1.1);}}
+@keyframes shake{0%,100%{transform:translateX(0);}25%{transform:translateX(-5px);}75%{transform:translateX(5px);}}
+
+/* Phase 2: AI Examples Carousel */
+.ai-example-card{min-width:200px;max-width:200px;background:var(--surface);border:1.5px solid var(--border);border-radius:14px;padding:14px 12px;flex-shrink:0;}
+.ai-example-icon{font-size:28px;text-align:center;margin-bottom:8px;}
+.ai-example-title{font-size:12px;font-weight:800;color:var(--text);margin-bottom:6px;text-align:center;line-height:1.3;}
+.ai-example-desc{font-size:10px;color:rgba(240,242,255,0.7);line-height:1.4;margin-bottom:8px;text-align:center;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;}
+.ai-example-tag{font-size:9px;font-weight:700;background:rgba(99,102,241,0.2);color:#93c5fd;padding:3px 8px;border-radius:10px;text-align:center;text-transform:uppercase;letter-spacing:0.3px;}
+#aiExamplesCarousel::-webkit-scrollbar{display:none;}
+
+/* Phase 2: Interactive Concept Cards */
+.concept-card-interactive{background:var(--surface);border:1.5px solid var(--border);border-radius:16px;padding:14px;margin-bottom:10px;cursor:pointer;transition:all .2s;}
+.concept-card-interactive:hover{border-color:var(--indigo);background:rgba(99,102,241,0.05);}
+.concept-card-header{display:flex;align-items:center;justify-content:space-between;}
+.concept-expand-icon{font-size:14px;color:var(--muted);transition:transform .3s;}
+.concept-card-interactive.expanded .concept-expand-icon{transform:rotate(180deg);}
+.concept-card-content{margin-top:12px;padding-top:12px;border-top:1px solid var(--border);font-size:12px;color:rgba(240,242,255,0.8);line-height:1.6;}
+
+/* Phase 2: Project Assistant */
+.project-type-btn{background:var(--surface2);border:1.5px solid var(--border);border-radius:14px;padding:16px 12px;text-align:center;cursor:pointer;transition:all .2s;}
+.project-type-btn:hover{border-color:var(--indigo);background:rgba(99,102,241,0.08);transform:translateY(-2px);}
+.project-type-btn:active{transform:scale(.97);}
+.project-type-btn.selected{border-color:var(--purple);background:rgba(139,92,246,0.15);box-shadow:0 0 16px rgba(139,92,246,0.3);}
+
+
+
+/* Story Flip Card */
+.story-flip-container{perspective:1000px;margin-bottom:16px;display:none;}
+.story-flip-card{position:relative;width:100%;height:280px;transition:transform 0.8s;transform-style:preserve-3d;}
+.story-flip-card.flipped{transform:rotateY(180deg);}
+.story-card-front,.story-card-back{position:absolute;width:100%;height:100%;backface-visibility:hidden;border-radius:20px;overflow:hidden;}
+.story-card-front{background:var(--surface);border:1.5px solid var(--border);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;}
+.story-card-back{background:linear-gradient(135deg,var(--surface),var(--surface2));border:1.5px solid rgba(139,92,246,0.3);transform:rotateY(180deg);padding:20px;display:flex;flex-direction:column;}
+.story-front-icon{width:64px;height:64px;background:var(--surface2);border:2px dashed var(--border);border-radius:16px;display:flex;align-items:center;justify-content:center;font-size:32px;}
+.story-front-text{font-size:13px;color:var(--muted);font-weight:600;}
+.story-back-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;padding-bottom:10px;border-bottom:1px solid var(--border);}
+.story-back-title{font-size:14px;font-weight:800;color:var(--text);display:flex;align-items:center;gap:6px;}
+.story-back-content{flex:1;overflow-y:auto;padding-right:8px;}
+.story-back-content::-webkit-scrollbar{width:4px;}
+.story-back-content::-webkit-scrollbar-thumb{background:var(--border);border-radius:2px;}
+.story-text{font-size:14px;line-height:1.8;color:rgba(240,242,255,0.85);font-weight:500;}
+.story-actions{display:flex;gap:8px;margin-top:12px;}
+.story-action-btn{flex:1;padding:8px;background:var(--surface2);border:1px solid var(--border);border-radius:10px;font-size:11px;font-weight:700;color:var(--text);cursor:pointer;transition:all .15s;font-family:'Inter',sans-serif;}
+.story-action-btn:hover{border-color:var(--indigo);background:rgba(99,102,241,0.1);}
+.story-loading{display:flex;align-items:center;gap:8px;color:var(--muted);font-size:12px;font-weight:600;}
+.story-loading-spinner{width:16px;height:16px;border:2px solid var(--border);border-top-color:var(--purple);border-radius:50%;animation:spin .7s linear infinite;}
 </style>
 </head>
 <body>
@@ -157,8 +277,10 @@ body{font-family:'Inter',sans-serif;background:#0A0C12;min-height:100vh;display:
       <div>
         <div class="hero-title">AI Learning Lab</div>
         <div class="hero-sub">Learn to Think with AI</div>
-        <div style="display:flex;align-items:center;gap:8px;margin-top:8px;">
-          <div style="background:rgba(139,92,246,0.2);border:1px solid rgba(139,92,246,0.3);border-radius:20px;padding:4px 12px;font-size:11px;font-weight:700;color:#C4B5FD;">⚡ Prompting Skill: Intermediate</div>
+        <div style="display:flex;align-items:center;gap:8px;margin-top:8px;flex-wrap:wrap;">
+          <button id="viewFavoritesBtn" onclick="toggleFavoritesView()" style="display:none;background:rgba(251,191,36,0.12);border:1px solid rgba(251,191,36,0.3);padding:6px 12px;border-radius:20px;cursor:pointer;font-size:11px;font-weight:700;color:#fbbf24;transition:all .2s;" onmouseover="this.style.background='rgba(251,191,36,0.2)';this.style.borderColor='rgba(251,191,36,0.5)';" onmouseout="this.style.background='rgba(251,191,36,0.12)';this.style.borderColor='rgba(251,191,36,0.3)';">
+            ⭐ Favorites <span id="favCount" style="display:inline-block;min-width:18px;text-align:center;background:rgba(251,191,36,0.25);padding:2px 6px;border-radius:10px;margin-left:6px;">0</span>
+          </button>
         </div>
       </div>
     </div>
@@ -174,8 +296,888 @@ body{font-family:'Inter',sans-serif;background:#0A0C12;min-height:100vh;display:
   <div class="scroll">
     <div class="inner">
 
-      <div class="sec-lbl">Your Prompt</div>
-      <div class="prompt-card">
+      <!-- Favorites View (Separate Section) -->
+      <div id="favoritesViewSection" style="display:none;">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;">
+          <div class="sec-lbl" style="margin:0;">My Starred Creations ⭐</div>
+          <button onclick="toggleFavoritesView()" style="padding:8px 16px;background:var(--card);border:1px solid var(--border);border-radius:8px;cursor:pointer;font-size:12px;font-weight:600;color:var(--text);transition:all .2s;" onmouseover="this.style.background='rgba(255,255,255,0.05)';" onmouseout="this.style.background='var(--card)';">
+            ← Back to Lab
+          </button>
+        </div>
+        
+        <div id="favoritesGridView" style="display:grid;grid-template-columns:repeat(2,1fr);gap:12px;min-height:400px;">
+          <div style="grid-column:1/-1;text-align:center;padding:80px 20px;color:var(--muted);font-size:14px;">
+            <div style="font-size:64px;margin-bottom:16px;">⭐</div>
+            <div style="font-weight:700;font-size:18px;margin-bottom:8px;color:var(--text);">No favorites yet!</div>
+            <div style="font-size:13px;">Star your best creations to see them here</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Main Lab Content -->
+      <div id="aiConceptSection" style="display:none;">
+        <div class="sec-lbl">What is AI?</div>
+        <div class="ai-concept-card">
+          <div class="concept-title">
+            <span>🤖</span>
+            <span>AI is a Smart Helper!</span>
+          </div>
+          <div class="concept-content">
+            AI is like a magical friend that learns patterns and helps create cool things. It can draw pictures, tell stories, and make learning fun!
+          </div>
+          <div class="concept-icons">
+            <div class="concept-icon">🎨</div>
+            <div class="concept-icon">📚</div>
+            <div class="concept-icon">✨</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Classes 1-3: Story Builder -->
+      <div id="storyBuilderSection" style="display:none;">
+        <div class="sec-lbl">Create Your Story</div>
+        <div class="story-builder-container">
+          <div class="story-builder-card" id="storyBuilderCard">
+            <!-- Front Side: Story Builder Form -->
+            <div class="story-front">
+              <div class="builder-row">
+                <div class="builder-label">Choose a Character</div>
+                <select class="builder-select" id="storyCharacter">
+                  <option value="">Pick one...</option>
+                  <option value="a brave knight">🛡️ A Brave Knight</option>
+                  <option value="a friendly dragon">🐉 A Friendly Dragon</option>
+                  <option value="a curious cat">🐱 A Curious Cat</option>
+                  <option value="a happy robot">🤖 A Happy Robot</option>
+                </select>
+              </div>
+              <div class="builder-row">
+                <div class="builder-label">Choose a Setting</div>
+                <select class="builder-select" id="storySetting">
+                  <option value="">Pick one...</option>
+                  <option value="in a magic forest">🌳 In a Magic Forest</option>
+                  <option value="on a floating island">🏝️ On a Floating Island</option>
+                  <option value="in a candy castle">🏰 In a Candy Castle</option>
+                  <option value="under the ocean">🌊 Under the Ocean</option>
+                </select>
+              </div>
+              <div class="builder-row">
+                <div class="builder-label">Choose an Action</div>
+                <select class="builder-select" id="storyAction">
+                  <option value="">Pick one...</option>
+                  <option value="finds a treasure">💎 Finds a Treasure</option>
+                  <option value="makes new friends">👥 Makes New Friends</option>
+                  <option value="solves a puzzle">🧩 Solves a Puzzle</option>
+                  <option value="goes on an adventure">🗺️ Goes on an Adventure</option>
+                </select>
+              </div>
+              <button class="gen-btn" onclick="generateStory()" style="width:100%;margin-top:8px;">
+                <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                <span>Create Story!</span>
+              </button>
+            </div>
+            
+            <!-- Back Side: Story Display -->
+            <div class="story-back">
+              <div class="story-back-header">
+                <div class="story-back-title">
+                  <span>📚</span>
+                  <span>Your Story</span>
+                </div>
+                <div class="story-loading" id="storyLoading" style="display:none;">
+                  <div class="story-loading-spinner"></div>
+                  <span>Creating...</span>
+                </div>
+              </div>
+              <div class="story-back-content">
+                <div class="story-text" id="storyText"></div>
+              </div>
+              <div class="story-actions">
+                <button class="story-action-btn" onclick="copyStory()">📋 Copy</button>
+                <button class="story-action-btn" onclick="resetStory()">🔄 New Story</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Classes 1-3: Simple Prompt Card -->
+      <div id="simplePromptSection" style="display:none;">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;gap:12px;">
+          <div class="sec-lbl" style="margin:0;flex:1;">Turn Your Imagination Into Reality ✨</div>
+          <div style="display:flex;align-items:center;gap:6px;flex-shrink:0;">
+            <span style="font-size:11px;color:var(--muted);font-weight:500;white-space:nowrap;">Free Trials:</span>
+            <div style="background:linear-gradient(135deg,#8b5cf6,#6366f1);color:#fff;padding:4px 10px;border-radius:12px;font-size:11px;font-weight:700;letter-spacing:.3px;" id="trialsLeftBadge">3 / 3</div>
+          </div>
+        </div>
+        <div class="prompt-card">
+          <textarea class="prompt-ta" id="simplePromptTa" placeholder="Tell me what you want to create...&#10;e.g. A happy sun with a smiling face" oninput="updateSimpleChar()"></textarea>
+          <div class="prompt-actions">
+            <div class="tool-row">
+              <div class="tool-btn active-tool" title="Image Mode">
+                <svg viewBox="0 0 24 24"><path d="M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z"/></svg>
+              </div>
+              <div class="tool-btn" title="Text Mode">
+                <svg viewBox="0 0 24 24"><path d="M14 17H4v2h10v-2zm6-8H4v2h16V9zM4 15h16v-2H4v2zM4 5v2h16V5H4z"/></svg>
+              </div>
+              <div class="tool-btn" title="Voice Input" onclick="doVoiceSimple()">
+                <svg viewBox="0 0 24 24"><path d="M12 14c1.66 0 2.99-1.34 2.99-3L15 5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3zm5.3-3c0 3-2.54 5.1-5.3 5.1S6.7 14 6.7 11H5c0 3.41 2.72 6.23 6 6.72V21h2v-3.28c3.28-.48 6-3.3 6-6.72h-1.7z"/></svg>
+              </div>
+            </div>
+            <span class="char-count" id="simpleCharCount">0 / 500</span>
+            <button class="gen-btn" id="simpleGenBtn" onclick="generateSimple()">
+              <svg id="simpleGenIcon" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+              <div class="gen-spinner" id="simpleGenSpin" style="display:none;"></div>
+              <span id="simpleGenTxt">Generate</span>
+            </button>
+          </div>
+          
+          <!-- Integrated Try These Section -->
+          <div style="margin-top:14px;padding-top:14px;border-top:1px solid var(--border);">
+            <div style="font-size:10px;font-weight:700;color:var(--muted);letter-spacing:.8px;text-transform:uppercase;margin-bottom:8px;">Or Try These Ideas</div>
+            <div style="display:flex;flex-direction:column;gap:6px;">
+              <div class="compact-sug-chip" onclick="useSuggest(this,'Draw a red bird on a tree')">
+                <div class="sug-ico" style="background:rgba(139,92,246,0.2);">🔭</div>
+                <span class="compact-sug-text">Draw a red bird on a tree</span>
+                <span class="sug-arrow">›</span>
+              </div>
+              <div class="compact-sug-chip" onclick="useSuggest(this,'Make a rainbow')">
+                <div class="sug-ico" style="background:rgba(79,110,247,0.2);">💡</div>
+                <span class="compact-sug-text">Make a rainbow</span>
+                <span class="sug-arrow">›</span>
+              </div>
+              <div class="compact-sug-chip" onclick="useSuggest(this,'Draw a happy sun')">
+                <div class="sug-ico" style="background:rgba(34,197,94,0.2);">🌆</div>
+                <span class="compact-sug-text">Draw a happy sun</span>
+                <span class="sug-arrow">›</span>
+              </div>
+              <div class="compact-sug-chip" onclick="useSuggest(this,'Make colorful flowers')">
+                <div class="sug-ico" style="background:rgba(245,158,11,0.2);">✍️</div>
+                <span class="compact-sug-text">Make colorful flowers</span>
+                <span class="sug-arrow">›</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Classes 1-3: Generated Image Output -->
+      <div id="simpleOutputSection" style="display:none;">
+        <div class="sec-lbl">Generated Output</div>
+        <div class="output-card ready" id="simpleOutputCard">
+          <div class="out-hdr">
+            <div class="out-title-row">
+              <div class="out-dot" id="simpleOutDot"></div>
+              <div class="out-title" id="simpleOutTitle">Ready to Generate</div>
+            </div>
+            <div class="out-acts">
+              <div class="ico-btn" onclick="downloadSimpleOutput()" title="Download">
+                <svg viewBox="0 0 24 24"><path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/></svg>
+              </div>
+              <div class="ico-btn" onclick="copySimpleOutput()" title="Copy">
+                <svg viewBox="0 0 24 24"><path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/></svg>
+              </div>
+            </div>
+          </div>
+
+          <!-- Placeholder -->
+          <div class="out-placeholder" id="simpleOutPH">
+            <div class="out-ph-icon"><svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg></div>
+            <div class="out-ph-text">Your creation will appear here</div>
+            <div class="out-ph-sub">Write a prompt above and hit Generate ✨</div>
+          </div>
+
+          <!-- Loading -->
+          <div class="out-loading" id="simpleOutLoad" style="display:none;">
+            <div class="shimmer-lines">
+              <div class="shimmer tall"></div>
+              <div class="shimmer" style="width:70%"></div>
+              <div class="shimmer" style="width:50%"></div>
+            </div>
+            <div class="out-loading-text" id="simpleLoadTxt">Generating image…</div>
+          </div>
+
+          <!-- Generated Image -->
+          <div class="out-image" id="simpleOutImg" style="display:none;"></div>
+
+          <div class="out-meta" id="simpleOutMeta" style="display:none;">
+            <div class="out-meta-txt" id="simpleOutMetaTxt">Generated in 3.2s</div>
+            <button class="regen-btn" onclick="generateSimple()">↺ Regenerate</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Classes 1-3: Emoji Reflection Survey -->
+      <div class="emoji-reflection" id="emojiReflection">
+        <div class="emoji-question">How did you feel about this? 😊</div>
+        <div class="emoji-options">
+          <div class="emoji-btn" onclick="selectEmoji(this, 'happy')" title="Happy!">😊</div>
+          <div class="emoji-btn" onclick="selectEmoji(this, 'neutral')" title="It's okay">😐</div>
+          <div class="emoji-btn" onclick="selectEmoji(this, 'sad')" title="Not great">😢</div>
+        </div>
+      </div>
+
+      <!-- Phase 2: Interactive Concept Cards -->
+      <div id="interactiveConceptsSection" style="display:none;">
+        <div class="sec-lbl">Learn AI Concepts 📚</div>
+        <div style="margin-bottom:14px;">
+          <div class="concept-card-interactive" onclick="toggleConceptCard(this, 'whatIsAI')">
+            <div class="concept-card-header">
+              <div style="display:flex;align-items:center;gap:10px;flex:1;">
+                <span style="font-size:24px;">🤖</span>
+                <span style="font-size:14px;font-weight:700;color:var(--text);">What is AI?</span>
+              </div>
+              <span class="concept-expand-icon">▼</span>
+            </div>
+            <div class="concept-card-content" style="display:none;">
+              AI (Artificial Intelligence) is when computers learn to do things that usually need human thinking - like recognizing faces, understanding speech, or making decisions. It's like teaching a robot to be smart!
+              <div style="margin-top:10px;padding:10px;background:rgba(99,102,241,0.1);border-radius:8px;font-size:11px;">
+                <strong>Example:</strong> When your phone recognizes your face to unlock, that's AI!
+              </div>
+            </div>
+          </div>
+          
+          <div class="concept-card-interactive" onclick="toggleConceptCard(this, 'howAILearns')">
+            <div class="concept-card-header">
+              <div style="display:flex;align-items:center;gap:10px;flex:1;">
+                <span style="font-size:24px;">🧠</span>
+                <span style="font-size:14px;font-weight:700;color:var(--text);">How Does AI Learn?</span>
+              </div>
+              <span class="concept-expand-icon">▼</span>
+            </div>
+            <div class="concept-card-content" style="display:none;">
+              AI learns by looking at lots of examples, just like you! If you show AI 1000 pictures of cats, it learns what makes something a "cat" - whiskers, pointy ears, tail. The more examples it sees, the smarter it gets!
+              <div style="margin-top:10px;padding:10px;background:rgba(34,197,94,0.1);border-radius:8px;font-size:11px;">
+                <strong>Try this:</strong> That's why our pattern game helps you think like AI!
+              </div>
+            </div>
+          </div>
+          
+          <div class="concept-card-interactive" onclick="toggleConceptCard(this, 'patterns')">
+            <div class="concept-card-header">
+              <div style="display:flex;align-items:center;gap:10px;flex:1;">
+                <span style="font-size:24px;">🎯</span>
+                <span style="font-size:14px;font-weight:700;color:var(--text);">Pattern Recognition</span>
+              </div>
+              <span class="concept-expand-icon">▼</span>
+            </div>
+            <div class="concept-card-content" style="display:none;">
+              Patterns are things that repeat in a predictable way. AI is really good at finding patterns - like noticing that you always watch cooking videos on weekends, so it suggests more cooking content!
+              <div style="margin-top:10px;padding:10px;background:rgba(139,92,246,0.1);border-radius:8px;font-size:11px;">
+                <strong>Your turn:</strong> Play the pattern game above to practice!
+              </div>
+            </div>
+          </div>
+          
+          <div class="concept-card-interactive" onclick="toggleConceptCard(this, 'dataPredictions')">
+            <div class="concept-card-header">
+              <div style="display:flex;align-items:center;gap:10px;flex:1;">
+                <span style="font-size:24px;">📊</span>
+                <span style="font-size:14px;font-weight:700;color:var(--text);">Data & Predictions</span>
+              </div>
+              <span class="concept-expand-icon">▼</span>
+            </div>
+            <div class="concept-card-content" style="display:none;">
+              Data is information AI uses to learn. The more data AI has, the better it can predict what might happen next. Like weather forecasts - AI looks at past weather data to predict tomorrow's weather!
+              <div style="margin-top:10px;padding:10px;background:rgba(245,158,11,0.1);border-radius:8px;font-size:11px;">
+                <strong>Cool fact:</strong> AI can even predict which song you'll like next!
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Classes 4-6: AI Fundamentals Explainer -->
+      <div id="aiFundamentalsSection" style="display:none;">
+        <div class="sec-lbl">How Does AI Work?</div>
+        <div class="ai-fundamentals-card">
+          <div class="fundamentals-title">
+            <span>🧠</span>
+            <span>AI Learning Process</span>
+          </div>
+          <div class="ai-flow">
+            <div class="flow-box">
+              <div class="flow-icon">📥</div>
+              <div class="flow-label">INPUT</div>
+              <div class="flow-desc">Data & Information</div>
+            </div>
+            <div class="flow-arrow">→</div>
+            <div class="flow-box">
+              <div class="flow-icon">🧠</div>
+              <div class="flow-label">AI BRAIN</div>
+              <div class="flow-desc">Finds Patterns</div>
+            </div>
+            <div class="flow-arrow">→</div>
+            <div class="flow-box">
+              <div class="flow-icon">📤</div>
+              <div class="flow-label">OUTPUT</div>
+              <div class="flow-desc">Results & Creations</div>
+            </div>
+          </div>
+          <div class="concept-content">
+            AI learns by looking at lots of examples and finding patterns. Just like you learn to recognize animals by seeing many pictures, AI learns to create by studying millions of images and texts!
+          </div>
+        </div>
+      </div>
+
+      <!-- Phase 2: Real-World AI Examples Carousel -->
+      <div id="realWorldAISection" style="display:none;">
+        <div class="sec-lbl">AI in Your Daily Life 🌍</div>
+        <div style="background:linear-gradient(135deg,rgba(99,102,241,0.15),rgba(139,92,246,0.15));border:1.5px solid rgba(99,102,241,0.3);border-radius:20px;padding:18px;margin-bottom:14px;">
+          <div style="font-size:13px;font-weight:700;color:var(--text);margin-bottom:12px;text-align:center;">
+            AI is all around you! Swipe to see examples →
+          </div>
+          
+          <div style="overflow-x:scroll;overflow-y:hidden;-webkit-overflow-scrolling:touch;margin:0 -18px;padding:0 18px;scroll-behavior:smooth;scrollbar-width:none;" id="aiExamplesCarousel">
+            <div style="display:flex;gap:12px;padding-bottom:10px;width:max-content;">
+              <!-- Voice Assistants Card -->
+              <div class="ai-example-card">
+                <div class="ai-example-icon">🎤</div>
+                <div class="ai-example-title">Voice Assistants</div>
+                <div class="ai-example-desc">
+                  Siri, Alexa, and Google Assistant understand your voice and answer questions!
+                </div>
+                <div class="ai-example-tag">Speech Recognition</div>
+              </div>
+              
+              <!-- Video Recommendations Card -->
+              <div class="ai-example-card">
+                <div class="ai-example-icon">📺</div>
+                <div class="ai-example-title">Video Suggestions</div>
+                <div class="ai-example-desc">
+                  YouTube and Netflix suggest videos you might like based on what you watch!
+                </div>
+                <div class="ai-example-tag">Recommendation AI</div>
+              </div>
+              
+              <!-- Photo Features Card -->
+              <div class="ai-example-card">
+                <div class="ai-example-icon">📸</div>
+                <div class="ai-example-title">Smart Photos</div>
+                <div class="ai-example-desc">
+                  Your phone can recognize faces, enhance photos, and even suggest best shots!
+                </div>
+                <div class="ai-example-tag">Image Recognition</div>
+              </div>
+              
+              <!-- Smart Search Card -->
+              <div class="ai-example-card">
+                <div class="ai-example-icon">🔍</div>
+                <div class="ai-example-title">Search Engines</div>
+                <div class="ai-example-desc">
+                  Google predicts what you're typing and finds the best answers instantly!
+                </div>
+                <div class="ai-example-tag">Natural Language</div>
+              </div>
+              
+              <!-- Games Card -->
+              <div class="ai-example-card">
+                <div class="ai-example-icon">🎮</div>
+                <div class="ai-example-title">Smart Games</div>
+                <div class="ai-example-desc">
+                  Game characters use AI to make smart moves and act like real opponents!
+                </div>
+                <div class="ai-example-tag">Game AI</div>
+              </div>
+            </div>
+          </div>
+          
+          <div style="text-align:center;margin-top:12px;font-size:11px;color:var(--muted);">
+            Swipe left to see more examples →
+          </div>
+        </div>
+      </div>
+
+      <!-- Classes 4-6: Interactive Prompt Builder -->
+      <div id="promptBuilderSection" style="display:none;">
+        <div class="sec-lbl">Build Your Prompt</div>
+        <div class="prompt-builder-card">
+          <div class="builder-grid">
+            <div class="builder-field">
+              <div class="builder-label">Style</div>
+              <select class="builder-input" id="builderStyle" onchange="updatePromptPreview()">
+                <option value="">Pick...</option>
+                <option value="cartoon style">🎨 Cartoon</option>
+                <option value="realistic photo">📸 Realistic</option>
+                <option value="watercolor painting">🖼️ Watercolor</option>
+                <option value="fantasy art">✨ Fantasy</option>
+                <option value="pencil sketch">✏️ Sketch</option>
+                <option value="digital art">💻 Digital Art</option>
+              </select>
+            </div>
+            <div class="builder-field">
+              <div class="builder-label">Subject</div>
+              <select class="builder-input" id="builderSubject" onchange="updatePromptPreview()">
+                <option value="">Pick...</option>
+                <option value="bird">🐦 Bird</option>
+                <option value="dog">🐕 Dog</option>
+                <option value="cat">🐱 Cat</option>
+                <option value="robot">🤖 Robot</option>
+                <option value="castle">🏰 Castle</option>
+                <option value="dragon">🐉 Dragon</option>
+                <option value="unicorn">🦄 Unicorn</option>
+                <option value="spaceship">🚀 Spaceship</option>
+              </select>
+            </div>
+            <div class="builder-field">
+              <div class="builder-label">Action</div>
+              <select class="builder-input" id="builderAction" onchange="updatePromptPreview()">
+                <option value="">Pick...</option>
+                <option value="running fast">🏃 Running</option>
+                <option value="sleeping peacefully">💤 Sleeping</option>
+                <option value="flying high">🕊️ Flying</option>
+                <option value="standing proudly">🧍 Standing</option>
+                <option value="jumping happily">🦘 Jumping</option>
+                <option value="dancing">💃 Dancing</option>
+                <option value="exploring">🔍 Exploring</option>
+              </select>
+            </div>
+            <div class="builder-field">
+              <div class="builder-label">Place</div>
+              <select class="builder-input" id="builderPlace" onchange="updatePromptPreview()">
+                <option value="">Pick...</option>
+                <option value="in a magical forest">🌲 Magical Forest</option>
+                <option value="by the ocean">🌊 By the Ocean</option>
+                <option value="in outer space">🚀 Outer Space</option>
+                <option value="in a beautiful garden">🌻 Garden</option>
+                <option value="in a futuristic city">🏙️ Futuristic City</option>
+                <option value="on a snowy mountain">⛰️ Snowy Mountain</option>
+                <option value="in an enchanted castle">🏰 Enchanted Castle</option>
+              </select>
+            </div>
+          </div>
+          
+          <div class="prompt-preview">
+            <div class="prompt-preview-label">Your Prompt:</div>
+            <div id="promptPreviewText">Select options above to build your prompt...</div>
+          </div>
+          
+          <button class="gen-btn" onclick="generateFromBuilder()" style="width:100%;">
+            <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+            <span>Generate Image!</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Classes 4-6: Free Prompt Section -->
+      <div id="class46FreePromptSection" style="display:none;">
+        <div class="sec-lbl">Or Try Your Own Idea! ✨</div>
+        <div class="simple-prompt-card">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;">
+            <div style="font-size:13px;font-weight:600;color:var(--text);">Write Anything You Imagine</div>
+            <div style="display:flex;align-items:center;gap:8px;">
+              <div style="font-size:11px;color:var(--muted);font-weight:500;">Free Trials:</div>
+              <div style="background:linear-gradient(135deg,#8b5cf6,#6366f1);color:#fff;padding:4px 10px;border-radius:12px;font-size:11px;font-weight:700;letter-spacing:.3px;" id="class46TrialsBadge">3 / 3</div>
+            </div>
+          </div>
+          
+          <textarea 
+            id="class46FreePromptTa" 
+            placeholder="Type your creative idea here... (e.g., 'A magical unicorn flying over rainbow clouds')"
+            style="width:100%;min-height:100px;padding:12px;border:2px solid var(--border);border-radius:12px;font-size:13px;font-family:inherit;resize:vertical;background:var(--bg);color:var(--text);transition:border-color .2s;"
+            oninput="updateClass46FreeChar()"
+            onfocus="this.style.borderColor='var(--primary)'"
+            onblur="this.style.borderColor='var(--border)'"
+          ></textarea>
+          
+          <!-- Prompt Quality Feedback -->
+          <div id="promptQualityFeedback" style="margin-top:8px;padding:10px;border-radius:8px;background:rgba(139,92,246,0.1);border:1px solid rgba(139,92,246,0.3);display:none;">
+            <div style="display:flex;align-items:center;gap:8px;">
+              <span id="qualityIcon" style="font-size:18px;">💡</span>
+              <div>
+                <div id="qualityMessage" style="font-size:12px;font-weight:600;color:var(--text);"></div>
+                <div id="qualityDetails" style="font-size:11px;color:var(--muted);margin-top:2px;"></div>
+              </div>
+            </div>
+          </div>
+          
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-top:8px;">
+            <div style="font-size:11px;color:var(--muted);" id="class46FreeCharCount">0 / 200 characters</div>
+            <div style="display:flex;gap:8px;">
+              <button onclick="doVoiceClass46Free()" style="padding:8px 14px;border:1px solid var(--border);background:var(--card);border-radius:8px;font-size:12px;cursor:pointer;display:flex;align-items:center;gap:6px;color:var(--text);font-weight:500;transition:all .2s;">
+                <span>🎤</span>
+                <span>Voice</span>
+              </button>
+              <button class="gen-btn" onclick="generateClass46Free()" style="padding:8px 20px;font-size:13px;">
+                <svg viewBox="0 0 24 24" style="width:16px;height:16px;"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                <span>Generate</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Classes 4-6: Generated Output Section -->
+      <div id="class46OutputSection" style="display:none;">
+        <div class="sec-lbl">Generated Output</div>
+        <div class="output-card ready" id="class46OutputCard">
+          <div class="out-hdr">
+            <div class="out-title-row">
+              <div class="out-dot" id="class46OutDot"></div>
+              <div class="out-title" id="class46OutTitle">Ready to Generate</div>
+            </div>
+            <div class="out-acts">
+              <div class="ico-btn" onclick="downloadClass46Output()" title="Download">
+                <svg viewBox="0 0 24 24"><path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/></svg>
+              </div>
+              <div class="ico-btn" onclick="copyClass46Output()" title="Copy">
+                <svg viewBox="0 0 24 24"><path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/></svg>
+              </div>
+            </div>
+          </div>
+
+          <!-- Placeholder -->
+          <div class="out-placeholder" id="class46OutPH">
+            <div class="out-ph-icon"><svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg></div>
+            <div class="out-ph-text">Your creation will appear here</div>
+            <div class="out-ph-sub">Build your prompt above and hit Generate ✨</div>
+          </div>
+
+          <!-- Loading -->
+          <div class="out-loading" id="class46OutLoad" style="display:none;">
+            <div class="shimmer-lines">
+              <div class="shimmer tall"></div>
+              <div class="shimmer" style="width:70%"></div>
+              <div class="shimmer" style="width:50%"></div>
+            </div>
+            <div class="out-loading-text" id="class46LoadTxt">Generating image…</div>
+          </div>
+
+          <!-- Generated Image -->
+          <div class="out-image" id="class46OutImg" style="display:none;"></div>
+
+          <div class="out-meta" id="class46OutMeta" style="display:none;">
+            <!-- Action Buttons - Horizontal Compact Layout -->
+            <div style="display:flex;gap:8px;align-items:center;">
+              <!-- Save Favorite -->
+              <button onclick="saveToFavorites()" style="flex:1;padding:10px 14px;background:rgba(251,191,36,0.08);border:1px solid rgba(251,191,36,0.2);border-radius:8px;cursor:pointer;transition:all .2s;display:flex;align-items:center;justify-content:center;gap:8px;" onmouseover="this.style.background='rgba(251,191,36,0.12)';this.style.borderColor='rgba(251,191,36,0.35)';" onmouseout="this.style.background='rgba(251,191,36,0.08)';this.style.borderColor='rgba(251,191,36,0.2)';">
+                <span style="font-size:16px;">⭐</span>
+                <span style="font-size:12px;font-weight:600;color:#fbbf24;">Favorite</span>
+              </button>
+              
+              <!-- Generate Variations -->
+              <button onclick="generateVariations()" style="flex:1;padding:10px 14px;background:rgba(139,92,246,0.08);border:1px solid rgba(139,92,246,0.2);border-radius:8px;cursor:pointer;transition:all .2s;display:flex;align-items:center;justify-content:center;gap:8px;" onmouseover="this.style.background='rgba(139,92,246,0.12)';this.style.borderColor='rgba(139,92,246,0.35)';" onmouseout="this.style.background='rgba(139,92,246,0.08)';this.style.borderColor='rgba(139,92,246,0.2)';">
+                <span style="font-size:16px;">🎲</span>
+                <span style="font-size:12px;font-weight:600;color:#a78bfa;">Variations</span>
+              </button>
+              
+              <!-- Compare -->
+              <button onclick="saveForComparison()" style="flex:1;padding:10px 14px;background:rgba(16,185,129,0.08);border:1px solid rgba(16,185,129,0.2);border-radius:8px;cursor:pointer;transition:all .2s;display:flex;align-items:center;justify-content:center;gap:8px;" onmouseover="this.style.background='rgba(16,185,129,0.12)';this.style.borderColor='rgba(16,185,129,0.35)';" onmouseout="this.style.background='rgba(16,185,129,0.08)';this.style.borderColor='rgba(16,185,129,0.2)';">
+                <span style="font-size:16px;">🔄</span>
+                <span style="font-size:12px;font-weight:600;color:#34d399;">Compare</span>
+              </button>
+            </div>
+          </div>
+          
+          <!-- Output Variations -->
+          <div id="variationsContainer" style="display:none;margin-top:16px;padding-top:16px;border-top:1px solid var(--border);">
+            <div style="font-size:12px;font-weight:700;color:var(--text);margin-bottom:12px;display:flex;align-items:center;gap:8px;">
+              <span>🎲</span>
+              <span>Two Variations from Same Prompt</span>
+            </div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+              <div style="position:relative;">
+                <div style="font-size:11px;font-weight:600;color:var(--muted);margin-bottom:6px;">Variation 1</div>
+                <div id="variation1Img" style="width:100%;aspect-ratio:1;background:linear-gradient(135deg,#667eea,#764ba2);border-radius:8px;"></div>
+                <button onclick="selectVariation(1)" style="margin-top:8px;width:100%;padding:8px;background:var(--card);border:1px solid var(--border);border-radius:6px;cursor:pointer;font-size:11px;font-weight:600;color:var(--text);">
+                  ✓ Use This
+                </button>
+              </div>
+              <div style="position:relative;">
+                <div style="font-size:11px;font-weight:600;color:var(--muted);margin-bottom:6px;">Variation 2</div>
+                <div id="variation2Img" style="width:100%;aspect-ratio:1;background:linear-gradient(135deg,#f093fb,#f5576c);border-radius:8px;"></div>
+                <button onclick="selectVariation(2)" style="margin-top:8px;width:100%;padding:8px;background:var(--card);border:1px solid var(--border);border-radius:6px;cursor:pointer;font-size:11px;font-weight:600;color:var(--text);">
+                  ✓ Use This
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Classes 4-6: Before/After Comparison -->
+      <div id="comparisonSection" style="display:none;">
+        <div class="sec-lbl">Before/After Comparison 🔄</div>
+        <div class="ai-fundamentals-card">
+          <div style="font-size:13px;font-weight:600;color:var(--text);margin-bottom:16px;">Compare how different prompts change the results!</div>
+          
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px;">
+            <!-- Before -->
+            <div>
+              <div style="font-size:12px;font-weight:700;color:var(--primary);margin-bottom:8px;display:flex;align-items:center;gap:6px;">
+                <span>📋</span>
+                <span>BEFORE (Simple Prompt)</span>
+              </div>
+              <div style="padding:10px;background:rgba(139,92,246,0.1);border-radius:8px;margin-bottom:8px;">
+                <div style="font-size:11px;color:var(--muted);margin-bottom:4px;">Prompt:</div>
+                <div id="beforePrompt" style="font-size:12px;color:var(--text);font-weight:500;">-</div>
+              </div>
+              <div id="beforeImage" style="width:100%;aspect-ratio:1;background:var(--card);border:2px dashed var(--border);border-radius:8px;display:flex;align-items:center;justify-content:center;color:var(--muted);font-size:11px;">
+                No image saved yet
+              </div>
+            </div>
+            
+            <!-- After -->
+            <div>
+              <div style="font-size:12px;font-weight:700;color:#10b981;margin-bottom:8px;display:flex;align-items:center;gap:6px;">
+                <span>✨</span>
+                <span>AFTER (Detailed Prompt)</span>
+              </div>
+              <div style="padding:10px;background:rgba(16,185,129,0.1);border-radius:8px;margin-bottom:8px;">
+                <div style="font-size:11px;color:var(--muted);margin-bottom:4px;">Prompt:</div>
+                <div id="afterPrompt" style="font-size:12px;color:var(--text);font-weight:500;">-</div>
+              </div>
+              <div id="afterImage" style="width:100%;aspect-ratio:1;background:var(--card);border:2px dashed var(--border);border-radius:8px;display:flex;align-items:center;justify-content:center;color:var(--muted);font-size:11px;">
+                No image saved yet
+              </div>
+            </div>
+          </div>
+          
+          <div style="text-align:center;padding:12px;background:rgba(99,102,241,0.1);border-radius:8px;">
+            <div style="font-size:12px;font-weight:600;color:var(--text);margin-bottom:4px;">💡 Learning Tip</div>
+            <div style="font-size:11px;color:var(--muted);">Generate an image, click "Compare Later", then try a more detailed prompt to see the difference!</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Classes 4-6: CT Pattern Recognition Game -->
+      <div id="ctPatternGameSection" style="display:none;">
+        <div class="sec-lbl">Think Like a Computer! 🧩</div>
+        <div class="ai-fundamentals-card">
+          <div class="fundamentals-title">
+            <span>🎯</span>
+            <span>Pattern Recognition Challenge</span>
+          </div>
+          <div class="concept-content" style="margin-bottom:16px;">
+            Can you find the pattern? This is how AI learns too!
+          </div>
+          
+          <div id="patternGameArea">
+            <div style="display:flex;justify-content:center;gap:12px;margin-bottom:20px;flex-wrap:wrap;" id="patternSequence">
+              <!-- Pattern will be inserted here -->
+            </div>
+            
+            <div style="text-align:center;margin-bottom:16px;">
+              <div style="font-size:13px;font-weight:700;color:var(--text);margin-bottom:12px;">What comes next?</div>
+              <div style="display:flex;justify-content:center;gap:10px;flex-wrap:wrap;" id="patternChoices">
+                <!-- Choices will be inserted here -->
+              </div>
+            </div>
+            
+            <div id="patternFeedback" style="display:none;padding:12px;border-radius:10px;text-align:center;font-size:13px;font-weight:600;margin-top:12px;">
+            </div>
+            
+            <button onclick="nextPatternChallenge()" style="width:100%;padding:12px;background:linear-gradient(135deg,var(--indigo),var(--purple));color:white;border:none;border-radius:12px;font-size:13px;font-weight:700;cursor:pointer;margin-top:12px;font-family:'Inter',sans-serif;">
+              Next Challenge →
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Classes 4-6: Homework Helper Templates -->
+      <div id="homeworkHelperSection" style="display:none;">
+        <div class="sec-lbl">Homework Helper 📚</div>
+        <div style="background:linear-gradient(135deg,rgba(34,197,94,0.15),rgba(79,110,247,0.15));border:1.5px solid rgba(34,197,94,0.3);border-radius:20px;padding:18px;margin-bottom:14px;">
+          <div style="font-size:13px;color:rgba(240,242,255,0.8);line-height:1.6;margin-bottom:16px;">
+            <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
+              <span style="font-size:18px;">💡</span>
+              <span style="font-size:14px;font-weight:700;color:var(--text);">AI can help you learn better!</span>
+            </div>
+            Choose a template below to get started with your homework.
+          </div>
+          
+          <div class="template-grid">
+            <div class="template-btn" onclick="useHomeworkTemplate('explain')">
+              <div class="template-emoji">🔍</div>
+              <div class="template-label">Explain Concept</div>
+            </div>
+            <div class="template-btn" onclick="useHomeworkTemplate('examples')">
+              <div class="template-emoji">💡</div>
+              <div class="template-label">Give Examples</div>
+            </div>
+            <div class="template-btn" onclick="useHomeworkTemplate('poster')">
+              <div class="template-emoji">🎨</div>
+              <div class="template-label">Make Poster</div>
+            </div>
+            <div class="template-btn" onclick="useHomeworkTemplate('summary')">
+              <div class="template-emoji">📝</div>
+              <div class="template-label">Summarize Topic</div>
+            </div>
+          </div>
+          
+          <div id="homeworkTemplateInput" style="display:none;margin-top:16px;">
+            <div style="font-size:12px;font-weight:700;color:var(--muted);margin-bottom:8px;" id="homeworkTemplateLabel">Enter your topic:</div>
+            <input type="text" id="homeworkTopicInput" placeholder="e.g., Photosynthesis" style="width:100%;background:var(--surface2);border:1.5px solid var(--border);border-radius:10px;padding:10px 12px;font-size:13px;font-weight:600;color:var(--text);font-family:'Inter',sans-serif;margin-bottom:10px;">
+            <button onclick="generateFromHomeworkTemplate()" style="width:100%;padding:10px;background:linear-gradient(135deg,#10b981,#059669);color:white;border:none;border-radius:10px;font-size:13px;font-weight:700;cursor:pointer;font-family:'Inter',sans-serif;">
+              Generate →
+            </button>
+          </div>
+        </div>
+        
+        <!-- Responsible Use Tips -->
+        <div style="background:rgba(245,158,11,0.1);border:1.5px solid rgba(245,158,11,0.3);border-radius:16px;padding:14px;margin-bottom:14px;">
+          <div style="display:flex;align-items:start;gap:10px;">
+            <span style="font-size:20px;flex-shrink:0;">🛡️</span>
+            <div>
+              <div style="font-size:12px;font-weight:700;color:#f59e0b;margin-bottom:6px;">Remember: Use AI Responsibly!</div>
+              <div style="font-size:11px;color:rgba(245,158,11,0.9);line-height:1.5;">
+                ✓ AI helps you <strong>learn</strong>, not copy<br>
+                ✓ Always <strong>verify</strong> with your teacher<br>
+                ✓ Use AI ideas, but write in <strong>your own words</strong>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Classes 4-6: Homework Helper Output Section -->
+      <div id="homeworkOutputSection" style="display:none;">
+        <div class="sec-lbl">Your Homework Result 📖</div>
+        <div class="output-card ready" id="homeworkOutputCard">
+          <div class="out-hdr">
+            <div class="out-title-row">
+              <div class="out-dot" id="homeworkOutDot"></div>
+              <div class="out-title" id="homeworkOutTitle">Ready to Generate</div>
+            </div>
+            <div class="out-acts">
+              <div class="ico-btn" onclick="copyHomeworkOutput()" title="Copy Text">
+                <svg viewBox="0 0 24 24"><path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/></svg>
+              </div>
+              <div class="ico-btn" onclick="downloadHomeworkOutput()" title="Download">
+                <svg viewBox="0 0 24 24"><path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/></svg>
+              </div>
+            </div>
+          </div>
+
+          <!-- Placeholder -->
+          <div class="out-placeholder" id="homeworkOutPH">
+            <div class="out-ph-icon">
+              <svg viewBox="0 0 24 24"><path d="M14 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V8l-6-6zm4 18H6V4h7v5h5v11z"/></svg>
+            </div>
+            <div class="out-ph-text">Your homework help will appear here</div>
+            <div class="out-ph-sub">Choose a template above and enter your topic ✨</div>
+          </div>
+
+          <!-- Loading -->
+          <div class="out-loading" id="homeworkOutLoad" style="display:none;">
+            <div class="shimmer-lines">
+              <div class="shimmer" style="width:90%"></div>
+              <div class="shimmer" style="width:85%"></div>
+              <div class="shimmer" style="width:80%"></div>
+              <div class="shimmer" style="width:75%"></div>
+            </div>
+            <div class="out-loading-text" id="homeworkLoadTxt">Generating your homework help…</div>
+          </div>
+
+          <!-- Generated Text Output -->
+          <div class="out-text-area" id="homeworkOutText" style="display:none;">
+            <div style="margin-bottom:12px;padding:10px;background:rgba(34,197,94,0.1);border-left:3px solid #10b981;border-radius:8px;">
+              <div style="font-size:11px;font-weight:700;color:#10b981;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:4px;" id="homeworkTemplateType">Explanation</div>
+              <div style="font-size:12px;color:var(--muted);" id="homeworkTopicDisplay">Topic: Photosynthesis</div>
+            </div>
+            <div class="out-text-content" id="homeworkTextContent">
+              <!-- Generated content will appear here -->
+            </div>
+          </div>
+
+          <div class="out-meta" id="homeworkOutMeta" style="display:none;">
+            <div class="out-meta-txt" id="homeworkOutMetaTxt">Generated in 2.1s</div>
+            <button class="regen-btn" onclick="regenerateHomework()">↺ Regenerate</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Phase 2: Project Assistant Mode -->
+      <div id="projectAssistantSection" style="display:none;">
+        <div class="sec-lbl">Project Assistant 🎯</div>
+        <div style="background:linear-gradient(135deg,rgba(245,158,11,0.15),rgba(239,68,68,0.15));border:1.5px solid rgba(245,158,11,0.3);border-radius:20px;padding:18px;margin-bottom:14px;">
+          <div style="display:flex;align-items:center;gap:10px;margin-bottom:16px;">
+            <span style="font-size:28px;">🚀</span>
+            <div>
+              <div style="font-size:15px;font-weight:800;color:var(--text);">Big Project Helper</div>
+              <div style="font-size:12px;color:var(--muted);margin-top:2px;">For school projects, presentations & more!</div>
+            </div>
+          </div>
+          
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px;">
+            <div class="project-type-btn" onclick="selectProjectType('ideas')">
+              <div style="font-size:28px;margin-bottom:6px;">💡</div>
+              <div style="font-size:12px;font-weight:700;">Project Ideas</div>
+            </div>
+            <div class="project-type-btn" onclick="selectProjectType('research')">
+              <div style="font-size:28px;margin-bottom:6px;">🔬</div>
+              <div style="font-size:12px;font-weight:700;">Research Help</div>
+            </div>
+            <div class="project-type-btn" onclick="selectProjectType('presentation')">
+              <div style="font-size:28px;margin-bottom:6px;">📊</div>
+              <div style="font-size:12px;font-weight:700;">Presentation</div>
+            </div>
+            <div class="project-type-btn" onclick="selectProjectType('visual')">
+              <div style="font-size:28px;margin-bottom:6px;">🎨</div>
+              <div style="font-size:12px;font-weight:700;">Visual Project</div>
+            </div>
+          </div>
+          
+          <div id="projectInputArea" style="display:none;">
+            <div style="font-size:12px;font-weight:700;color:var(--muted);margin-bottom:8px;" id="projectInputLabel">Tell me about your project:</div>
+            <textarea id="projectDescInput" placeholder="e.g., Science project about renewable energy" style="width:100%;min-height:80px;background:var(--surface2);border:1.5px solid var(--border);border-radius:10px;padding:10px 12px;font-size:13px;color:var(--text);font-family:'Inter',sans-serif;resize:vertical;margin-bottom:10px;"></textarea>
+            <button onclick="generateProjectHelp()" style="width:100%;padding:12px;background:linear-gradient(135deg,#f59e0b,#d97706);color:white;border:none;border-radius:10px;font-size:13px;font-weight:700;cursor:pointer;font-family:'Inter',sans-serif;">
+              Get Project Help →
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Phase 2: Project Output Section -->
+      <div id="projectOutputSection" style="display:none;">
+        <div class="sec-lbl">Your Project Plan 📋</div>
+        <div class="output-card ready" id="projectOutputCard">
+          <div class="out-hdr">
+            <div class="out-title-row">
+              <div class="out-dot live"></div>
+              <div class="out-title" id="projectOutTitle">Project Plan Ready</div>
+            </div>
+            <div class="out-acts">
+              <div class="ico-btn" onclick="copyProjectOutput()" title="Copy">
+                <svg viewBox="0 0 24 24"><path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/></svg>
+              </div>
+              <div class="ico-btn" onclick="printProjectOutput()" title="Print">
+                <svg viewBox="0 0 24 24"><path d="M19 8H5c-1.66 0-3 1.34-3 3v6h4v4h12v-4h4v-6c0-1.66-1.34-3-3-3zm-3 11H8v-5h8v5zm3-7c-.55 0-1-.45-1-1s.45-1 1-1 1 .45 1 1-.45 1-1 1zm-1-9H6v4h12V3z"/></svg>
+              </div>
+            </div>
+          </div>
+          <div class="out-text-area" style="display:block;">
+            <div class="out-text-content" id="projectOutputContent">
+              <!-- Project plan will appear here -->
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Classes 4-6: Reflection Questions -->
+      <div id="reflectionSection" style="display:none;">
+        <div class="sec-lbl">Quick Reflection 💭 (Optional)</div>
+        <div class="reflection-card" style="display:block;">
+          <div class="reflection-question" style="margin-bottom:12px;">What did you learn from using AI for this?</div>
+          <textarea class="reflection-input" id="reflectionAnswer1" placeholder="Share your thoughts... (This is optional and helps you learn better!)"></textarea>
+          
+          <div style="display:flex;gap:8px;margin-top:12px;">
+            <button class="reflection-submit" onclick="submitReflection()" style="flex:1;">
+              Save My Thoughts ✨
+            </button>
+            <button onclick="skipReflection()" style="flex:1;padding:10px 16px;background:var(--surface2);border:1.5px solid var(--border);border-radius:10px;font-size:12px;font-weight:700;color:var(--muted);cursor:pointer;transition:all .2s;font-family:'Inter',sans-serif;">
+              Skip for Now
+            </button>
+          </div>
+          
+          <div id="reflectionSuccess" style="display:none;margin-top:12px;padding:12px;background:rgba(34,197,94,0.1);border:1px solid rgba(34,197,94,0.3);border-radius:10px;text-align:center;color:#10b981;font-size:12px;font-weight:600;">
+            ✅ Great thinking! Reflection helps you learn better!
+          </div>
+        </div>
+      </div>
+
+      <!-- Classes 1-3: Simple Prompt Card -->
+      <div id="simplePromptSection" style="display:none;">
+      <div class="prompt-card" id="promptCard">
         <textarea class="prompt-ta" id="promptTa" placeholder="Describe what you want to create or learn…&#10;e.g. Generate a futuristic city on Mars" oninput="updateChar()">Generate a futuristic city on Mars with glowing buildings, flying vehicles, and a dramatic night sky</textarea>
         <div class="prompt-actions">
           <div class="tool-row">
@@ -198,27 +1200,30 @@ body{font-family:'Inter',sans-serif;background:#0A0C12;min-height:100vh;display:
         </div>
       </div>
 
-      <div class="sec-lbl">Try These</div>
-      <div class="suggest-col">
-        <div class="sug-chip" onclick="useSuggest(this,'Explain Newton\'s Laws of Motion with examples and diagrams')">
-          <div class="sug-ico" style="background:rgba(139,92,246,0.2);">🔭</div>
-          <span class="sug-text">Explain Newton's Laws of Motion</span>
-          <span class="sug-arrow">›</span>
-        </div>
-        <div class="sug-chip" onclick="useSuggest(this,'Create a detailed startup pitch for a solar-powered bicycle sharing app')">
-          <div class="sug-ico" style="background:rgba(79,110,247,0.2);">💡</div>
-          <span class="sug-text">Create a startup pitch for a solar bike</span>
-          <span class="sug-arrow">›</span>
-        </div>
-        <div class="sug-chip" onclick="useSuggest(this,'Generate a futuristic city on Mars with glowing buildings, flying vehicles, and a dramatic night sky')">
-          <div class="sug-ico" style="background:rgba(34,197,94,0.2);">🌆</div>
-          <span class="sug-text">Generate a futuristic city image</span>
-          <span class="sug-arrow">›</span>
-        </div>
-        <div class="sug-chip" onclick="useSuggest(this,'Write a beautiful poem about the ocean and its mysteries')">
-          <div class="sug-ico" style="background:rgba(245,158,11,0.2);">✍️</div>
-          <span class="sug-text">Write a poem about the ocean</span>
-          <span class="sug-arrow">›</span>
+      <!-- Try These Suggestions - shown for all classes -->
+      <div id="trySuggestions">
+        <div class="sec-lbl">Try These</div>
+        <div class="suggest-col">
+          <div class="sug-chip" onclick="useSuggest(this,'Explain Newton\'s Laws of Motion with examples and diagrams')">
+            <div class="sug-ico" style="background:rgba(139,92,246,0.2);">🔭</div>
+            <span class="sug-text">Explain Newton's Laws of Motion</span>
+            <span class="sug-arrow">›</span>
+          </div>
+          <div class="sug-chip" onclick="useSuggest(this,'Create a detailed startup pitch for a solar-powered bicycle sharing app')">
+            <div class="sug-ico" style="background:rgba(79,110,247,0.2);">💡</div>
+            <span class="sug-text">Create a startup pitch for a solar bike</span>
+            <span class="sug-arrow">›</span>
+          </div>
+          <div class="sug-chip" onclick="useSuggest(this,'Generate a futuristic city on Mars with glowing buildings, flying vehicles, and a dramatic night sky')">
+            <div class="sug-ico" style="background:rgba(34,197,94,0.2);">🌆</div>
+            <span class="sug-text">Generate a futuristic city image</span>
+            <span class="sug-arrow">›</span>
+          </div>
+          <div class="sug-chip" onclick="useSuggest(this,'Write a beautiful poem about the ocean and its mysteries')">
+            <div class="sug-ico" style="background:rgba(245,158,11,0.2);">✍️</div>
+            <span class="sug-text">Write a poem about the ocean</span>
+            <span class="sug-arrow">›</span>
+          </div>
         </div>
       </div>
 
@@ -331,7 +1336,7 @@ body{font-family:'Inter',sans-serif;background:#0A0C12;min-height:100vh;display:
         </div>
       </div>
 
-      <div class="sec-lbl">Recent Creations</div>
+      <div class="sec-lbl" id="historyLabel">Recent Creations</div>
       <div class="hist-card">
         <div class="hist-item" onclick="loadHistory('solar','txt')">
           <div class="hist-thumb" style="background:rgba(139,92,246,0.2);">🌌</div>
@@ -367,24 +1372,1250 @@ body{font-family:'Inter',sans-serif;background:#0A0C12;min-height:100vh;display:
 let currentTool = 'image';
 let currentClass = '10';
 let generating = false;
+let trialsRemaining = 3;
 
 const classLabels = {'1-3':'Beginner Mode · Class 1–3','4-6':'Intermediate · Class 4–6','7-9':'Advanced Mode · Class 7–9','10':'Advanced Mode · Class 10'};
 const classSuggests = {
   '1-3':['Draw a red bird on a tree','Make a rainbow','Draw a happy sun','Make colorful flowers'],
   '4-6':['Draw the solar system','A lion in the jungle','A rainbow waterfall','A futuristic rocket'],
-  '7-9':['Explain photosynthesis','Newton's Laws of Motion','A city of the future','Write a short story about space'],
+  '7-9':['Explain photosynthesis','Newtons Laws of Motion','A city of the future','Write a short story about space'],
   '10':["Explain Newton's Laws of Motion with examples","Create a startup pitch for a solar bike","Generate a futuristic city image","Write a poem about the ocean"]
 };
+
+// Kid-friendly loading messages for Classes 1-3
+const kidsLoadingMessages = {
+  image: [
+    '🎨 Mixing magical colors...',
+    '✨ Sprinkling fairy dust...',
+    '🌈 Making it colorful...',
+    '🎉 Almost ready!'
+  ],
+  story: [
+    '📖 Opening story book...',
+    '✍️ Writing your tale...',
+    '🌟 Adding magic words...',
+    '📚 Story complete!'
+  ]
+};
+
+// Classes 4-6: Prompt Builder Functions
+function updatePromptPreview(){
+  const style = document.getElementById('builderStyle').value;
+  const subject = document.getElementById('builderSubject').value;
+  const action = document.getElementById('builderAction').value;
+  const place = document.getElementById('builderPlace').value;
+  
+  let prompt = '';
+  if(style && subject && action && place) {
+    prompt = `${style} of a ${subject} ${action} ${place}`;
+  } else {
+    prompt = 'Select all 4 options above to build your prompt...';
+  }
+  
+  document.getElementById('promptPreviewText').textContent = prompt;
+}
+
+function generateFromBuilder(){
+  const prompt = document.getElementById('promptPreviewText').textContent;
+  if(prompt === 'Select options above to build your prompt...') {
+    showToast('⚠️ Please select all options first!');
+    return;
+  }
+  
+  if(generating) return;
+  generating = true;
+  
+  // Show class 4-6 output section
+  document.getElementById('class46OutputSection').style.display = 'block';
+  
+  // Show loading state
+  document.getElementById('class46OutPH').style.display = 'none';
+  document.getElementById('class46OutImg').style.display = 'none';
+  document.getElementById('class46OutMeta').style.display = 'none';
+  document.getElementById('class46OutLoad').style.display = 'flex';
+  document.getElementById('class46OutDot').classList.remove('live');
+  document.getElementById('class46OutTitle').textContent = 'Generating…';
+  const loadTxt = document.getElementById('class46LoadTxt');
+  
+  const msgs = ['Composing scene…','Adding details…','Rendering lighting…','Finalizing…'];
+  let m = 0;
+  const intv = setInterval(() => { loadTxt.textContent = msgs[m % msgs.length]; m++; }, 700);
+  
+  setTimeout(() => {
+    clearInterval(intv);
+    generating = false;
+    document.getElementById('class46OutLoad').style.display = 'none';
+    document.getElementById('class46OutDot').classList.add('live');
+    document.getElementById('class46OutputCard').classList.add('ready');
+    
+    document.getElementById('class46OutImg').style.display = 'block';
+    document.getElementById('class46OutImg').innerHTML = document.getElementById('outImg').innerHTML;
+    document.getElementById('class46OutTitle').textContent = 'AI Image · Generated';
+    document.getElementById('class46OutMeta').style.display = 'block';
+    
+    showToast('✅ Generated successfully!');
+    addToHistory(prompt, 'image');
+  }, 3200);
+}
+
+function downloadClass46Output(){ showToast('⬇️ Saved to gallery!'); }
+function copyClass46Output(){ showToast('📋 Copied to clipboard!'); }
+
+function submitReflection(){
+  const reflection1 = document.getElementById('reflection1').value;
+  const reflection2 = document.getElementById('reflection2').value;
+  
+  if(!reflection1 || !reflection2) {
+    showToast('⚠️ Please answer both questions!');
+    return;
+  }
+  
+  // Save reflections to localStorage
+  const reflections = JSON.parse(localStorage.getItem('class46_reflections') || '[]');
+  reflections.push({
+    date: new Date().toISOString(),
+    question1: reflection1,
+    question2: reflection2
+  });
+  localStorage.setItem('class46_reflections', JSON.stringify(reflections));
+  
+  showToast('✅ Your thoughts have been saved!');
+  document.getElementById('reflection1').value = '';
+  document.getElementById('reflection2').value = '';
+}
+
+function updateUIForClass(cls){
+  // Hide all class-specific sections first
+  document.getElementById('aiConceptSection').style.display = 'none';
+  document.getElementById('storyBuilderSection').style.display = 'none';
+  document.getElementById('simplePromptSection').style.display = 'none';
+  document.getElementById('simpleOutputSection').style.display = 'none';
+  document.getElementById('aiFundamentalsSection').style.display = 'none';
+  document.getElementById('promptBuilderSection').style.display = 'none';
+  document.getElementById('class46FreePromptSection').style.display = 'none';
+  document.getElementById('class46OutputSection').style.display = 'none';
+  document.getElementById('comparisonSection').style.display = 'none';
+  document.getElementById('reflectionSection').style.display = 'none';
+  document.getElementById('ctPatternGameSection').style.display = 'none';
+  document.getElementById('homeworkHelperSection').style.display = 'none';
+  document.getElementById('homeworkOutputSection').style.display = 'none';
+  document.getElementById('realWorldAISection').style.display = 'none';
+  document.getElementById('interactiveConceptsSection').style.display = 'none';
+  document.getElementById('projectAssistantSection').style.display = 'none';
+  document.getElementById('projectOutputSection').style.display = 'none';
+  document.getElementById('promptCard').style.display = 'none';
+  document.getElementById('trySuggestions').style.display = 'block';
+  document.getElementById('emojiReflection').style.display = 'none';
+
+  // Show class-specific UI
+  if(cls === '1-3'){
+    document.getElementById('aiConceptSection').style.display = 'block';
+    document.getElementById('storyBuilderSection').style.display = 'block';
+    document.getElementById('simplePromptSection').style.display = 'block';
+    document.getElementById('trySuggestions').style.display = 'none';
+
+    // Hide favorites button for Class 1-3
+    document.getElementById('viewFavoritesBtn').style.display = 'none';
+  } else if(cls === '4-6'){
+    document.getElementById('aiFundamentalsSection').style.display = 'block';
+    document.getElementById('realWorldAISection').style.display = 'block';
+    document.getElementById('interactiveConceptsSection').style.display = 'block';
+    document.getElementById('ctPatternGameSection').style.display = 'block';
+    document.getElementById('homeworkHelperSection').style.display = 'block';
+    document.getElementById('projectAssistantSection').style.display = 'block';
+    document.getElementById('promptBuilderSection').style.display = 'block';
+    document.getElementById('class46FreePromptSection').style.display = 'block';
+    document.getElementById('class46OutputSection').style.display = 'none';
+    document.getElementById('comparisonSection').style.display = 'none';
+    // Reflection section hidden by default - only shown after homework/project outputs
+
+    // Initialize pattern game
+    initPatternGame();
+
+    // Show favorites button for Class 4-6
+    const favBtn = document.getElementById('viewFavoritesBtn');
+    favBtn.style.display = 'inline-block';
+
+    // Hide other class sections
+    document.getElementById('aiConceptSection').style.display = 'none';
+    document.getElementById('storyBuilderSection').style.display = 'none';
+    document.getElementById('simplePromptSection').style.display = 'none';
+    document.getElementById('simpleOutputSection').style.display = 'none';
+    document.getElementById('emojiReflection').style.display = 'none';
+
+    // Hide general prompt card and try these
+    document.getElementById('promptCard').style.display = 'none';
+    document.getElementById('trySuggestions').style.display = 'none';
+  } else {
+    // Classes 7-9, 10, etc. - show standard prompt card
+    document.getElementById('promptCard').style.display = 'block';
+
+    // Hide favorites button for other classes
+    document.getElementById('viewFavoritesBtn').style.display = 'none';
+  }
+}
 
 function setClass(el, cls){
   document.querySelectorAll('.class-chip').forEach(c=>c.classList.remove('active'));
   el.classList.add('active');
   currentClass = cls;
   document.getElementById('modeLbl').textContent = classLabels[cls];
-  // update suggestions
+  
+  // Update UI based on class
+  updateUIForClass(cls);
+  
+  // update suggestions for older classes
   const sugs = document.querySelectorAll('.sug-text');
   const texts = classSuggests[cls];
   sugs.forEach((s,i)=>{ if(texts[i]) s.textContent=texts[i]; });
+}
+
+// Story Builder Function
+function generateStory(){
+  const char = document.getElementById('storyCharacter').value;
+  const setting = document.getElementById('storySetting').value;
+  const action = document.getElementById('storyAction').value;
+  
+  if(!char || !setting || !action){
+    showToast('⚠️ Please choose all options!');
+    return;
+  }
+  
+  const story = `Once upon a time, ${char} lived ${setting}. One day, ${char} ${action}. It was the best day ever! The End. 🌟`;
+  
+  // Show loading with kid-friendly messages
+  const loadingEl = document.getElementById('storyLoading');
+  loadingEl.style.display = 'flex';
+  
+  let msgIndex = 0;
+  const loadingText = loadingEl.querySelector('span');
+  loadingText.textContent = kidsLoadingMessages.story[0];
+  
+  const msgInterval = setInterval(() => {
+    msgIndex++;
+    if (msgIndex < kidsLoadingMessages.story.length) {
+      loadingText.textContent = kidsLoadingMessages.story[msgIndex];
+    }
+  }, 500);
+  
+  // Simulate story generation
+  setTimeout(() => {
+    clearInterval(msgInterval);
+    document.getElementById('storyText').textContent = story;
+    document.getElementById('storyLoading').style.display = 'none';
+    document.getElementById('storyBuilderCard').classList.add('flipped');
+    
+    showToast('✅ Story created successfully!');
+    
+    // Show emoji reflection
+    setTimeout(()=>{
+      document.getElementById('emojiReflection').style.display='block';
+    }, 500);
+  }, 2000);
+}
+
+function copyStory(){
+  const storyText = document.getElementById('storyText').textContent;
+  navigator.clipboard.writeText(storyText).then(() => {
+    showToast('📋 Story copied to clipboard!');
+  }).catch(() => {
+    showToast('📋 Story copied!');
+  });
+}
+
+function resetStory(){
+  document.getElementById('storyBuilderCard').classList.remove('flipped');
+  document.getElementById('emojiReflection').style.display='none';
+  setTimeout(() => {
+    document.getElementById('storyText').textContent = '';
+    document.getElementById('storyCharacter').value = '';
+    document.getElementById('storySetting').value = '';
+    document.getElementById('storyAction').value = '';
+  }, 400);
+  showToast('🔄 Ready for a new story!');
+}
+
+// Simple prompt generation for Classes 1-3
+function generateSimple(){
+  if(generating) return;
+  
+  // Check trials
+  if(trialsRemaining <= 0){
+    showToast('⚠️ Free trials used! Pay ₹10 to continue.');
+    return;
+  }
+  
+  const prompt = document.getElementById('simplePromptTa').value.trim();
+  if(!prompt){ showToast('⚠️ Please enter a prompt first!'); return; }
+  
+  generating = true;
+  const btn = document.getElementById('simpleGenBtn');
+  btn.classList.add('loading');
+  document.getElementById('simpleGenIcon').style.display='none';
+  document.getElementById('simpleGenSpin').style.display='block';
+  document.getElementById('simpleGenTxt').textContent='Generating…';
+
+  // Show simple output section
+  document.getElementById('simpleOutputSection').style.display='block';
+  
+  // show loading state
+  document.getElementById('simpleOutPH').style.display='none';
+  document.getElementById('simpleOutImg').style.display='none';
+  document.getElementById('simpleOutMeta').style.display='none';
+  document.getElementById('simpleOutLoad').style.display='flex';
+  document.getElementById('simpleOutDot').classList.remove('live');
+  document.getElementById('simpleOutTitle').textContent='Generating…';
+  const loadTxt = document.getElementById('simpleLoadTxt');
+
+  // Use kid-friendly messages
+  const msgs = kidsLoadingMessages.image;
+  let m=0;
+  loadTxt.textContent = msgs[0];
+  const intv = setInterval(()=>{ 
+    m++;
+    if(m < msgs.length) {
+      loadTxt.textContent = msgs[m];
+    }
+  }, 800);
+
+  setTimeout(()=>{
+    clearInterval(intv);
+    generating = false;
+    btn.classList.remove('loading');
+    document.getElementById('simpleGenIcon').style.display='';
+    document.getElementById('simpleGenSpin').style.display='none';
+    document.getElementById('simpleGenTxt').textContent='Generate';
+    document.getElementById('simpleOutLoad').style.display='none';
+    document.getElementById('simpleOutDot').classList.add('live');
+    document.getElementById('simpleOutputCard').classList.add('ready');
+
+    document.getElementById('simpleOutImg').style.display='block';
+    document.getElementById('simpleOutImg').innerHTML = document.getElementById('outImg').innerHTML;
+    document.getElementById('simpleOutTitle').textContent='AI Image · Generated';
+    document.getElementById('simpleOutMetaTxt').textContent='Generated in 3.2s · DALL-E 3 style';
+    document.getElementById('simpleOutMeta').style.display='flex';
+    
+    // Decrease trial count
+    trialsRemaining--;
+    document.getElementById('trialsLeftBadge').textContent = trialsRemaining + ' / 3';
+    
+    if(trialsRemaining === 0){
+      document.getElementById('trialsLeftBadge').style.background = 'linear-gradient(135deg,#EF4444,#DC2626)';
+      document.getElementById('trialsLeftBadge').textContent = '0 / 3 ❌';
+    }
+    
+    showToast('✅ Generated successfully!');
+    addToHistory(prompt, 'image');
+    
+    // Show emoji reflection for Classes 1-3
+    setTimeout(()=>{
+      document.getElementById('emojiReflection').style.display='block';
+    }, 500);
+  }, 3200);
+}
+
+function downloadSimpleOutput(){ showToast('⬇️ Saved to gallery!'); }
+function copySimpleOutput(){ showToast('📋 Copied to clipboard!'); }
+
+function updateSimpleChar(){
+  const len = document.getElementById('simplePromptTa').value.length;
+  document.getElementById('simpleCharCount').textContent = len+' / 500';
+}
+
+function doVoiceSimple(){
+  showToast('🎙️ Voice input — speak now…');
+  setTimeout(()=>{
+    document.getElementById('simplePromptTa').value = 'A happy sun with a smiling face';
+    updateSimpleChar();
+    showToast('✅ Voice captured!');
+  },2000);
+}
+
+// Classes 4-6 Free Prompt Functions
+let class46TrialsRemaining = 3;
+
+function updateClass46FreeChar(){
+  const text = document.getElementById('class46FreePromptTa').value;
+  const len = text.length;
+  document.getElementById('class46FreeCharCount').textContent = len+' / 200 characters';
+  
+  // Prompt Quality Feedback
+  const feedback = document.getElementById('promptQualityFeedback');
+  const icon = document.getElementById('qualityIcon');
+  const message = document.getElementById('qualityMessage');
+  const details = document.getElementById('qualityDetails');
+  
+  if(len === 0){
+    feedback.style.display = 'none';
+    return;
+  }
+  
+  feedback.style.display = 'flex';
+  const words = text.trim().split(/\s+/).filter(w => w.length > 0);
+  const wordCount = words.length;
+  const hasAdjectives = /\b(beautiful|magical|colorful|bright|dark|mysterious|amazing|fantastic|cute|scary|happy|sad|angry|peaceful)\b/i.test(text);
+  const hasDetails = /\b(with|wearing|holding|in|at|on|flying|running|sitting|standing)\b/i.test(text);
+  
+  if(wordCount < 3){
+    icon.textContent = '💡';
+    message.textContent = 'Add more details!';
+    details.textContent = `${wordCount} word${wordCount !== 1 ? 's' : ''} - Try adding colors, actions, or locations`;
+    feedback.style.background = 'rgba(239,68,68,0.1)';
+    feedback.style.borderColor = 'rgba(239,68,68,0.3)';
+  } else if(wordCount < 6 && !hasAdjectives && !hasDetails){
+    icon.textContent = '📝';
+    message.textContent = 'Good start! Add descriptive words';
+    details.textContent = `${wordCount} words - Try: "A red dragon flying over mountains"`;
+    feedback.style.background = 'rgba(251,191,36,0.1)';
+    feedback.style.borderColor = 'rgba(251,191,36,0.3)';
+  } else if((wordCount >= 6 && hasAdjectives) || (wordCount >= 5 && hasDetails)){
+    icon.textContent = '🌟';
+    message.textContent = 'Great detail!';
+    details.textContent = `${wordCount} words - Specific prompts create better results!`;
+    feedback.style.background = 'rgba(16,185,129,0.1)';
+    feedback.style.borderColor = 'rgba(16,185,129,0.3)';
+  } else {
+    icon.textContent = '👍';
+    message.textContent = 'Nice prompt!';
+    details.textContent = `${wordCount} words - This should work well`;
+    feedback.style.background = 'rgba(139,92,246,0.1)';
+    feedback.style.borderColor = 'rgba(139,92,246,0.3)';
+  }
+}
+
+function doVoiceClass46Free(){
+  showToast('🎙️ Voice input — speak now…');
+  setTimeout(()=>{
+    document.getElementById('class46FreePromptTa').value = 'A magical unicorn flying over rainbow clouds';
+    updateClass46FreeChar();
+    showToast('✅ Voice captured!');
+  },2000);
+}
+
+function generateClass46Free(){
+  const prompt = document.getElementById('class46FreePromptTa').value.trim();
+  
+  if(!prompt){
+    showToast('⚠️ Please write your idea first!');
+    return;
+  }
+  
+  if(class46TrialsRemaining <= 0){
+    showToast('💳 Please upgrade to continue creating!');
+    return;
+  }
+  
+  if(generating) return;
+  generating = true;
+  
+  // Show class 4-6 output section
+  document.getElementById('class46OutputSection').style.display = 'block';
+  
+  // Show loading state
+  document.getElementById('class46OutPH').style.display = 'none';
+  document.getElementById('class46OutImg').style.display = 'none';
+  document.getElementById('class46OutMeta').style.display = 'none';
+  document.getElementById('class46OutLoad').style.display = 'flex';
+  document.getElementById('class46OutDot').classList.remove('live');
+  document.getElementById('class46OutTitle').textContent = 'Generating…';
+  const loadTxt = document.getElementById('class46LoadTxt');
+  
+  const msgs = ['Composing scene…','Adding details…','Rendering lighting…','Finalizing…'];
+  let m = 0;
+  const intv = setInterval(() => { loadTxt.textContent = msgs[m % msgs.length]; m++; }, 700);
+  
+  setTimeout(() => {
+    clearInterval(intv);
+    generating = false;
+    document.getElementById('class46OutLoad').style.display = 'none';
+    document.getElementById('class46OutDot').classList.add('live');
+    document.getElementById('class46OutputCard').classList.add('ready');
+    
+    document.getElementById('class46OutImg').style.display = 'block';
+    document.getElementById('class46OutImg').innerHTML = document.getElementById('outImg').innerHTML;
+    document.getElementById('class46OutTitle').textContent = 'AI Image · Generated';
+    document.getElementById('class46OutMeta').style.display = 'block';
+    
+    // Decrease trial count
+    class46TrialsRemaining--;
+    document.getElementById('class46TrialsBadge').textContent = class46TrialsRemaining + ' / 3';
+    
+    if(class46TrialsRemaining === 0){
+      document.getElementById('class46TrialsBadge').style.background = 'linear-gradient(135deg,#EF4444,#DC2626)';
+      document.getElementById('class46TrialsBadge').textContent = '0 / 3 ❌';
+      showToast('💳 Free trials used! Pay ₹10 to continue');
+    }
+    
+    showToast('✅ Generated successfully!');
+    addToHistory(prompt, 'image');
+  }, 3200);
+}
+
+// Classes 4-6: Favorites Management
+let favoritesList = [];
+
+function saveToFavorites(){
+  const imgHTML = document.getElementById('class46OutImg').innerHTML;
+  const prompt = document.getElementById('class46FreePromptTa').value || document.getElementById('promptPreviewText').textContent;
+  
+  const favorite = {
+    id: Date.now(),
+    image: imgHTML,
+    prompt: prompt,
+    timestamp: new Date().toLocaleString()
+  };
+  
+  favoritesList.push(favorite);
+  
+  // Update favorites count
+  document.getElementById('favCount').textContent = favoritesList.length;
+  
+  // Update favorites grid view
+  updateFavoritesGridView();
+  
+  showToast('⭐ Added to favorites!');
+}
+
+function updateFavoritesGridView(){
+  const grid = document.getElementById('favoritesGridView');
+  
+  if(favoritesList.length === 0){
+    grid.innerHTML = `
+      <div style="grid-column:1/-1;text-align:center;padding:80px 20px;color:var(--muted);font-size:14px;">
+        <div style="font-size:64px;margin-bottom:16px;">⭐</div>
+        <div style="font-weight:700;font-size:18px;margin-bottom:8px;color:var(--text);">No favorites yet!</div>
+        <div style="font-size:13px;">Star your best creations to see them here</div>
+      </div>
+    `;
+    return;
+  }
+  
+  grid.innerHTML = favoritesList.map(fav => `
+    <div style="position:relative;border:1.5px solid var(--border);border-radius:10px;padding:10px;background:var(--card);transition:all .2s;" onmouseover="this.style.borderColor='rgba(251,191,36,0.4)';this.style.transform='translateY(-2px)';" onmouseout="this.style.borderColor='var(--border)';this.style.transform='translateY(0)';">
+      <div style="width:100%;aspect-ratio:1;border-radius:8px;overflow:hidden;margin-bottom:8px;background:linear-gradient(135deg,#667eea,#764ba2);">
+        ${fav.image}
+      </div>
+      <div style="margin-bottom:8px;">
+        <div style="font-size:10px;font-weight:700;color:var(--muted);margin-bottom:4px;text-transform:uppercase;letter-spacing:0.5px;">PROMPT:</div>
+        <div style="font-size:11px;color:var(--text);line-height:1.3;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;">${fav.prompt}</div>
+      </div>
+      <div style="display:flex;align-items:center;justify-content:space-between;gap:6px;padding-top:8px;border-top:1px solid rgba(255,255,255,0.05);">
+        <div style="font-size:9px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">🕐 ${fav.timestamp.split(',')[0]}</div>
+        <div style="display:flex;gap:4px;">
+          <button onclick="downloadFavorite(${fav.id})" style="padding:6px 10px;background:rgba(139,92,246,0.1);border:1px solid rgba(139,92,246,0.25);border-radius:6px;cursor:pointer;font-size:10px;font-weight:600;color:#a78bfa;transition:all .2s;" onmouseover="this.style.background='rgba(139,92,246,0.15)';" onmouseout="this.style.background='rgba(139,92,246,0.1)';">⬇️</button>
+          <button onclick="removeFavorite(${fav.id})" style="padding:6px 10px;background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.25);border-radius:6px;cursor:pointer;font-size:10px;font-weight:600;color:#EF4444;transition:all .2s;" onmouseover="this.style.background='rgba(239,68,68,0.15)';" onmouseout="this.style.background='rgba(239,68,68,0.1)';">🗑️</button>
+        </div>
+      </div>
+    </div>
+  `).join('');
+}
+
+function toggleFavoritesView(){
+  const favView = document.getElementById('favoritesViewSection');
+  const mainContent = document.querySelectorAll('.inner > div:not(#favoritesViewSection)');
+  
+  if(favView.style.display === 'none' || !favView.style.display){
+    // Show favorites view
+    favView.style.display = 'block';
+    mainContent.forEach(el => el.style.display = 'none');
+  } else {
+    // Hide favorites view
+    favView.style.display = 'none';
+    mainContent.forEach(el => el.style.display = '');
+  }
+}
+
+function removeFavorite(id){
+  favoritesList = favoritesList.filter(f => f.id !== id);
+  updateFavoritesGridView();
+  document.getElementById('favCount').textContent = favoritesList.length;
+  showToast('🗑️ Removed from favorites');
+}
+
+function downloadFavorite(id){
+  showToast('⬇️ Saved to gallery!');
+}
+
+// Classes 4-6: Before/After Comparison
+let beforeData = null;
+let afterData = null;
+
+function saveForComparison(){
+  const imgHTML = document.getElementById('class46OutImg').innerHTML;
+  const prompt = document.getElementById('class46FreePromptTa').value || document.getElementById('promptPreviewText').textContent;
+  
+  if(!beforeData){
+    beforeData = { image: imgHTML, prompt: prompt };
+    document.getElementById('beforeImage').innerHTML = imgHTML;
+    document.getElementById('beforePrompt').textContent = prompt;
+    document.getElementById('comparisonSection').style.display = 'block';
+    showToast('📋 Saved as "Before" - Now try a more detailed prompt!');
+  } else if(!afterData){
+    afterData = { image: imgHTML, prompt: prompt };
+    document.getElementById('afterImage').innerHTML = imgHTML;
+    document.getElementById('afterPrompt').textContent = prompt;
+    showToast('✨ Saved as "After" - Check the comparison below!');
+  } else {
+    // Reset and start over
+    beforeData = { image: imgHTML, prompt: prompt };
+    afterData = null;
+    document.getElementById('beforeImage').innerHTML = imgHTML;
+    document.getElementById('beforePrompt').textContent = prompt;
+    document.getElementById('afterImage').innerHTML = '<div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;color:var(--muted);font-size:11px;">No image saved yet</div>';
+    document.getElementById('afterPrompt').textContent = '-';
+    showToast('🔄 Comparison reset! Saved as new "Before"');
+  }
+}
+
+// Classes 4-6: Output Variations
+function generateVariations(){
+  showToast('🎲 Generating 2 variations...');
+  
+  const container = document.getElementById('variationsContainer');
+  container.style.display = 'block';
+  
+  // Simulate variation generation
+  setTimeout(() => {
+    document.getElementById('variation1Img').innerHTML = document.getElementById('outImg').innerHTML;
+    showToast('✅ Variation 1 ready!');
+  }, 1000);
+  
+  setTimeout(() => {
+    document.getElementById('variation2Img').innerHTML = document.getElementById('outImg').innerHTML;
+    showToast('✅ Variation 2 ready!');
+  }, 2000);
+}
+
+function selectVariation(num){
+  const varImg = document.getElementById('variation' + num + 'Img').innerHTML;
+  document.getElementById('class46OutImg').innerHTML = varImg;
+  document.getElementById('variationsContainer').style.display = 'none';
+  showToast(`✅ Using Variation ${num}!`);
+}
+
+// Template Selection Function
+function selectTemplate(prompt){
+  document.getElementById('promptTa').value = prompt;
+  currentTool = 'image';
+  generate();
+}
+
+// Emoji Reflection Function
+function selectEmoji(el, feeling){
+  document.querySelectorAll('.emoji-btn').forEach(btn => btn.classList.remove('selected'));
+  el.classList.add('selected');
+  showToast(`✅ Thank you for sharing! You felt ${feeling}!`);
+}
+
+// Phase 1: CT Pattern Recognition Game
+let patternChallenges = [
+  {
+    sequence: ['🔴', '🔵', '🔴', '🔵', '🔴'],
+    choices: ['🔵', '🔴', '🟡'],
+    correct: 0,
+    explanation: 'The pattern alternates: Red, Blue, Red, Blue...'
+  },
+  {
+    sequence: ['⭐', '⭐', '🌙', '⭐', '⭐'],
+    choices: ['⭐', '🌙', '☀️'],
+    correct: 1,
+    explanation: 'Two stars, then a moon repeats!'
+  },
+  {
+    sequence: ['🍎', '🍊', '🍎', '🍊', '🍎'],
+    choices: ['🍎', '🍊', '🍇'],
+    correct: 1,
+    explanation: 'Apple, Orange pattern repeating'
+  },
+  {
+    sequence: ['1️⃣', '2️⃣', '3️⃣', '4️⃣', '5️⃣'],
+    choices: ['6️⃣', '1️⃣', '5️⃣'],
+    correct: 0,
+    explanation: 'Numbers counting up: 1, 2, 3, 4, 5...'
+  },
+  {
+    sequence: ['🟢', '🟢', '🟡', '🟢', '🟢'],
+    choices: ['🟢', '🟡', '🔴'],
+    correct: 1,
+    explanation: 'Two green, one yellow repeats'
+  }
+];
+
+let currentPatternIndex = 0;
+
+function initPatternGame(){
+  currentPatternIndex = 0;
+  loadPatternChallenge();
+}
+
+function loadPatternChallenge(){
+  const challenge = patternChallenges[currentPatternIndex];
+  const sequenceEl = document.getElementById('patternSequence');
+  const choicesEl = document.getElementById('patternChoices');
+  
+  // Load sequence
+  sequenceEl.innerHTML = challenge.sequence.map(item => 
+    `<div class="pattern-box">${item}</div>`
+  ).join('');
+  
+  // Load choices
+  choicesEl.innerHTML = challenge.choices.map((item, idx) => 
+    `<div class="pattern-box choice" onclick="checkPatternAnswer(${idx})">${item}</div>`
+  ).join('');
+  
+  // Hide feedback
+  document.getElementById('patternFeedback').style.display = 'none';
+}
+
+function checkPatternAnswer(selectedIdx){
+  const challenge = patternChallenges[currentPatternIndex];
+  const feedbackEl = document.getElementById('patternFeedback');
+  const choices = document.querySelectorAll('#patternChoices .pattern-box');
+  
+  if(selectedIdx === challenge.correct){
+    choices[selectedIdx].classList.add('correct');
+    feedbackEl.innerHTML = `<div style="color:#10b981;">✅ Correct! ${challenge.explanation}</div>`;
+    feedbackEl.style.background = 'rgba(16,185,129,0.15)';
+    feedbackEl.style.border = '1px solid rgba(16,185,129,0.3)';
+    showToast('🎉 Great job!');
+  } else {
+    choices[selectedIdx].classList.add('incorrect');
+    feedbackEl.innerHTML = `<div style="color:#ef4444;">❌ Try again! Hint: ${challenge.explanation}</div>`;
+    feedbackEl.style.background = 'rgba(239,68,68,0.15)';
+    feedbackEl.style.border = '1px solid rgba(239,68,68,0.3)';
+  }
+  
+  feedbackEl.style.display = 'block';
+}
+
+function nextPatternChallenge(){
+  currentPatternIndex = (currentPatternIndex + 1) % patternChallenges.length;
+  loadPatternChallenge();
+  showToast('🎯 New challenge loaded!');
+}
+
+// Phase 1: Homework Helper Templates
+const homeworkTemplates = {
+  explain: {
+    label: 'What topic should I explain?',
+    template: 'Explain [TOPIC] in simple words for a 10-year-old with examples',
+    icon: '🔍'
+  },
+  examples: {
+    label: 'What concept do you need examples for?',
+    template: 'Give me 3 real-world examples of [TOPIC] that kids can relate to',
+    icon: '💡'
+  },
+  poster: {
+    label: 'What should the poster be about?',
+    template: 'Create a colorful educational poster about [TOPIC] with key points and visuals',
+    icon: '🎨'
+  },
+  summary: {
+    label: 'What topic should I summarize?',
+    template: 'Summarize the main ideas about [TOPIC] in a simple way',
+    icon: '📝'
+  }
+};
+
+let selectedTemplate = null;
+
+function useHomeworkTemplate(type){
+  selectedTemplate = type;
+  const template = homeworkTemplates[type];
+  
+  document.getElementById('homeworkTemplateLabel').innerHTML = `${template.icon} ${template.label}`;
+  document.getElementById('homeworkTemplateInput').style.display = 'block';
+  document.getElementById('homeworkTopicInput').value = '';
+  document.getElementById('homeworkTopicInput').focus();
+}
+
+function generateFromHomeworkTemplate(){
+  const topic = document.getElementById('homeworkTopicInput').value.trim();
+  
+  if(!topic){
+    showToast('⚠️ Please enter a topic!');
+    return;
+  }
+  
+  const template = homeworkTemplates[selectedTemplate];
+  const prompt = template.template.replace('[TOPIC]', topic);
+  
+  // Show output section
+  document.getElementById('homeworkOutputSection').style.display = 'block';
+  
+  // Update template type display
+  const typeNames = {
+    explain: 'Explanation',
+    examples: 'Examples',
+    poster: 'Poster Outline',
+    summary: 'Summary'
+  };
+  document.getElementById('homeworkTemplateType').textContent = typeNames[selectedTemplate];
+  document.getElementById('homeworkTopicDisplay').textContent = `Topic: ${topic}`;
+  
+  // Show loading state
+  document.getElementById('homeworkOutPH').style.display = 'none';
+  document.getElementById('homeworkOutText').style.display = 'none';
+  document.getElementById('homeworkOutMeta').style.display = 'none';
+  document.getElementById('homeworkOutLoad').style.display = 'flex';
+  document.getElementById('homeworkOutDot').classList.remove('live');
+  document.getElementById('homeworkOutTitle').textContent = 'Generating…';
+  
+  const loadTxt = document.getElementById('homeworkLoadTxt');
+  const msgs = ['Analyzing topic…', 'Gathering information…', 'Writing content…', 'Finalizing…'];
+  let m = 0;
+  const intv = setInterval(() => { loadTxt.textContent = msgs[m % msgs.length]; m++; }, 600);
+  
+  // Simulate generation
+  setTimeout(() => {
+    clearInterval(intv);
+    
+    // Generate appropriate content based on template
+    let generatedContent = '';
+    
+    if(selectedTemplate === 'explain'){
+      generatedContent = `
+        <strong>What is ${topic}?</strong><br><br>
+        ${topic} is an important concept that helps us understand how things work in our world. Let me break it down in simple terms:<br><br>
+        
+        <div class="highlight">
+        🔹 Key Point 1: The basic definition and why it matters<br>
+        🔹 Key Point 2: How it works in everyday life<br>
+        🔹 Key Point 3: Real examples you can see around you
+        </div><br>
+        
+        <strong>Example:</strong><br>
+        Think of ${topic} like [simple analogy]. Just as [example], ${topic} works in a similar way to help [benefit].<br><br>
+        
+        <strong>Why is this important?</strong><br>
+        Understanding ${topic} helps you [practical application]. You can see it in action when [real-world scenario].
+      `;
+    } else if(selectedTemplate === 'examples'){
+      generatedContent = `
+        <strong>3 Real-World Examples of ${topic}:</strong><br><br>
+        
+        <strong>Example 1: At Home 🏠</strong><br>
+        You can see ${topic} when [household example]. This happens because [simple explanation].<br><br>
+        
+        <strong>Example 2: In Nature 🌳</strong><br>
+        ${topic} appears in nature through [natural example]. Animals and plants use this to [purpose].<br><br>
+        
+        <strong>Example 3: In Technology 💻</strong><br>
+        Modern devices use ${topic} to [tech example]. This is why your [device] can [function].<br><br>
+        
+        <div class="highlight">
+        💡 Fun Fact: ${topic} is so important that scientists study it to make our lives better every day!
+        </div>
+      `;
+    } else if(selectedTemplate === 'poster'){
+      generatedContent = `
+        <strong>Poster Design for: ${topic}</strong><br><br>
+        
+        <strong>📌 Title (Big & Bold):</strong><br>
+        "${topic} - Understanding Our World"<br><br>
+        
+        <strong>🎨 Key Points to Include:</strong><br>
+        <div class="highlight">
+        ✓ What is ${topic}?<br>
+        ✓ Why does it matter?<br>
+        ✓ Where do we see it?<br>
+        ✓ 3 Cool facts about ${topic}
+        </div><br>
+        
+        <strong>🖼️ Visual Ideas:</strong><br>
+        • Draw colorful diagrams showing [aspect 1]<br>
+        • Add icons representing [aspect 2]<br>
+        • Use arrows to show the process<br>
+        • Include real photos or illustrations<br><br>
+        
+        <strong>🌈 Color Scheme:</strong><br>
+        Use bright colors like blue, green, and yellow to make it eye-catching!<br><br>
+        
+        <strong>✨ Don't Forget:</strong><br>
+        Add your name, class, and date at the bottom!
+      `;
+    } else if(selectedTemplate === 'summary'){
+      generatedContent = `
+        <strong>Summary: ${topic}</strong><br><br>
+        
+        <strong>🔍 Main Idea:</strong><br>
+        ${topic} is [core concept in one sentence].<br><br>
+        
+        <strong>📝 Key Points:</strong><br>
+        <div class="highlight">
+        1️⃣ First important thing: [point 1]<br>
+        2️⃣ Second important thing: [point 2]<br>
+        3️⃣ Third important thing: [point 3]
+        </div><br>
+        
+        <strong>💡 How It Works:</strong><br>
+        The process involves [simplified explanation]. This is important because [reason].<br><br>
+        
+        <strong>🎯 Why Should You Care?</strong><br>
+        Learning about ${topic} helps you understand [practical benefit]. It's used in [applications].<br><br>
+        
+        <strong>📚 Remember This:</strong><br>
+        The most important thing about ${topic} is [key takeaway].
+      `;
+    }
+    
+    document.getElementById('homeworkTextContent').innerHTML = generatedContent;
+    document.getElementById('homeworkOutLoad').style.display = 'none';
+    document.getElementById('homeworkOutText').style.display = 'block';
+    document.getElementById('homeworkOutDot').classList.add('live');
+    document.getElementById('homeworkOutTitle').textContent = 'Homework Help Generated';
+    document.getElementById('homeworkOutMeta').style.display = 'flex';
+    document.getElementById('homeworkOutputCard').classList.add('ready');
+    
+    showToast(`✨ ${typeNames[selectedTemplate]} ready!`);
+    
+    // Show reflection section after successful generation
+    setTimeout(() => {
+      document.getElementById('reflectionSection').style.display = 'block';
+    }, 500);
+    
+    // Scroll to output
+    setTimeout(() => {
+      document.getElementById('homeworkOutputSection').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }, 300);
+  }, 2500);
+  
+  // Hide template input
+  document.getElementById('homeworkTemplateInput').style.display = 'none';
+  
+  showToast(`✨ Generating ${selectedTemplate} for: ${topic}`);
+}
+
+function copyHomeworkOutput(){
+  const content = document.getElementById('homeworkTextContent').innerText;
+  navigator.clipboard.writeText(content).then(() => {
+    showToast('📋 Copied to clipboard!');
+  }).catch(() => {
+    showToast('❌ Copy failed - try selecting and copying manually');
+  });
+}
+
+function downloadHomeworkOutput(){
+  showToast('💾 Download feature coming soon!');
+}
+
+function regenerateHomework(){
+  const topic = document.getElementById('homeworkTopicDisplay').textContent.replace('Topic: ', '');
+  showToast('🔄 Regenerating with new details...');
+  
+  // Show loading
+  document.getElementById('homeworkOutText').style.display = 'none';
+  document.getElementById('homeworkOutLoad').style.display = 'flex';
+  document.getElementById('homeworkOutDot').classList.remove('live');
+  
+  setTimeout(() => {
+    document.getElementById('homeworkOutLoad').style.display = 'none';
+    document.getElementById('homeworkOutText').style.display = 'block';
+    document.getElementById('homeworkOutDot').classList.add('live');
+    showToast('✅ Regenerated successfully!');
+  }, 2000);
+}
+
+// Phase 1: Reflection Questions
+let selectedReflectionChoice = null;
+
+function selectReflectionChoice(choice){
+  selectedReflectionChoice = choice;
+  
+  // Update button styles
+  document.querySelectorAll('.reflection-choice-btn').forEach(btn => {
+    btn.classList.remove('selected');
+    btn.style.borderColor = 'var(--border)';
+    btn.style.background = 'var(--surface2)';
+  });
+  
+  const selectedBtn = document.querySelector(`.reflection-choice-btn[data-choice="${choice}"]`);
+  selectedBtn.classList.add('selected');
+  
+  // Show explanation textarea
+  document.getElementById('reflectionAnswer3').style.display = 'block';
+}
+
+function submitReflection(){
+  const answer1 = document.getElementById('reflectionAnswer1').value.trim();
+  
+  // Save reflection (optional - can be empty)
+  const reflection = {
+    learned: answer1 || 'No reflection provided',
+    timestamp: new Date().toLocaleString()
+  };
+  
+  console.log('Reflection saved:', reflection);
+  
+  // Show success message
+  document.getElementById('reflectionSuccess').style.display = 'block';
+  showToast('✅ Thank you for reflecting!');
+  
+  // Clear form after 2 seconds
+  setTimeout(() => {
+    document.getElementById('reflectionAnswer1').value = '';
+    
+    setTimeout(() => {
+      document.getElementById('reflectionSuccess').style.display = 'none';
+      document.getElementById('reflectionSection').style.display = 'none';
+    }, 2000);
+  }, 1500);
+}
+
+function skipReflection(){
+  showToast('👍 Skipped - You can always reflect later!');
+  document.getElementById('reflectionSection').style.display = 'none';
+  document.getElementById('reflectionAnswer1').value = '';
+}
+
+// Phase 2: Interactive Concept Cards
+function toggleConceptCard(cardElement, conceptId){
+  const content = cardElement.querySelector('.concept-card-content');
+  const isExpanded = cardElement.classList.contains('expanded');
+  
+  if(isExpanded){
+    // Collapse
+    content.style.display = 'none';
+    cardElement.classList.remove('expanded');
+  } else {
+    // Expand
+    content.style.display = 'block';
+    cardElement.classList.add('expanded');
+    showToast('📚 Tap again to close');
+  }
+}
+
+// Phase 2: Project Assistant
+let selectedProjectType = null;
+
+const projectLabels = {
+  ideas: '💡 What subject interests you? (e.g., Science, Art, Technology)',
+  research: '🔬 What topic do you need to research?',
+  presentation: '📊 What is your presentation about?',
+  visual: '🎨 Describe your visual project idea'
+};
+
+function selectProjectType(type){
+  selectedProjectType = type;
+  
+  // Update button styles
+  document.querySelectorAll('.project-type-btn').forEach(btn => {
+    btn.classList.remove('selected');
+  });
+  event.target.closest('.project-type-btn').classList.add('selected');
+  
+  // Show input area
+  document.getElementById('projectInputLabel').textContent = projectLabels[type];
+  document.getElementById('projectInputArea').style.display = 'block';
+  document.getElementById('projectDescInput').value = '';
+  document.getElementById('projectDescInput').focus();
+}
+
+function generateProjectHelp(){
+  const description = document.getElementById('projectDescInput').value.trim();
+  
+  if(!description){
+    showToast('⚠️ Please describe your project!');
+    return;
+  }
+  
+  // Show output section
+  document.getElementById('projectOutputSection').style.display = 'block';
+  
+  // Generate content based on project type
+  let projectContent = '';
+  
+  if(selectedProjectType === 'ideas'){
+    projectContent = `
+      <strong style="font-size:16px;color:var(--text);">💡 Project Ideas: ${description}</strong><br><br>
+      
+      <strong>Idea 1: Interactive Model</strong><br>
+      Create a hands-on model or demonstration about ${description}. Students can touch and interact with it to learn better!<br>
+      <div class="highlight" style="margin:10px 0;">
+      📌 Materials needed: Cardboard, colors, glue, charts<br>
+      ⏰ Time required: 2-3 days<br>
+      🎯 Difficulty: Easy to Medium
+      </div><br>
+      
+      <strong>Idea 2: Digital Presentation</strong><br>
+      Make a colorful slideshow with images, fun facts, and quiz questions about ${description}.<br>
+      <div class="highlight" style="margin:10px 0;">
+      💻 Tools: PowerPoint, Canva, Google Slides<br>
+      ⏰ Time required: 1-2 days<br>
+      🎯 Difficulty: Easy
+      </div><br>
+      
+      <strong>Idea 3: Research Report</strong><br>
+      Write a detailed report with experiments, observations, and conclusions about ${description}.<br>
+      <div class="highlight" style="margin:10px 0;">
+      📝 Sections: Introduction, Method, Results, Conclusion<br>
+      ⏰ Time required: 3-4 days<br>
+      🎯 Difficulty: Medium to Hard
+      </div><br>
+      
+      <strong>💡 Bonus Tip:</strong><br>
+      Add real-life examples and pictures to make your project more interesting!
+    `;
+  } else if(selectedProjectType === 'research'){
+    projectContent = `
+      <strong style="font-size:16px;color:var(--text);">🔬 Research Guide: ${description}</strong><br><br>
+      
+      <strong>Step 1: Understanding the Topic</strong><br>
+      • What is ${description}?<br>
+      • Why is it important?<br>
+      • Who discovered or invented it?<br><br>
+      
+      <strong>Step 2: Key Questions to Answer</strong><br>
+      <div class="highlight">
+      ❓ How does ${description} work?<br>
+      ❓ Where do we see ${description} in real life?<br>
+      ❓ What are the benefits and challenges?<br>
+      ❓ What's the future of ${description}?
+      </div><br>
+      
+      <strong>Step 3: Gather Information</strong><br>
+      📚 Books from your library<br>
+      🌐 Educational websites (ask your teacher for recommendations)<br>
+      👨‍🏫 Interview experts or teachers<br>
+      📰 Science magazines and journals<br><br>
+      
+      <strong>Step 4: Organize Your Findings</strong><br>
+      • Create a mind map<br>
+      • Write key points on cards<br>
+      • Make a simple outline<br><br>
+      
+      <strong>🎯 Remember:</strong> Always note where you found your information (sources)!
+    `;
+  } else if(selectedProjectType === 'presentation'){
+    projectContent = `
+      <strong style="font-size:16px;color:var(--text);">📊 Presentation Outline: ${description}</strong><br><br>
+      
+      <strong>Slide 1: Title Slide</strong><br>
+      • Project title: "${description}"<br>
+      • Your name and class<br>
+      • Add a relevant image<br><br>
+      
+      <strong>Slide 2: Introduction</strong><br>
+      • What is ${description}?<br>
+      • Why did you choose this topic?<br>
+      • What will you cover?<br><br>
+      
+      <strong>Slides 3-5: Main Content</strong><br>
+      <div class="highlight">
+      📍 Key Point 1: [Main concept]<br>
+      📍 Key Point 2: [How it works]<br>
+      📍 Key Point 3: [Real examples]
+      </div><br>
+      
+      <strong>Slide 6: Fun Facts</strong><br>
+      • 3 interesting facts about ${description}<br>
+      • Use emojis and colorful graphics<br><br>
+      
+      <strong>Slide 7: Quiz/Activity</strong><br>
+      • 2-3 questions for your classmates<br>
+      • Make it interactive and fun!<br><br>
+      
+      <strong>Slide 8: Conclusion</strong><br>
+      • Summary of what you learned<br>
+      • Why ${description} is important<br>
+      • Thank you message<br><br>
+      
+      <strong>🎨 Design Tips:</strong><br>
+      ✓ Use max 3-4 colors<br>
+      ✓ Keep text large and readable<br>
+      ✓ Add pictures on every slide<br>
+      ✓ Practice your speech 3 times!
+    `;
+  } else if(selectedProjectType === 'visual'){
+    projectContent = `
+      <strong style="font-size:16px;color:var(--text);">🎨 Visual Project Plan: ${description}</strong><br><br>
+      
+      <strong>Project Concept:</strong><br>
+      Create an eye-catching visual display about ${description} that combines art, information, and creativity!<br><br>
+      
+      <strong>Materials You'll Need:</strong><br>
+      <div class="highlight">
+      📋 Chart paper or poster board<br>
+      🎨 Markers, colors, paints<br>
+      ✂️ Scissors, glue, tape<br>
+      📸 Printed images or drawings<br>
+      ✨ Decorative items (stickers, glitter)
+      </div><br>
+      
+      <strong>Layout Design:</strong><br>
+      <strong>Top Section:</strong> Bold title with decorative border<br>
+      <strong>Middle Left:</strong> Main diagram or illustration<br>
+      <strong>Middle Right:</strong> Key facts in colorful boxes<br>
+      <strong>Bottom:</strong> Examples and your name<br><br>
+      
+      <strong>Content to Include:</strong><br>
+      • What is ${description}? (1-2 sentences)<br>
+      • Labeled diagram or flowchart<br>
+      • 5-6 interesting facts<br>
+      • Real-world examples with pictures<br>
+      • Your own drawings or photos<br><br>
+      
+      <strong>🌟 Make It Stand Out:</strong><br>
+      ✓ Use bright, contrasting colors<br>
+      ✓ Make your title 3D with shadows<br>
+      ✓ Add QR codes linking to videos<br>
+      ✓ Include a "Did You Know?" section<br><br>
+      
+      <strong>⏰ Timeline:</strong><br>
+      Day 1: Research and planning<br>
+      Day 2: Create rough sketch<br>
+      Day 3: Final execution and decoration
+    `;
+  }
+  
+  document.getElementById('projectOutputContent').innerHTML = projectContent;
+  document.getElementById('projectOutTitle').textContent = 'Project Plan Ready';
+  
+  showToast('🎯 Project plan generated!');
+  
+  // Show reflection section after successful generation
+  setTimeout(() => {
+    document.getElementById('reflectionSection').style.display = 'block';
+  }, 500);
+  
+  // Scroll to output
+  setTimeout(() => {
+    document.getElementById('projectOutputSection').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }, 300);
+  
+  // Hide input area
+  document.getElementById('projectInputArea').style.display = 'none';
+}
+
+function copyProjectOutput(){
+  const content = document.getElementById('projectOutputContent').innerText;
+  navigator.clipboard.writeText(content).then(() => {
+    showToast('📋 Project plan copied!');
+  }).catch(() => {
+    showToast('❌ Copy failed');
+  });
+}
+
+function printProjectOutput(){
+  const content = document.getElementById('projectOutputContent').innerHTML;
+  const printWindow = window.open('', '_blank');
+  printWindow.document.write(`
+    <html>
+      <head>
+        <title>Project Plan</title>
+        <style>
+          body { font-family: Arial, sans-serif; padding: 20px; line-height: 1.6; }
+          strong { color: #333; }
+          .highlight { background: #f0f0f0; padding: 10px; border-radius: 5px; margin: 10px 0; }
+        </style>
+      </head>
+      <body>${content}</body>
+    </html>
+  `);
+  printWindow.document.close();
+  printWindow.print();
+  showToast('🖨️ Opening print dialog...');
 }
 
 function setTool(t){
@@ -411,8 +2642,13 @@ function updateChar(){
 }
 
 function useSuggest(el, text){
-  document.getElementById('promptTa').value = text;
-  updateChar();
+  if(currentClass === '1-3'){
+    document.getElementById('simplePromptTa').value = text;
+    updateSimpleChar();
+  } else {
+    document.getElementById('promptTa').value = text;
+    updateChar();
+  }
   el.style.borderColor='var(--indigo)';
   setTimeout(()=>el.style.borderColor='',600);
 }
@@ -469,6 +2705,13 @@ function generate(){
     document.getElementById('outMeta').style.display='flex';
     showToast('✅ Generated successfully!');
     addToHistory(prompt, isImg?'image':'text');
+    
+    // Show emoji reflection for Classes 1-3
+    if(currentClass === '1-3'){
+      setTimeout(()=>{
+        document.getElementById('emojiReflection').style.display='block';
+      }, 500);
+    }
   }, 3200);
 }
 
@@ -514,6 +2757,8 @@ function showToast(msg){
 }
 
 updateChar();
+// Initialize UI for default class
+updateUIForClass(currentClass);
 </script>
 </body>
 </html>
